@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Pivot Table Builder</title>
+
+       <!-- Flatpickr CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/pivot.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Pivot Table</h1>
+
+    <div class="builder">
+
+        <!-- ========================= -->
+        <!-- ROWS -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <h2>Rows</h2>
+
+            <select id="rowField">
+
+                <option value="">Select Field</option>
+
+                {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+
+            </select>
+
+            <button class="add-btn"
+                    onclick="addRow()">
+                Add
+            </button>
+
+            <div class="selected-fields"
+                 id="rows">
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- COLUMNS -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <h2>Columns</h2>
+
+            <select id="columnField">
+
+                <option value="">Select Field</option>
+
+                {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+
+            </select>
+
+            <button class="add-btn"
+                    onclick="addColumn()">
+                Add
+            </button>
+
+            <div class="selected-fields"
+                 id="columns">
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- VALUES -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <h2>Values</h2>
+
+            <select id="valueField">
+
+                <option value="">Select Field</option>
+
+                {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+
+            </select>
+
+            <select id="aggregate">
+
+                <option value="SUM">SUM</option>
+
+                <option value="COUNT">COUNT</option>
+
+                <option value="AVG">AVG</option>
+
+                <option value="MIN">MIN</option>
+
+                <option value="MAX">MAX</option>
+
+            </select>
+
+            <button class="add-btn"
+                    onclick="addValue()">
+                Add
+            </button>
+
+            <div class="selected-fields"
+                 id="values">
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- FILTERS -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <h2>Filters</h2>
+
+            <select id="filterField">
+
+                <option value="">Select Field</option>
+
+                {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+
+            </select>
+
+            <button class="add-btn"
+                    onclick="addFilter()">
+                Add
+            </button>
+
+            <div class="selected-fields"
+                 id="filters">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Generate -->
+    <!-- ========================= -->
+
+    <button id="generate">
+
+        Generate Pivot
+
+    </button>
+
+    <!-- ========================= -->
+    <!-- Output -->
+    <!-- ========================= -->
+
+    <div class="table-container">
+
+        <div id="output"></div>
+
+    </div>
+
+</div>
+<script>
+
+const DATE_COLUMNS = JSON.parse('{{ date_columns | tojson | safe }}');
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ url_for('static', filename='js/pivot.js') }}"></script>
+
+</body>
+
+</html>

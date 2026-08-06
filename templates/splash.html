@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>InTallygence</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Blueprint Lines -->
+    <div class="blueprint">
+
+        <div class="vline left"></div>
+        <div class="vline right"></div>
+        <div class="hline"></div>
+
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <!-- Background Shape -->
+        <img
+            src="{{ url_for('static', filename='images/oval-bg.png') }}"
+            class="bg-shape"
+            alt="">
+
+        <!-- Heading -->
+        <p class="topline">
+            Transforming Tally Data Into Business Intelligence
+        </p>
+
+        <!-- Logo -->
+        <div class="logo">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.svg') }}"
+                alt="InTallygence">
+
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+
+            <span>
+                <i class="fa-solid fa-check"></i>
+                Real-Time Analytics
+            </span>
+
+            <span>
+                <i class="fa-solid fa-check"></i>
+                Interactive Reports
+            </span>
+
+            <span>
+                <i class="fa-solid fa-check"></i>
+                Smart Insights
+            </span>
+
+        </div>
+
+        <!-- Enter Button -->
+        <button id="enterBtn" class="enter-btn">
+
+            Enter →
+
+        </button>
+
+    </section>
+
+    <!-- Login -->
+    <div class="login-container">
+
+        <div class="login-box">
+
+            <button id="backBtn" class="back-btn">
+
+                ← Back
+
+            </button>
+
+            <h2>Login</h2>
+
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <form action="{{ url_for('login') }}" method="POST">
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    required>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required>
+
+                <button type="submit">
+
+                    Login
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/splash.js') }}"></script>
+
+</body>
+
+</html>

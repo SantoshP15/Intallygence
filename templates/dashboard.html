@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>InTallygence Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <h2>In<span>Tally</span>gence</h2>
+
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            <i class="fa-solid fa-chart-line"></i>
+            Sales Master
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Purchase Master
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-users"></i>
+            Client Master
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-user-tie"></i>
+            Supplier Master
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-box"></i>
+            Item Master
+        </a>
+
+        <a href="{{ url_for('pivot') }}">
+            <i class="fa-solid fa-table-cells-large"></i>
+            Pivot Builder
+        </a>
+
+    </nav>
+
+    <a href="{{ url_for('logout') }}" class="logout">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        Logout
+
+    </a>
+
+</div>
+
+<div class="main">
+
+    <h1>Welcome to InTallygence</h1>
+
+    <p>
+
+        Select a module from the left sidebar to begin.
+
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <h3>Sales Master</h3>
+
+            <p>Manage sales transactions.</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-cart-shopping"></i>
+
+            <h3>Purchase Master</h3>
+
+            <p>Manage purchase records.</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h3>Client Master</h3>
+
+            <p>Manage customer details.</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

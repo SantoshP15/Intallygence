@@ -1,0 +1,819 @@
+/* ===================================
+   Global
+=================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:#FFFDF5;
+
+    color:#333;
+
+}
+
+.container{
+
+    width:95%;
+
+    max-width:1800px;
+
+    margin:auto;
+
+    padding:30px 20px;
+
+}
+
+/* ===================================
+   Heading
+=================================== */
+
+h1{
+
+    text-align:center;
+
+    font-size:42px;
+
+    margin-bottom:35px;
+
+    color:#222;
+
+    font-weight:700;
+
+}
+
+/* ===================================
+   Builder Layout
+=================================== */
+
+.builder{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:24px;
+
+    align-items:start;
+
+}
+
+/* ===================================
+   Cards
+=================================== */
+
+.card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.card h2{
+
+    margin-bottom:15px;
+
+    font-size:22px;
+
+    color:#333;
+
+}
+
+/* ===================================
+   Dropdowns
+=================================== */
+
+.card select{
+
+    width:100%;
+
+    height:44px;
+
+    border:1px solid #D8D8D8;
+
+    border-radius:10px;
+
+    padding:0 14px;
+
+    margin-bottom:12px;
+
+    font-size:15px;
+
+    background:#fff;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.card select:focus{
+
+    border-color:#FFBF00;
+
+    box-shadow:0 0 8px rgba(255,191,0,.35);
+
+}
+
+/* ===================================
+   Buttons
+=================================== */
+
+.add-btn{
+
+    height:42px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#FFBF00;
+
+    color:#111;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.add-btn:hover{
+
+    background:#F3B300;
+
+    transform:translateY(-2px);
+
+}
+
+/* ===================================
+   Selected Area
+=================================== */
+
+.selected-fields{
+
+    margin-top:18px;
+
+    min-height:250px;
+    max-height:250px;
+
+    border:2px dashed #D8D8D8;
+    border-radius:12px;
+    padding:12px;
+
+    background:#FAFAFA;
+
+    overflow-y:auto;
+
+}
+/* ===================================
+   Selected Field Cards
+=================================== */
+
+.field-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#FFBF00;
+
+    color:#222;
+
+    padding:10px 14px;
+
+    border-radius:10px;
+
+    margin-bottom:10px;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    transition:.25s;
+
+}
+
+.field-item:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 5px 15px rgba(255,191,0,.35);
+
+}
+
+/* ===================================
+   Value Badge
+=================================== */
+
+.badge{
+
+    background:#fff;
+
+    color:#444;
+
+    padding:3px 8px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    margin-left:8px;
+
+}
+
+/* ===================================
+   Remove Button
+=================================== */
+
+.remove-btn{
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    color:#666;
+
+    margin-left:12px;
+
+}
+
+.remove-btn:hover{
+
+    color:red;
+
+}
+
+/* ===================================
+   Filter Dropdown
+=================================== */
+
+.filter-value{
+
+    width:100%;
+
+    margin-top:8px;
+
+    height:36px;
+
+    border-radius:8px;
+
+    border:1px solid #DDD;
+
+    padding:0 10px;
+
+}
+/* ===================================
+   Generate Button
+=================================== */
+
+#generate{
+
+    width:100%;
+
+    height:60px;
+
+    margin-top:30px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#FFBF00;
+
+    color:#222;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+#generate:hover{
+
+    background:#F3B300;
+
+}
+
+/* ===================================
+   Output
+=================================== */
+
+.table-container{
+
+    margin-top:30px;
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    overflow:auto;
+
+}
+
+#output{
+
+    min-height:400px;
+
+}
+
+/* ===================================
+   Responsive
+=================================== */
+
+@media(max-width:1200px){
+
+    .builder{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .builder{
+
+        grid-template-columns:1fr;
+
+    }
+
+    h1{
+
+        font-size:30px;
+
+    }
+
+}
+.pivot-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+    font-size:15px;
+
+}
+
+.pivot-table th{
+
+    background:#FFBF00;
+
+    color:#222;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+}
+
+.pivot-table td{
+
+    padding:10px;
+
+    border:1px solid #ddd;
+
+}
+
+.pivot-table tr:nth-child(even){
+
+    background:#fafafa;
+
+}
+
+.pivot-table tr:hover{
+
+    background:#fff6d8;
+
+}
+/* 
+===============================================
+Filter dropdown 
+===============================================
+*/
+/* ===========================
+   Filter Popup
+=========================== */
+
+.filter-summary{
+
+    margin-top:8px;
+
+    padding:8px 10px;
+
+    background:#fff;
+
+    border:1px solid #ddd;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+}
+
+.filter-popup{
+
+    position:absolute;
+
+    margin-top:5px;
+
+    width:320px;
+
+    background:#fff;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+    padding:15px;
+
+    z-index:999;
+
+}
+
+.filter-search{
+
+    width:100%;
+
+    padding:8px;
+
+    margin-bottom:10px;
+
+    border:1px solid #ddd;
+
+    border-radius:6px;
+
+}
+
+.checkbox-container{
+
+    max-height:220px;
+
+    overflow-y:auto;
+
+    margin-bottom:10px;
+
+}
+
+.apply-filter{
+
+    width:100%;
+
+    height:36px;
+
+    border:none;
+
+    border-radius:6px;
+
+    background:#FFBF00;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+/* ==========================
+   Checkbox List
+========================== */
+
+.checkbox-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:6px 4px;
+
+    cursor:pointer;
+
+    border-radius:4px;
+
+}
+
+.checkbox-item:hover{
+
+    background:#FFF6D6;
+
+}
+
+.checkbox-item input{
+
+    cursor:pointer;
+
+}
+.checkbox-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:6px;
+
+    cursor:pointer;
+
+    border-radius:4px;
+
+}
+
+.checkbox-item:hover{
+
+    background:#FFF6D8;
+
+}
+
+.checkbox-item input{
+
+    cursor:pointer;
+
+}
+
+.filter-summary{
+
+    margin-top:8px;
+
+    padding:8px 10px;
+
+    border:1px solid #ddd;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    background:white;
+
+}
+
+.filter-popup{
+
+    position:absolute;
+
+    width:260px;
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    padding:10px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
+
+    z-index:999;
+
+}
+.date-filter-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding-bottom:10px;
+
+    border-bottom:1px solid #ddd;
+
+    font-weight:600;
+
+}
+
+.date-tabs{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-bottom:15px;
+
+}
+
+.date-tabs button{
+
+    flex:1;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#eee;
+
+}
+
+.active-tab{
+
+    background:#FFBF00 !important;
+
+}
+
+.date-filter-body{
+
+    min-height:250px;
+
+}
+
+.date-filter-body input{
+
+    width:100%;
+
+    height:38px;
+
+    margin:8px 0 15px;
+
+    padding:8px;
+
+}
+
+.apply-date{
+
+    width:100%;
+    height:40px;
+
+    background:#FFBF00;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    margin-top:10px;
+}
+
+.coming-soon{
+
+    text-align:center;
+
+    margin-top:50px;
+
+    color:#666;
+
+}
+.date-picker{
+
+    width:100%;
+    height:40px;
+
+    border:1px solid #ccc;
+    border-radius:8px;
+
+    padding:0 12px;
+
+    font-size:14px;
+
+    margin-bottom:12px;
+}
+
+.flatpickr-calendar{
+
+    font-family:Poppins,sans-serif;
+    z-index: 999999 !important;
+
+}
+.grand-total{
+
+    background:#FFE08A;
+
+    font-weight:bold;
+
+}
+
+.grand-total td{
+
+    border-top:3px solid #FFBF00;
+
+}
+
+.date-tree{
+
+    max-height:250px;
+
+    overflow:auto;
+
+    margin-top:10px;
+
+    border:1px solid #ddd;
+
+    padding:8px;
+
+    border-radius:6px;
+
+}
+
+.date-tree details{
+
+    margin-left:10px;
+
+}
+
+.date-tree summary{
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    padding:3px 0;
+
+}
+
+.date-tree label{
+
+    display:block;
+
+    margin-left:20px;
+
+    padding:2px 0;
+
+}
+
+.date-heading{
+
+    margin-top:10px;
+
+    margin-bottom:8px;
+
+}
+.tree-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    padding:3px;
+
+}
+
+.tree-body{
+
+    margin-left:28px;
+
+}
+
+.tree-year{
+
+    margin-bottom:5px;
+
+}
+
+.tree-month{
+
+    margin-top:5px;
+
+}

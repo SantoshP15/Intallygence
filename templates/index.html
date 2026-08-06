@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales Master</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+
+    <div class="header">
+
+    <div>
+
+        <h1>Sales Master Dashboard</h1>
+
+        <p>Manage and explore your sales transactions</p>
+
+    </div>
+
+    <div class="header-actions">
+
+        <a href="{{ url_for('pivot') }}" class="pivot-btn">
+
+            <i class="fa-solid fa-table-cells-large"></i>
+
+            Pivot Builder
+
+        </a>
+
+    </div>
+
+</div>
+
+
+    <!-- Table -->
+
+    <div class="table-card">
+
+        <div class="table-container">
+
+            <table class="sales-table">
+
+                <thead>
+
+                    <tr>
+
+                        {% for col in data[0].keys() %}
+
+                        <th>
+
+                            {{ col.replace('_',' ') }}
+
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for row in data %}
+
+                    <tr>
+
+                        {% for value in row.values() %}
+
+                        <td>{{ value }}</td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="pagination">
+
+    {% if page > 1 %}
+        <a href="{{ url_for('home', page=page-1) }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ page }} of {{ total_pages }}</span>
+
+    {% if page < total_pages %}
+        <a href="{{ url_for('home', page=page+1) }}">Next</a>
+    {% endif %}
+
+</div>
+</body>
+
+</html>

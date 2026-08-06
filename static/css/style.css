@@ -1,0 +1,477 @@
+/* ===========================
+   Google Font
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ===========================
+   Reset
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:#F8FAFC;
+
+    color:#334155;
+
+}
+body::-webkit-scrollbar{
+    display:none;              /* Chrome, Edge, Safari */
+}
+
+/* ===========================
+   Container
+=========================== */
+
+.container{
+
+    width:95%;
+
+    max-width:1800px;
+
+    margin:35px auto;
+
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.header h1{
+
+    font-size:38px;
+
+    font-weight:700;
+
+    color:#1E293B;
+
+}
+
+.header p{
+
+    color:#64748B;
+
+    margin-top:8px;
+
+    font-size:15px;
+
+}
+
+/* ===========================
+   Right Section
+=========================== */
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+/* ===========================
+   Record Card
+=========================== */
+
+.record-card{
+
+    background:#fff;
+
+    width:200px;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+
+}
+
+.record-card span{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+.record-card h3{
+
+    margin-top:10px;
+
+    font-size:34px;
+
+    color:#FFBF00;
+
+}
+
+/* ===========================
+   Search Box
+=========================== */
+
+.search-box{
+
+    width:350px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px 18px;
+
+    background:white;
+
+    border-radius:15px;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+
+}
+
+.search-box input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    font-size:15px;
+
+    background:transparent;
+
+}
+
+.search-box i{
+
+    color:#94A3B8;
+
+}
+
+/* ===========================
+   Table Card
+=========================== */
+
+.table-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:20px;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+
+}
+
+/* ===========================
+   Table Container
+=========================== */
+
+.table-container{
+
+    overflow:auto;
+
+    border-radius:15px;
+
+}
+
+/* ===========================
+   Table
+=========================== */
+
+.sales-table{
+
+    width:max-content;
+
+    min-width:2500px;
+
+    border-collapse:collapse;
+
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.sales-table thead th{
+
+    position:sticky;
+
+    top:0;
+
+    background:#FFBF00;
+
+    color:#222;
+
+    padding:16px 20px;
+
+    text-align:center;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    text-transform:uppercase;
+
+    letter-spacing:.6px;
+
+    z-index:10;
+
+    border-bottom:2px solid #F0B000;
+
+}
+
+.sales-table thead th:first-child{
+
+    left:0;
+
+    position:sticky;
+
+    z-index:20;
+
+}
+
+/* ===========================
+   Body
+=========================== */
+
+.sales-table tbody td{
+
+    padding:15px 20px;
+
+    font-size:14px;
+
+    border-bottom:1px solid #EDF2F7;
+
+    white-space:nowrap;
+
+}
+
+.sales-table tbody td:first-child{
+
+    position:sticky;
+
+    left:0;
+
+    background:white;
+
+    font-weight:600;
+
+    box-shadow:4px 0 10px rgba(0,0,0,.04);
+
+}
+
+/* ===========================
+   Zebra Rows
+=========================== */
+
+.sales-table tbody tr:nth-child(even){
+
+    background:#FAFAFA;
+
+}
+
+.sales-table tbody tr:hover{
+
+    background:#FFF6D6;
+
+    transition:.25s;
+
+}
+
+/* ===========================
+   Scrollbar
+=========================== */
+
+.table-container::-webkit-scrollbar{
+
+    height:10px;
+
+    width:10px;
+
+}
+
+.table-container::-webkit-scrollbar-thumb{
+
+    background:#C8CDD6;
+
+    border-radius:20px;
+
+}
+
+.table-container::-webkit-scrollbar-thumb:hover{
+
+    background:#94A3B8;
+
+}
+
+/* ===========================
+   Pagination
+=========================== */
+
+.pagination{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-top:30px;
+
+}
+
+.pagination a{
+
+    background:#FFBF00;
+
+    color:#222;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.pagination a:hover{
+
+    background:#F0B000;
+
+    transform:translateY(-2px);
+
+}
+
+.pagination span{
+
+    font-size:16px;
+
+    font-weight:600;
+
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+    .header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .header-right{
+
+        width:100%;
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .record-card{
+
+        width:100%;
+
+    }
+
+    .search-box{
+
+        width:100%;
+
+    }
+
+}
+.header-actions{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.pivot-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px 24px;
+
+    background:#FFBF00;
+
+    color:#222;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    border-radius:12px;
+
+    transition:.3s;
+
+    box-shadow:0 8px 20px rgba(255,191,0,.25);
+
+}
+
+.pivot-btn:hover{
+
+    background:#F0B000;
+
+    color:#222;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 30px rgba(255,191,0,.35);
+
+}
+
+.pivot-btn i{
+
+    font-size:18px;
+
+}
