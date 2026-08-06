@@ -101,24 +101,27 @@ body{
 
 /* Background Shape */
 
+/* ==========================
+   BACKGROUND WATERMARK
+========================== */
+
 .bg-shape{
     position:absolute;
 
-    width:1090px;
+    left:48.5%;
+    top:50%;
 
-    left:50%;
-    top:48%;
+    width:1700px;
+    height:auto;
 
     transform:translate(-50%,-50%);
 
-    opacity:.22;
+    opacity:1;
 
-    z-index:-1;
+    z-index:1;
 
     pointer-events:none;
 }
-
-/* Keep content above background */
 
 .topline,
 .logo,
