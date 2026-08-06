@@ -5,7 +5,7 @@
 }
 
 body{
-    font-family:Segoe UI, Arial, sans-serif;
+    font-family:'Montserrat', sans-serif;
     background:#dbedf7;
     overflow:hidden;
     color:#1188c9;
@@ -25,38 +25,61 @@ body{
 .vline,
 .hline{
     position:absolute;
-    background:#1592cf;
-    opacity:.6;
+    background:#008bbf;
+    /* opacity:.6; */
 }
 
+/* Vertical Lines */
+
 .vline{
-    position:absolute;
     width:3px;
-    height:140%;
-    top:-20%;
-    background:linear-gradient(
-        to bottom,
-        transparent,
-        #1592cf 15%,
-        #1592cf 85%,
-        transparent
-    );
+    background:#008bbf;
 }
 
 .left{
     left:80px;
+    top:0;
+    height:500px;
+
+    transform-origin:top;
+    transform:scaleY(0);
+    transition:1s ease;
 }
 
 .right{
     right:140px;
-    height:60%;
-    bottom: 1%;
+    bottom:0;
+    height:500px;
+
+    transform-origin:bottom;
+    transform:scaleY(0);
+    transition:1s ease;
 }
+
+/* Horizontal Lines */
 
 .hline{
     height:3px;
-    width:100%;
     top:50%;
+    background:#1592cf;
+}
+
+.left-line{
+    left:0;
+    width:calc(50% - 23px);
+
+    transform-origin:left;
+    transform:scaleX(0);
+    transition:.8s ease;
+}
+
+.right-line{
+    right:0;
+    width:calc(50% - 92px);
+
+    transform-origin:right;
+    transform:scaleX(0);
+    transition:.8s ease;
 }
 
 /* ==========================
@@ -66,20 +89,21 @@ body{
 .hero{
     position:fixed;
     inset:0;
+
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+
     text-align:center;
     overflow:hidden;
 }
 
-/* ==========================
-   BACKGROUND SHAPE
-========================== */
+/* Background Shape */
 
 .bg-shape{
     position:absolute;
+
     width:1090px;
 
     left:50%;
@@ -89,50 +113,54 @@ body{
 
     opacity:.22;
 
-    z-index:-1;       /* IMPORTANT */
+    z-index:-1;
 
     pointer-events:none;
 }
 
-@keyframes floatShape{
-
-    0%{
-        transform:translate(-50%,-50%) scale(1);
-    }
-
-    50%{
-        transform:translate(-50%,-48%) scale(1.03);
-    }
-
-    100%{
-        transform:translate(-50%,-50%) scale(1);
-    }
-
-}
-
-/* Keep everything above background */
+/* Keep content above background */
 
 .topline,
 .logo,
 .features,
-.enter-btn{
-
+.enter-arrow{
     position:relative;
     z-index:2;
-
 }
-
 /* ==========================
    TOP TEXT
 ========================== */
 
 .topline{
+    position:absolute;
 
+    top:120px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    font-family:'Montserrat', sans-serif;
     font-size:22px;
-
     font-weight:500;
 
-    margin-bottom:120px;
+    letter-spacing:.4px;
+
+    z-index:2;
+    animation:toplineFade 1.5s ease forwards;
+    opacity:0;
+}
+@keyframes toplineFade{
+
+    from{
+        opacity:0;
+        transform:translateX(-50%) translateY(  25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(-50%) translateY(0);
+    }
 
 }
 
@@ -141,57 +169,42 @@ body{
 ========================== */
 
 .logo{
-
     width:80%;
 
     display:flex;
-
     justify-content:center;
-
     align-items:center;
 
-    margin:50px 0 45px;
+    margin:10px 0 50px;
 
-    animation:logoFade 1.2s ease;
-
+    animation:logoFade 1.5s ease forwards;
+    opacity:0;
 }
 
 .logo img{
-
     width:680px;
-
     max-width:80vw;
-
     height:auto;
 
     transition:.35s;
 
     filter:drop-shadow(0 15px 35px rgba(17,136,201,.18));
-
 }
 
 .logo img:hover{
-
     transform:scale(1.02);
-
 }
 
 @keyframes logoFade{
 
     from{
-
         opacity:0;
-
         transform:translateY(30px);
-
     }
 
     to{
-
         opacity:1;
-
         transform:translateY(0);
-
     }
 
 }
@@ -201,71 +214,90 @@ body{
 ========================== */
 
 .features{
-
     display:flex;
-
     gap:50px;
 
     margin-top:25px;
 
     font-size:18px;
-
     font-weight:500;
 
+    font-family:'Montserrat', sans-serif;
 }
 
 .features span{
-
     display:flex;
-
     align-items:center;
-
     gap:8px;
-
 }
 
 .features i{
-
     color:#1188c9;
-
 }
 
 /* ==========================
-   BUTTON
+   ENTER ARROW
 ========================== */
 
-.enter-btn{
+.enter-arrow{
 
-    margin-top:150px;
+    position:absolute;
 
-    padding:14px 38px;
+    right:180px;
+    top:55%;
 
-    border:2px solid #1188c9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-    border-radius:40px;
-
-    background:white;
+    font-size:34px;
 
     color:#1188c9;
 
-    font-size:22px;
-
     cursor:pointer;
 
-    transition:.3s;
+    opacity:0;
+
+    transform:translateY(-50%) translateX(30px);
+
+    animation:
+        arrowAppear .6s ease forwards,
+        bounce 2s ease-in-out infinite;
+
+    animation-delay:1.5s,2.2s;
+
+}
+@keyframes arrowAppear{
+
+    from{
+        opacity:0;
+        transform:translateY(-50%) translateX(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(-50%) translateX(0);
+    }
 
 }
 
-.enter-btn:hover{
+.enter-arrow:hover{
 
-    background:#1188c9;
-
-    color:white;
-
-    box-shadow:0 15px 35px rgba(17,136,201,.25);
+    transform:translateY(-50%) translateX(8px);
 
 }
 
+@keyframes bounce{
+
+    0%,100%{
+        transform:translateY(-50%);
+    }
+
+    50%{
+        transform:translateY(-50%) translateX(10px);
+    }
+
+}
 /* ==========================
    LOGIN
 ========================== */
@@ -275,12 +307,11 @@ body{
     position:fixed;
 
     left:50%;
-
     top:120%;
 
     transform:translate(-50%,0);
 
-    transition:.8s;
+    transition:.8s ease;
 
 }
 
@@ -290,19 +321,19 @@ body{
 
     padding:40px;
 
-    background:white;
-
-    border-radius:20px;
+    background:#fff;
 
     border:1px solid #d8eaf5;
+
+    border-radius:20px;
 
     box-shadow:0 20px 50px rgba(0,0,0,.15);
 
     opacity:0;
 
-    transform:translateY(50px);
+    transform:translateY(50px) scale(.95);
 
-    transition:.8s;
+    transition:.8s ease;
 
 }
 
@@ -312,7 +343,11 @@ body{
 
     color:#1188c9;
 
-    margin-bottom:20px;
+    margin-bottom:25px;
+
+    font-size:30px;
+
+    font-weight:600;
 
 }
 
@@ -322,13 +357,13 @@ body{
 
     flex-direction:column;
 
-    gap:15px;
+    gap:18px;
 
 }
 
 .login-box input{
 
-    padding:14px;
+    padding:14px 16px;
 
     border:1px solid #cfdde8;
 
@@ -336,21 +371,49 @@ body{
 
     outline:none;
 
+    font-family:'Montserrat', sans-serif;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.login-box input:focus{
+
+    border-color:#1188c9;
+
+    box-shadow:0 0 0 3px rgba(17,136,201,.15);
+
 }
 
 .login-box button[type="submit"]{
 
     padding:14px;
 
-    background:#1188c9;
-
-    color:white;
-
     border:none;
 
     border-radius:10px;
 
+    background:#1188c9;
+
+    color:#fff;
+
+    font-family:'Montserrat', sans-serif;
+
+    font-size:16px;
+
+    font-weight:600;
+
     cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-box button[type="submit"]:hover{
+
+    background:#0b6fae;
 
 }
 
@@ -362,17 +425,33 @@ body{
 
     color:#1188c9;
 
+    font-family:'Montserrat', sans-serif;
+
+    font-size:15px;
+
     cursor:pointer;
 
-    margin-bottom:15px;
+    margin-bottom:20px;
+
+    transition:.3s;
+
+}
+
+.back-btn:hover{
+
+    color:#0b6fae;
+
+    transform:translateX(-5px);
 
 }
 
 .error{
 
-    color:#cc0000;
+    color:#d32f2f;
 
     text-align:center;
+
+    font-size:14px;
 
     margin-bottom:15px;
 

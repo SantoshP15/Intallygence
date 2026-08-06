@@ -67,7 +67,7 @@ if (logo) {
 // Feature Animation
 // ================================
 
-const features = document.querySelectorAll(".feature");
+const features = document.querySelectorAll(".features span");
 
 features.forEach((feature, index) => {
 
@@ -136,3 +136,32 @@ document.addEventListener("keydown", function (e) {
     }
 
 });
+
+// ================================
+// Blueprint Line Animation
+// ================================
+
+window.addEventListener("load", () => {
+
+    const leftLine = document.querySelector(".left");
+    const rightLine = document.querySelector(".right");
+    const hLeft = document.querySelector(".left-line");
+    const hRight = document.querySelector(".right-line");
+
+    leftLine.style.transform = "scaleY(1)";
+    rightLine.style.transform = "scaleY(1)";
+
+    setTimeout(() => {
+
+        hLeft.style.transform = "scaleX(1)";
+        hRight.style.transform = "scaleX(1)";
+
+    }, 500);
+
+});
+setTimeout(() => {
+
+    document.querySelector(".logo").style.opacity = "1";
+    document.querySelector(".logo").style.transform = "translateY(0)";
+
+}, 1000);
