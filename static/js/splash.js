@@ -1,167 +1,169 @@
+// ================================
+// ELEMENTS
+// ================================
+
 const hero = document.querySelector(".hero");
+
 const loginContainer = document.querySelector(".login-container");
 const loginBox = document.querySelector(".login-box");
 
-const enterBtn = document.getElementById("enterBtn");
+const enterArrow = document.querySelector(".enter-arrow");
 const backBtn = document.getElementById("backBtn");
 
+const logo = document.querySelector(".logo");
+const logoImg = document.querySelector(".logo img");
+
+const features = document.querySelectorAll(".features span");
+
+// Blueprint Lines
+const leftLine = document.querySelector(".left");
+const rightLine = document.querySelector(".right");
+const leftH = document.querySelector(".left-line");
+const rightH = document.querySelector(".right-line");
+
+
 // ================================
-// ENTER
+// PAGE LOAD ANIMATION
 // ================================
 
-enterBtn.addEventListener("click", () => {
+window.addEventListener("DOMContentLoaded", () => {
 
-    // Hero animation
-    hero.style.transform = "translateY(-80px)";
-    hero.style.opacity = "0";
+    // -----------------------
+    // Blueprint Lines
+    // -----------------------
 
-    // Login section
-    loginContainer.style.top = "50%";
-    loginContainer.style.transform = "translate(-50%, -50%)";
+    setTimeout(() => {
 
-    loginBox.style.opacity = "1";
-    loginBox.style.transform = "translateY(0) scale(1)";
+        if (leftLine) leftLine.style.transform = "scaleY(1)";
+        if (rightLine) rightLine.style.transform = "scaleY(1)";
+
+    }, 50);
+
+    setTimeout(() => {
+
+        if (leftH) leftH.style.transform = "scaleX(1)";
+        if (rightH) rightH.style.transform = "scaleX(1)";
+
+    }, 650);
+
+
+    // -----------------------
+    // Features
+    // -----------------------
+
+    features.forEach((feature, index) => {
+
+        feature.style.opacity = "0";
+        feature.style.transform = "translateY(20px)";
+        feature.style.transition = ".6s ease";
+
+        setTimeout(() => {
+
+            feature.style.opacity = "1";
+            feature.style.transform = "translateY(0)";
+
+        }, 1200 + (index * 180));
+
+    });
 
 });
+
+// ================================
+// LOGO HOVER
+// ================================
+
+if (logoImg) {
+
+    logoImg.addEventListener("mouseenter", () => {
+
+        logoImg.style.transform = "scale(1.03)";
+
+    });
+
+    logoImg.addEventListener("mouseleave", () => {
+
+        logoImg.style.transform = "scale(1)";
+
+    });
+
+}
+
+
+// ================================
+// ENTER (Arrow Click)
+// ================================
+if (enterArrow) {
+
+    enterArrow.addEventListener("click", () => {
+
+        // Hide only tagline, features and splash arrow
+        document.querySelector(".topline").style.opacity = "0";
+        // document.querySelector(".features").style.opacity = "0";
+        document.querySelector(".enter-arrow").style.opacity = "0";
+        enterArrow.style.display = "none";
+        // Move logo upward
+        document.querySelector(".logo").style.transform = "translateY(-170px)";
+
+        // Show login
+        if (loginContainer) {
+            loginContainer.classList.add("show");
+        }
+
+    });
+
+}
+
 
 // ================================
 // BACK
 // ================================
 
-backBtn.addEventListener("click", () => {
+if (backBtn) {
 
-    hero.style.transform = "translateY(0)";
-    hero.style.opacity = "1";
+    backBtn.addEventListener("click", () => {
 
-    loginContainer.style.top = "120%";
-    loginContainer.style.transform = "translate(-50%, 0)";
+        hero.style.opacity = "1";
+        hero.style.transform = "translateY(0)";
 
-    loginBox.style.opacity = "0";
-    loginBox.style.transform = "translateY(60px) scale(.92)";
+        if (loginContainer) {
 
-});
+            loginContainer.style.top = "120%";
+            loginContainer.style.transform = "translate(-50%,0)";
 
-// ================================
-// Hover Effect on Logo
-// ================================
+        }
 
-const logo = document.querySelector(".logo img");
+        if (loginBox) {
 
-if (logo) {
+            loginBox.style.opacity = "0";
+            loginBox.style.transform = "translateY(60px) scale(.92)";
 
-    logo.addEventListener("mouseenter", () => {
-
-        logo.style.transform = "scale(1.03)";
-
-    });
-
-    logo.addEventListener("mouseleave", () => {
-
-        logo.style.transform = "scale(1)";
+        }
 
     });
 
 }
 
-// ================================
-// Feature Animation
-// ================================
-
-const features = document.querySelectorAll(".features span");
-
-features.forEach((feature, index) => {
-
-    feature.style.opacity = "0";
-    feature.style.transform = "translateY(20px)";
-
-    setTimeout(() => {
-
-        feature.style.transition = ".6s ease";
-
-        feature.style.opacity = "1";
-        feature.style.transform = "translateY(0)";
-
-    }, 300 + (index * 180));
-
-});
 
 // ================================
-// Button Hover Arrow Animation
+// KEYBOARD SHORTCUTS
 // ================================
 
-const arrow = enterBtn.querySelector("i");
+document.addEventListener("keydown", (e) => {
 
-if (arrow) {
+    if (e.key === "Enter" && enterArrow) {
 
-    enterBtn.addEventListener("mouseenter", () => {
-
-        arrow.style.transform = "translateX(6px)";
-        arrow.style.transition = ".3s";
-
-    });
-
-    enterBtn.addEventListener("mouseleave", () => {
-
-        arrow.style.transform = "translateX(0px)";
-
-    });
-
-}
-
-// ================================
-// Keyboard Shortcut
-// Press Enter to open login
-// ================================
-
-document.addEventListener("keydown", function (e) {
-
-    if (e.key === "Enter" && hero.style.opacity !== "0") {
-
-        enterBtn.click();
+        enterArrow.click();
 
     }
 
 });
 
-// ================================
-// ESC returns to splash
-// ================================
+document.addEventListener("keydown", (e) => {
 
-document.addEventListener("keydown", function (e) {
-
-    if (e.key === "Escape" && hero.style.opacity === "0") {
+    if (e.key === "Escape" && backBtn) {
 
         backBtn.click();
 
     }
 
 });
-
-// ================================
-// Blueprint Line Animation
-// ================================
-
-window.addEventListener("load", () => {
-
-    const leftLine = document.querySelector(".left");
-    const rightLine = document.querySelector(".right");
-    const hLeft = document.querySelector(".left-line");
-    const hRight = document.querySelector(".right-line");
-
-    leftLine.style.transform = "scaleY(1)";
-    rightLine.style.transform = "scaleY(1)";
-
-    setTimeout(() => {
-
-        hLeft.style.transform = "scaleX(1)";
-        hRight.style.transform = "scaleX(1)";
-
-    }, 500);
-
-});
-setTimeout(() => {
-
-    document.querySelector(".logo").style.opacity = "1";
-    document.querySelector(".logo").style.transform = "translateY(0)";
-
-}, 1000);
