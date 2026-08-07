@@ -95,8 +95,10 @@ body{
     justify-content:center;
     align-items:center;
 
-    text-align:center;
     overflow:hidden;
+    text-align:center;
+
+    transition:.8s ease;
 }
 
 /* Background Shape */
@@ -185,8 +187,8 @@ body{
 }
 
 .logo img{
-    width:680px;
-    max-width:80vw;
+    width:clamp(420px,48vw,760px);
+    /* max-width:80vw; */
     height:auto;
 
     transition:.35s;
