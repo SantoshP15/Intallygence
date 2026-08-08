@@ -8,192 +8,425 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Pivot Table Builder</title>
+    <title>InTallygence - Report Generator</title>
 
-       <!-- Flatpickr CSS -->
+    <!-- Flatpickr -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+    <!-- Pivot CSS -->
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/pivot.css') }}">
 
+    <!-- DataTables -->
     <link rel="stylesheet"
-    href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+          href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
 
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables -->
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
 
 </head>
 
+
 <body>
 
-<div class="container">
 
-    <h1>Pivot Table</h1>
+<!-- =====================================
+     BACKGROUND
+===================================== -->
 
-    <div class="builder">
+<div class="background-page">
 
-        <!-- ========================= -->
-        <!-- ROWS -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <h2>Rows</h2>
-
-            <select id="rowField">
-
-                <option value="">Select Field</option>
-
-                {% for column in columns %}
-                    <option value="{{ column }}">{{ column }}</option>
-                {% endfor %}
-
-            </select>
-
-            <button class="add-btn"
-                    onclick="addRow()">
-                Add
-            </button>
-
-            <div class="selected-fields"
-                 id="rows">
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- COLUMNS -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <h2>Columns</h2>
-
-            <select id="columnField">
-
-                <option value="">Select Field</option>
-
-                {% for column in columns %}
-                    <option value="{{ column }}">{{ column }}</option>
-                {% endfor %}
-
-            </select>
-
-            <button class="add-btn"
-                    onclick="addColumn()">
-                Add
-            </button>
-
-            <div class="selected-fields"
-                 id="columns">
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- VALUES -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <h2>Values</h2>
-
-            <select id="valueField">
-
-                <option value="">Select Field</option>
-
-                {% for column in columns %}
-                    <option value="{{ column }}">{{ column }}</option>
-                {% endfor %}
-
-            </select>
-
-            <select id="aggregate">
-
-                <option value="SUM">SUM</option>
-
-                <option value="COUNT">COUNT</option>
-
-                <option value="AVG">AVG</option>
-
-                <option value="MIN">MIN</option>
-
-                <option value="MAX">MAX</option>
-
-            </select>
-
-            <button class="add-btn"
-                    onclick="addValue()">
-                Add
-            </button>
-
-            <div class="selected-fields"
-                 id="values">
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- FILTERS -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <h2>Filters</h2>
-
-            <select id="filterField">
-
-                <option value="">Select Field</option>
-
-                {% for column in columns %}
-                    <option value="{{ column }}">{{ column }}</option>
-                {% endfor %}
-
-            </select>
-
-            <button class="add-btn"
-                    onclick="addFilter()">
-                Add
-            </button>
-
-            <div class="selected-fields"
-                 id="filters">
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- Generate -->
-    <!-- ========================= -->
-
-    <button id="generate">
-
-        Generate Pivot
-
-    </button>
-
-    <!-- ========================= -->
-    <!-- Output -->
-    <!-- ========================= -->
-
-    <div class="table-container">
-
-        <div id="output"></div>
-
-    </div>
+    <div class="background-content"></div>
 
 </div>
+
+
+<!-- =====================================
+     MAIN REPORT PANEL
+===================================== -->
+
+<div class="report-panel">
+
+
+    <!-- =================================
+         HEADER
+    ================================== -->
+
+    <header class="report-header">
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.svg') }}"
+                alt="InTallygence">
+
+        </div>
+
+
+        <div class="report-title">
+
+            Report Generator
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================
+         SAVED REPORTS
+    ================================== -->
+
+    <div class="saved-reports">
+
+        <button id="savedReportsBtn">
+
+            My Saved Reports
+
+        </button>
+
+    </div>
+
+
+    <!-- =================================
+         REPORT BUILDER
+    ================================== -->
+
+    <div class="builder" id="builderArea">
+
+
+        <!-- ===============================
+             ROWS
+        ================================ -->
+
+        <div class="builder-section">
+
+            <label>Rows</label>
+
+            <div class="control-row">
+
+                <select id="rowField">
+
+                    <option value="">
+                        Select Rows
+                    </option>
+
+                    {% for column in columns %}
+
+                    <option value="{{ column }}">
+                        {{ column }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button
+                    class="add-btn"
+                    onclick="addRow()">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <div
+                class="selected-fields"
+                id="rows">
+
+            </div>
+
+        </div>
+
+
+        <!-- ===============================
+             COLUMNS
+        ================================ -->
+
+        <div class="builder-section">
+
+            <label>Columns</label>
+
+            <div class="control-row">
+
+                <select id="columnField">
+
+                    <option value="">
+                        Select Columns
+                    </option>
+
+                    {% for column in columns %}
+
+                    <option value="{{ column }}">
+                        {{ column }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button
+                    class="add-btn"
+                    onclick="addColumn()">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <div
+                class="selected-fields"
+                id="columns">
+
+            </div>
+
+        </div>
+
+
+        <!-- ===============================
+             VALUES
+        ================================ -->
+
+        <div class="builder-section">
+
+            <label>Values</label>
+
+            <div class="control-row">
+
+                <select id="valueField">
+
+                    <option value="">
+                        Select Values
+                    </option>
+
+                    {% for column in columns %}
+
+                    <option value="{{ column }}">
+                        {{ column }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+                <select id="aggregate">
+                    <option value="SUM">SUM</option>
+                    <option value="COUNT">COUNT</option>
+                    <option value="AVG">AVG</option>
+                    <option value="MIN">MIN</option>
+                    <option value="MAX">MAX</option>
+                </select>
+
+                <button
+                    class="add-btn"
+                    onclick="addValue()">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <div class="value-options">
+
+                <select id="aggregate">
+
+                    <option value="SUM">
+                        SUM
+                    </option>
+
+                    <option value="COUNT">
+                        COUNT
+                    </option>
+
+                    <option value="AVG">
+                        AVG
+                    </option>
+
+                    <option value="MIN">
+                        MIN
+                    </option>
+
+                    <option value="MAX">
+                        MAX
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                class="selected-fields"
+                id="values">
+
+            </div>
+
+        </div>
+
+
+        <!-- ===============================
+             FILTERS
+        ================================ -->
+
+        <div class="builder-section">
+
+            <label>Filters</label>
+
+            <div class="control-row">
+
+                <select id="filterField">
+
+                    <option value="">
+                        Select Filters
+                    </option>
+
+                    {% for column in columns %}
+
+                    <option value="{{ column }}">
+                        {{ column }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button
+                    class="add-btn"
+                    onclick="addFilter()">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <div
+                class="selected-fields"
+                id="filters">
+
+            </div>
+
+        </div>
+
+
+        <!-- ===============================
+             GO BUTTON
+        ================================ -->
+
+        <button
+            id="generate"
+            class="go-button">
+
+            go
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================
+         INFORMATION BOX
+    ================================== -->
+
+    <div class="info-area">
+
+        <div class="info-icon">
+
+            !
+
+        </div>
+
+
+        <div class="info-box">
+
+            To generate your custom report, select respective
+            elements from each column, then press '+'
+            to add your selection. You can select multiple
+            choices in each column. Once you are confirmed
+            of your selection then press 'go'. This will
+            generate a report in user friendly tabular
+            (rows & columns like in excel) format.
+            You can also save the report for future use so
+            you need not repeat the selection steps.
+            Once saved, you can visit 'My Saved Reports'
+            to access your previous reports and delete
+            redundant reports.
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================
+         OUTPUT
+    ================================== -->
+
+    <div class="output-area" id="outputArea">
+
+        <div id="output">
+
+            <div class="empty-message">
+
+                [THE ENTIRE MIDDLE BLOCK WILL SLIDE UPWARDS ON REPORT GENERATION]
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================
+         SAVE REPORT
+    ================================== -->
+
+    <div class="save-area">
+
+        <button
+            id="saveReportBtn"
+            class="save-button">
+
+            Save Report
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================
+     DATE COLUMNS
+===================================== -->
+
 <script>
 
-const DATE_COLUMNS = JSON.parse('{{ date_columns | tojson | safe }}');
+const DATE_COLUMNS =
+    JSON.parse('{{ date_columns | tojson | safe }}');
 
 </script>
 
+
+<!-- Flatpickr -->
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+<!-- Pivot JS -->
+
 <script src="{{ url_for('static', filename='js/pivot.js') }}"></script>
+    
 
 </body>
 

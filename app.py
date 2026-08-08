@@ -55,7 +55,7 @@ def login():
 
         session["user"] = user["username"]
 
-        return redirect(url_for("home"))
+        return redirect(url_for("pivot"))
 
     return redirect("/#login")
 
@@ -197,7 +197,7 @@ def filter_values(column):
 from collections import defaultdict
 
 
-@app.route("/date-hierarchy/<path:column>")
+@app.route("/date-hierarchy/<column>")
 def date_hierarchy(column):
 
     if "user" not in session:
@@ -208,14 +208,21 @@ def date_hierarchy(column):
 
     query = f"""
         SELECT DISTINCT
+
             `{column}` AS FullDate,
+
             YEAR(`{column}`) AS YearNo,
+
             MONTH(`{column}`) AS MonthNo,
-            MONTH(`{column}`) AS MonthNo,
+
             MONTHNAME(`{column}`) AS MonthName,
+
             DAY(`{column}`) AS DayNo
+
         FROM SalesMaster
+
         WHERE `{column}` IS NOT NULL
+
         ORDER BY
             YEAR(`{column}`),
             MONTH(`{column}`),
@@ -233,8 +240,12 @@ def date_hierarchy(column):
 
     for row in rows:
 
+        if row["FullDate"] is None:
+            continue
+
         year = str(row["YearNo"])
         month = row["MonthName"]
+
         date = row["FullDate"].strftime("%Y-%m-%d")
 
         if year not in hierarchy:

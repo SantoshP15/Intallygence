@@ -1,3 +1,4 @@
+
 // ================================
 // Global Configuration
 // ================================
@@ -396,8 +397,12 @@ document.body.appendChild(popup);
 
             const rect = summary.getBoundingClientRect();
 
+            popup.style.position = "fixed";
             popup.style.left = rect.left + "px";
-            popup.style.top = (rect.bottom + 5) + "px";
+            popup.style.top = (rect.bottom + 6) + "px";
+            popup.style.width = "260px";
+            popup.style.maxHeight = "400px";
+            popup.style.overflowY = "auto";
 
             popup.style.display =
                 popup.style.display === "block"
@@ -888,7 +893,47 @@ function generatePivot() {
 
         console.log("Response:", data);
 
-        renderTable(data);      
+        // Generate the result table
+        renderTable(data);
+
+        // ==========================
+        // MOVE BUILDER UP
+        // ==========================
+
+        const builderArea =
+            document.getElementById("builderArea");
+
+        if (builderArea) {
+            builderArea.classList.add("report-generated");
+        }
+
+        // ==========================
+        // REMOVE INFO BOX
+        // ==========================
+
+        const infoArea =
+            document.querySelector(".info-area");
+
+     if (infoArea) {
+            infoArea.classList.add("report-generated");
+        }
+
+        // ==========================
+        // SHOW OUTPUT
+        // ==========================
+
+        const outputArea =
+            document.getElementById("outputArea");
+
+        if (outputArea) {
+
+            setTimeout(() => {
+
+                outputArea.classList.add("report-generated");
+
+            }, 250);
+
+        }
 
     })
 
@@ -1259,6 +1304,38 @@ function loadDateHierarchy(field, container, filter)
             container.appendChild(yearDiv);
 
         });
+
+    });
+
+}
+const generateButton = document.getElementById("generate");
+const builderArea = document.getElementById("builderArea");
+const infoArea = document.querySelector(".info-area");
+const outputArea = document.getElementById("outputArea");
+
+
+if (generateButton) {
+
+    generateButton.addEventListener("click", function () {
+
+        // Move builder upward
+        if (builderArea) {
+            builderArea.classList.add("report-generated");
+        }
+
+        // Move information box upward
+        if (infoArea) {
+            infoArea.classList.add("report-generated");
+        }
+
+        // Show result area
+        setTimeout(() => {
+
+            if (outputArea) {
+                outputArea.classList.add("report-generated");
+            }
+
+        }, 400);
 
     });
 

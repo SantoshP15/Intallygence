@@ -111,16 +111,40 @@
     </div>
     <div class="login-links">
 
-            <a href="#">Forgot password</a>
+    <a href="#">Forgot password</a>
 
-            <span>|</span>
+    <span>|</span>
 
-            <a href="#">Sign Up</a>
+    <a href="#">Sign Up</a>
+
+</div>
+
+
+<!-- =================================
+     LOGIN LOADING SCREEN
+================================= -->
+
+<div id="loginLoader" class="login-loader">
+
+    <div class="loader-content">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.svg') }}"
+            alt="InTallygence"
+            class="loader-logo">
+
+        <div class="loader-line">
+            <div class="loader-progress"></div>
+        </div>
+
+        <p>Loading your dashboard...</p>
 
     </div>
 
-    <script src="{{ url_for('static', filename='js/splash.js') }}"></script>
+</div>
 
+
+<script src="{{ url_for('static', filename='js/splash.js') }}"></script>
 </body>
 
 </html>

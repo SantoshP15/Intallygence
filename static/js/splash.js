@@ -167,3 +167,35 @@ document.addEventListener("keydown", (e) => {
     }
 
 });
+const loginForm = document.querySelector(".login-form");
+const loginLoader = document.getElementById("loginLoader");
+
+if (loginForm && loginLoader) {
+
+    loginForm.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        loginLoader.classList.add("show");
+
+        setTimeout(() => {
+
+            loginForm.submit();
+
+        }, 1700);
+
+    });
+
+}
+
+
+// ADD THIS BELOW
+window.addEventListener("pageshow", function () {
+
+    const loginLoader = document.getElementById("loginLoader");
+
+    if (loginLoader) {
+        loginLoader.classList.remove("show");
+    }
+
+});

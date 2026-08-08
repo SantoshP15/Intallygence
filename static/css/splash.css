@@ -584,3 +584,156 @@ body{
     font-size:14px;
 
 }
+/* =========================================
+   LOGIN LOADING SCREEN
+========================================= */
+
+.login-loader {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: #dbedf7;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 999999;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+
+}
+
+
+/* Show loader */
+
+.login-loader.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+/* Loader content */
+
+.loader-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+/* Logo */
+
+.loader-logo {
+
+    width: 280px;
+
+    height: auto;
+
+    margin-bottom: 35px;
+
+    animation: loaderLogo 1.2s ease-in-out infinite alternate;
+
+}
+
+
+/* Logo animation */
+
+@keyframes loaderLogo {
+
+    from {
+        transform: scale(.96);
+        opacity: .65;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+}
+
+
+/* Progress line */
+
+.loader-line {
+
+    width: 280px;
+
+    height: 3px;
+
+    background: rgba(17,136,201,.15);
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+}
+
+
+/* Moving line */
+
+.loader-progress {
+
+    width: 35%;
+
+    height: 100%;
+
+    background: #1188c9;
+
+    border-radius: 10px;
+
+    animation: loadingProgress 1.2s ease-in-out infinite;
+
+}
+
+
+@keyframes loadingProgress {
+
+    0% {
+        transform: translateX(-120%);
+    }
+
+    100% {
+        transform: translateX(400%);
+    }
+
+}
+
+
+/* Loading text */
+
+.loader-content p {
+
+    margin-top: 18px;
+
+    color: #1188c9;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    letter-spacing: .3px;
+
+}
