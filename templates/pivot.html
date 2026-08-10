@@ -191,7 +191,7 @@
 
 
         <!-- ===============================
-             VALUES
+            VALUES
         ================================ -->
 
         <div class="builder-section">
@@ -215,26 +215,7 @@
                     {% endfor %}
 
                 </select>
-                <select id="aggregate">
-                    <option value="SUM">SUM</option>
-                    <option value="COUNT">COUNT</option>
-                    <option value="AVG">AVG</option>
-                    <option value="MIN">MIN</option>
-                    <option value="MAX">MAX</option>
-                </select>
 
-                <button
-                    class="add-btn"
-                    onclick="addValue()">
-
-                    +
-
-                </button>
-
-            </div>
-
-
-            <div class="value-options">
 
                 <select id="aggregate">
 
@@ -260,13 +241,23 @@
 
                 </select>
 
+
+                <button
+                    class="add-btn"
+                    onclick="addValue()">
+
+                    +
+
+                </button>
+
             </div>
 
+
+             <!-- Selected values appear BELOW the controls -->
 
             <div
                 class="selected-fields"
                 id="values">
-
             </div>
 
         </div>

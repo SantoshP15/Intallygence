@@ -27,6 +27,50 @@ function exists(area, field) {
 
 }
 
+// =================================
+// Hide fields already used in
+// Rows / Columns
+// =================================
+
+function updateRowColumnOptions() {
+
+    const rowSelect = document.getElementById("rowField");
+    const columnSelect = document.getElementById("columnField");
+
+    if (!rowSelect || !columnSelect)
+        return;
+
+    const rowFields = pivotConfig.rows;
+    const columnFields = pivotConfig.columns;
+
+
+    // Hide Columns already selected in Rows
+
+    [...columnSelect.options].forEach(option => {
+
+        if (!option.value)
+            return;
+
+        option.hidden =
+            rowFields.includes(option.value);
+
+    });
+
+
+    // Hide Rows already selected in Columns
+
+    [...rowSelect.options].forEach(option => {
+
+        if (!option.value)
+            return;
+
+        option.hidden =
+            columnFields.includes(option.value);
+
+    });
+
+}
+
 // ================================
 // Create Chip
 // ================================
@@ -79,6 +123,8 @@ function renderRows() {
 
                 renderRows();
 
+                updateRowColumnOptions();
+
             })
 
         );
@@ -109,6 +155,8 @@ function addRow() {
 
     select.value = "";
 
+    updateRowColumnOptions();
+
 }
 
 // ================================
@@ -131,6 +179,7 @@ function renderColumns() {
                     pivotConfig.columns.filter(f => f !== field);
 
                 renderColumns();
+                updateRowColumnOptions();
 
             })
 
@@ -161,6 +210,8 @@ function addColumn() {
     renderColumns();
 
     select.value = "";
+
+    updateRowColumnOptions();
 
 }
 // ================================
@@ -287,9 +338,14 @@ function renderFilters() {
 
         // Left section
         const left = document.createElement("div");
-        left.style.flex = "1";
 
-        const title = document.createElement("div");
+        left.style.display = "flex";
+        left.style.alignItems = "center";
+        left.style.gap = "6px";
+        left.style.flex = "0 0 auto";
+
+        const title = document.createElement("span");
+
         title.innerHTML = `<strong>${filter.field}</strong>`;
 
         left.appendChild(title);
@@ -843,6 +899,8 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.addEventListener("click", generatePivot);
     }
 
+    updateRowColumnOptions();
+
 });
 
 function generatePivot() {
@@ -1340,3 +1398,9 @@ if (generateButton) {
     });
 
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    updateRowColumnOptions();
+
+});
