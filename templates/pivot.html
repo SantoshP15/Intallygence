@@ -82,7 +82,7 @@
 
     <div class="saved-reports">
 
-        <button id="savedReportsBtn">
+        <button id="savedReportsBtn" type="button">
 
             My Saved Reports
 
@@ -262,7 +262,49 @@
 
         </div>
 
+        <!-- =================================
+        PERIOD
+        ================================== -->
 
+        <div class="builder-section">
+
+            <label>Period</label>
+
+            <div class="control-row">
+
+                <select id="periodField">
+
+                    <option value="">
+                        Select Period
+                    </option>
+
+                    {% for column in date_columns %}
+
+                    <option value="{{ column }}">
+                        {{ column }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button
+                    class="add-btn"
+                    onclick="addPeriod()">
+
+                    +
+
+                </button>
+
+            </div>
+
+            <div
+                class="selected-fields"
+                id="period">
+
+            </div>
+
+        </div>   
         <!-- ===============================
              FILTERS
         ================================ -->
@@ -279,7 +321,7 @@
                         Select Filters
                     </option>
 
-                    {% for column in columns %}
+                    {% for column in columns if column not in date_columns %}
 
                     <option value="{{ column }}">
                         {{ column }}
@@ -406,6 +448,9 @@
 const DATE_COLUMNS =
     JSON.parse('{{ date_columns | tojson | safe }}');
 
+const COLUMN_TYPES =
+    JSON.parse('{{ column_types | tojson | safe }}');
+
 </script>
 
 
@@ -417,7 +462,6 @@ const DATE_COLUMNS =
 <!-- Pivot JS -->
 
 <script src="{{ url_for('static', filename='js/pivot.js') }}"></script>
-    
 
 </body>
 

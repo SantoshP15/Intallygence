@@ -9,6 +9,7 @@ from flask import (
 )
 import mysql.connector
 import re
+import json
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
@@ -99,10 +100,9 @@ def home():
         total=total
     )
 
-
 @app.route("/pivot")
 def pivot():
-    
+
     if "user" not in session:
         return redirect(url_for("splash"))
 
@@ -116,10 +116,13 @@ def pivot():
     columns = []
 
     date_columns = []
-    MANUAL_DATE_COLUMNS = {
-    "Invoice Date",
-    "Document Date"
-    }
+
+    column_types = {}
+
+    # MANUAL_DATE_COLUMNS = {
+    #     "Invoice Date",
+    #     "Document Date"
+    # }
 
     for col in column_info:
 
@@ -129,15 +132,25 @@ def pivot():
 
         columns.append(column_name)
 
-        if "date" in column_type or "time" in column_type or column_name in MANUAL_DATE_COLUMNS:
+        # Store datatype for JavaScript
+        column_types[column_name] = column_type
 
+        if (
+            "date" in column_type
+            or "time" in column_type
+            # or column_name in MANUAL_DATE_COLUMNS
+        ):
             date_columns.append(column_name)
 
     cursor.close()
     db.close()
 
-    return render_template("pivot.html", columns=columns,date_columns=date_columns)
-
+    return render_template(
+        "pivot.html",
+        columns=columns,
+        date_columns=date_columns,
+        column_types=column_types
+    )
 
 @app.route("/generate-pivot", methods=["POST"])
 def generate_pivot():
@@ -169,6 +182,218 @@ def generate_pivot():
     "data": data
     })
 
+@app.route("/save-report", methods=["POST"])
+def save_report():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Not logged in"
+        }), 401
+
+    data = request.get_json()
+
+    report_name = data.get("report_name", "").strip()
+    config = data.get("config")
+
+    if not report_name:
+        return jsonify({
+            "error": "Report name is required"
+        }), 400
+
+    if not config:
+        return jsonify({
+            "error": "Report configuration is missing"
+        }), 400
+
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+
+    # =================================
+    # CHECK DUPLICATE REPORT NAME
+    # =================================
+
+    cursor.execute(
+        """
+        SELECT id
+        FROM SavedReports
+        WHERE username = %s
+          AND report_name = %s
+        """,
+        (
+            session["user"],
+            report_name
+        )
+    )
+
+    existing = cursor.fetchone()
+
+
+    if existing:
+
+        cursor.close()
+        db.close()
+
+        return jsonify({
+            "success": False,
+            "error": "A report with this name already exists."
+        }), 409
+
+
+    # =================================
+    # SAVE REPORT
+    # =================================
+
+    cursor.execute(
+        """
+        INSERT INTO SavedReports
+        (
+            username,
+            report_name,
+            report_config
+        )
+        VALUES (%s, %s, %s)
+        """,
+        (
+            session["user"],
+            report_name,
+            json.dumps(config)
+        )
+    )
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+
+    return jsonify({
+        "success": True,
+        "message": "Report saved successfully"
+    })
+
+@app.route("/saved-reports")
+def saved_reports():
+
+    if "user" not in session:
+        return jsonify([]), 401
+
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            report_name,
+            created_at
+        FROM SavedReports
+        WHERE username = %s
+        ORDER BY created_at DESC
+        """,
+        (session["user"],)
+    )
+
+
+    reports = cursor.fetchall()
+
+
+    cursor.close()
+    db.close()
+
+
+    return jsonify(reports)
+
+@app.route("/saved-report/<int:report_id>")
+def get_saved_report(report_id):
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Not logged in"
+        }), 401
+
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            report_name,
+            report_config
+        FROM SavedReports
+        WHERE id = %s
+        AND username = %s
+        """,
+        (
+            report_id,
+            session["user"]
+        )
+    )
+
+
+    report = cursor.fetchone()
+
+
+    cursor.close()
+    db.close()
+
+
+    if not report:
+
+        return jsonify({
+            "error": "Report not found"
+        }), 404
+
+
+    report["report_config"] = json.loads(
+        report["report_config"]
+    )
+
+
+    return jsonify(report)
+
+@app.route("/delete-saved-report/<int:report_id>", methods=["DELETE"])
+def delete_saved_report(report_id):
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Not logged in"
+        }), 401
+
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+
+    cursor.execute(
+        """
+        DELETE FROM SavedReports
+        WHERE id = %s
+        AND username = %s
+        """,
+        (
+            report_id,
+            session["user"]
+        )
+    )
+
+
+    db.commit()
+
+
+    cursor.close()
+    db.close()
+
+
+    return jsonify({
+        "success": True
+    })
 @app.route("/filter-values/<path:column>")
 def filter_values(column):
 

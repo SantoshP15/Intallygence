@@ -7,6 +7,7 @@ let pivotConfig = {
     rows: [],
     columns: [],
     values: [],
+    period: null,
     filters: []
 };
 
@@ -494,6 +495,268 @@ document.body.appendChild(popup);
 
 }
 // ================================
+// Render Period
+// ================================
+
+function renderPeriod() {
+
+    const container =
+        document.getElementById("period");
+
+    if (!container)
+        return;
+
+    container.innerHTML = "";
+
+
+    // =================================
+    // FIND DATE FILTER
+    // =================================
+
+    const period = pivotConfig.period;  
+
+
+    if (!period)
+        return;
+
+
+    // =================================
+    // WRAPPER
+    // =================================
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "field-item";
+
+
+    // =================================
+    // SUMMARY
+    // =================================
+
+    const summary =
+        document.createElement("div");
+
+    summary.className =
+        "filter-summary";
+
+
+    // =================================
+    // SHOW PERIOD COLUMN + SELECTION
+    // =================================
+
+    let periodText = "";
+
+    if (period.from && period.to) {
+
+        periodText =
+            period.from +
+            " → " +
+            period.to;
+
+    }
+
+    else if (
+        period.selectedDates &&
+        period.selectedDates.length > 0
+    ) {
+
+        periodText =
+            period.selectedDates.length +
+            " date(s) selected";
+
+    }
+
+    else {
+
+        periodText =
+            "Select Date Range";
+
+    }
+
+
+    // =================================
+    // SHOW COLUMN NAME
+    // =================================
+
+    summary.innerHTML =
+        period.field +
+        "  " +
+        periodText +
+        " ▼";
+
+
+    // =================================
+    // POPUP
+    // =================================
+
+    const popup =
+        document.createElement("div");
+
+    popup.className =
+        "filter-popup";
+
+    popup.style.display =
+        "none";
+
+    popup.style.position =
+        "fixed";
+
+    popup.style.zIndex =
+        "99999";
+
+
+    // =================================
+    // CREATE DATE FILTER
+    // =================================
+
+    createDateFilter(
+        period,
+        popup,
+        summary
+    );
+
+
+    document.body.appendChild(popup);
+
+
+    // =================================
+    // OPEN POPUP
+    // =================================
+
+    summary.onclick = function(e) {
+
+        e.stopPropagation();
+
+        document
+            .querySelectorAll(".filter-popup")
+            .forEach(p => {
+
+                if (p !== popup)
+                    p.style.display = "none";
+
+            });
+
+
+        const rect =
+            summary.getBoundingClientRect();
+
+
+        popup.style.left =
+            rect.left + "px";
+
+        popup.style.top =
+            (rect.bottom + 6) + "px";
+
+        popup.style.width =
+            "260px";
+
+        popup.style.maxHeight =
+            "400px";
+
+        popup.style.overflowY =
+            "auto";
+
+
+        popup.style.display =
+            popup.style.display === "block"
+                ? "none"
+                : "block";
+
+    };
+
+
+    // =================================
+    // REMOVE PERIOD
+    // =================================
+
+    const remove =
+        document.createElement("span");
+
+    remove.className =
+        "remove-btn";
+
+    remove.innerHTML =
+        "&times;";
+
+
+    remove.onclick = function() {
+
+        // Close popup
+        popup.remove();
+
+        // Remove Period
+        pivotConfig.period = null;
+
+        // Reset Period dropdown
+        const periodSelect =
+            document.getElementById("periodField");
+
+        if (periodSelect) {
+            periodSelect.value = "";
+        }
+
+        // Re-render Period
+        renderPeriod();
+
+    };
+
+    wrapper.appendChild(summary);
+
+    wrapper.appendChild(remove);
+
+    container.appendChild(wrapper);
+}
+// ================================
+// Add Period
+// ================================
+
+function addPeriod() {
+
+    const select =
+        document.getElementById("periodField");
+
+    const field =
+        select.value;
+
+
+    if (!field)
+        return;
+
+
+    // Only one Period allowed
+
+    if (pivotConfig.period)
+        return;
+
+
+    // Make sure it is actually
+    // a date column
+
+    if (!DATE_COLUMNS.includes(field))
+        return;
+
+
+    pivotConfig.period = {
+
+        field: field,
+
+        selectedDates: [],
+
+        from: "",
+
+        to: ""
+
+    };
+
+
+    renderPeriod();
+
+
+    select.value = "";
+}
+// ================================
 // Add Filter
 // ================================
 
@@ -698,7 +961,23 @@ function loadFilterValues(field, container, filter, summary, popup) {
 
 function getFilters() {
 
-    return pivotConfig.filters
+    let allFilters = [
+        ...pivotConfig.filters
+    ];
+
+
+    // Add Period as a filter
+
+    if (pivotConfig.period) {
+
+        allFilters.push(
+            pivotConfig.period
+        );
+
+    }
+
+
+    return allFilters
         .filter(f => {
 
             // Date Hierarchy
@@ -849,8 +1128,14 @@ function renderTable(response) {
 // Grand Total Row
 // =======================================
 
+
+
+    const tfoot = document.createElement("tfoot");
+
     const totalRow = document.createElement("tr");
+
     totalRow.className = "grand-total";
+
 
     columns.forEach((col, index) => {
 
@@ -858,14 +1143,15 @@ function renderTable(response) {
 
         if (index === 0) {
 
-            td.innerHTML = "<strong>Grand Total</strong>";
+            td.innerHTML =
+                "<strong>Grand Total</strong>";
 
         }
         else if (totals[col] !== 0) {
 
             td.innerHTML =
-                "<strong>" +
-                totals[col].toLocaleString("en-IN") +
+               "<strong>" +
+               totals[col].toLocaleString("en-IN") +
                 "</strong>";
 
             td.style.textAlign = "right";
@@ -876,14 +1162,29 @@ function renderTable(response) {
 
     });
 
-    tbody.appendChild(totalRow);
+
+    tfoot.appendChild(totalRow);
+
+
+    // Add body first
     table.appendChild(tbody);
+
+    // Add Grand Total separately
+    table.appendChild(tfoot);
+
     output.appendChild(table);
+
+
     new DataTable('#pivotTable', {
+
         ordering: true,
+
         searching: true,
+
         paging: true,
-        pageLength: 25
+
+        pageLength: 10
+
     });
 
 }
@@ -964,6 +1265,12 @@ function generatePivot() {
         if (builderArea) {
             builderArea.classList.add("report-generated");
         }
+        const saveArea =
+        document.querySelector(".save-area");
+
+        if (saveArea) {
+        saveArea.classList.add("report-generated");
+}
 
         // ==========================
         // REMOVE INFO BOX
@@ -1140,7 +1447,7 @@ function createDateFilter(filter, popup, summary) {
             filter.to = toInput.value;
 
             summary.innerHTML =
-                filter.from + " → " + filter.to;
+                filter.field + "  " + filter.from + " → " + filter.to;
 
         }
     // Otherwise keep hierarchy selection
@@ -1152,7 +1459,7 @@ function createDateFilter(filter, popup, summary) {
             if (filter.selectedDates.length > 0) {
 
                 summary.innerHTML =
-                    filter.selectedDates.length + " date(s) selected";
+                    filter.field + "  " +filter.selectedDates.length + " date(s) selected";
 
             } else {
 
@@ -1404,3 +1711,360 @@ document.addEventListener("DOMContentLoaded", function () {
     updateRowColumnOptions();
 
 });
+function updateAggregationOptions() {
+
+    const valueField = document.getElementById("valueField");
+    const aggregate = document.getElementById("aggregate");
+
+    if (!valueField || !aggregate)
+        return;
+
+    const field = valueField.value;
+
+    aggregate.innerHTML = "";
+
+    if (!field) {
+        return;
+    }
+
+    const type = (COLUMN_TYPES[field] || "").toLowerCase();
+
+    const numericTypes = [
+        "int",
+        "tinyint",
+        "smallint",
+        "mediumint",
+        "bigint",
+        "decimal",
+        "numeric",
+        "float",
+        "double",
+        "real"
+    ];
+
+    const isNumeric = numericTypes.some(
+        t => type.startsWith(t)
+    );
+
+    if (isNumeric) {
+
+        ["SUM", "COUNT", "AVG", "MIN", "MAX"]
+            .forEach(agg => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = agg;
+                option.textContent = agg;
+
+                aggregate.appendChild(option);
+
+            });
+
+    } else {
+
+        const option =
+            document.createElement("option");
+
+        option.value = "COUNT";
+        option.textContent = "COUNT";
+
+        aggregate.appendChild(option);
+
+    }
+}
+document
+    .getElementById("valueField")
+    .addEventListener(
+        "change",
+        updateAggregationOptions
+    );
+// =======================================
+// SAVE REPORT
+// =======================================
+
+const saveReportBtn =
+    document.getElementById("saveReportBtn");
+
+
+if (saveReportBtn) {
+
+    saveReportBtn.addEventListener(
+        "click",
+        saveCurrentReport
+    );
+
+}
+
+
+function saveCurrentReport() {
+
+    // -----------------------------------
+    // Make sure something was selected
+    // -----------------------------------
+
+    if (
+        pivotConfig.rows.length === 0 &&
+        pivotConfig.columns.length === 0 &&
+        pivotConfig.values.length === 0
+    ) {
+
+        alert(
+            "Please create a report before saving."
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------
+    // Ask for report name
+    // -----------------------------------
+
+    const reportName =
+        prompt("Enter a name for this report:");
+
+
+    if (!reportName)
+        return;
+
+
+    // -----------------------------------
+    // Send to Flask
+    // -----------------------------------
+
+    fetch("/save-report", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            report_name:
+                reportName.trim(),
+
+            config:
+                pivotConfig
+
+        })
+
+    })
+
+
+    .then(response =>
+        response.json()
+    )
+
+
+    .then(data => {
+
+        if (data.success) {
+
+            alert(
+                "Report saved successfully."
+            );
+
+        }
+        else {
+
+            alert(
+                data.error ||
+                "Could not save report."
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Error saving report."
+        );
+
+    });
+
+}
+
+// =======================================
+// MY SAVED REPORTS
+// =======================================
+
+const savedReportsBtn =
+    document.getElementById(
+        "savedReportsBtn"
+    );
+
+
+if (savedReportsBtn) {
+
+    savedReportsBtn.addEventListener(
+        "click",
+        loadSavedReports
+    );
+
+}
+
+
+function loadSavedReports() {
+
+    fetch("/saved-reports")
+
+        .then(response =>
+            response.json()
+        )
+
+        .then(reports => {
+
+            if (!reports.length) {
+
+                alert(
+                    "You don't have any saved reports."
+                );
+
+                return;
+            }
+
+
+            let message =
+                "MY SAVED REPORTS\n\n";
+
+
+            reports.forEach(
+                (report, index) => {
+
+                    message +=
+                        `${index + 1}. ` +
+                        `${report.report_name}\n`;
+
+                }
+            );
+
+
+            const choice =
+                prompt(
+                    message +
+                    "\nEnter report number to open:"
+                );
+
+
+            if (!choice)
+                return;
+
+
+            const index =
+                parseInt(choice) - 1;
+
+
+            if (
+                index < 0 ||
+                index >= reports.length
+            ) {
+
+                alert(
+                    "Invalid report number."
+                );
+
+                return;
+            }
+
+
+            openSavedReport(
+                reports[index].id
+            );
+
+        })
+
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert(
+                "Error loading saved reports."
+            );
+
+        });
+
+}
+function openSavedReport(reportId) {
+
+    fetch(`/saved-report/${reportId}`)
+
+        .then(response => response.json())
+
+        .then(report => {
+
+            if (report.error) {
+                alert(report.error);
+                return;
+            }
+
+
+            // =================================
+            // RESTORE SAVED CONFIGURATION
+            // =================================
+
+            pivotConfig = report.report_config;
+
+
+            // Make sure period exists
+            if (!pivotConfig.period) {
+                pivotConfig.period = null;
+            }
+
+
+            // =================================
+            // RENDER ALL BUILDERS
+            // =================================
+
+            renderRows();
+
+            renderColumns();
+
+            renderValues();
+
+            renderPeriod();
+
+            renderFilters();
+
+
+            // =================================
+            // RESTORE PERIOD DROPDOWN
+            // =================================
+
+            const periodSelect =
+                document.getElementById("periodField");
+
+            if (periodSelect) {
+
+                periodSelect.value =
+                    pivotConfig.period
+                        ? pivotConfig.period.field
+                        : "";
+
+            }
+
+
+            // =================================
+            // GENERATE REPORT
+            // =================================
+
+            generatePivot();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Error opening saved report.");
+
+        });
+}
