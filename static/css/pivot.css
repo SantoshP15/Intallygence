@@ -68,7 +68,7 @@ body {
 
     margin: 0;
 
-    background:#dbedf7;
+    background:#f7f7db;
 
     padding-bottom: 20px;
 
@@ -186,7 +186,8 @@ body {
 ========================================================= */
 
 .builder {
-    width: calc(100% - 100px);
+    width: calc(100% - 80px);
+    max-width: 1400px;
 
     margin: 0 auto;
 
@@ -200,16 +201,20 @@ body {
         minmax(0, 1fr)
         30px;
 
-    column-gap: 28px;
+    column-gap: clamp(12px, 2vw, 28px);
 
     align-items: start;
 
     box-sizing: border-box;
 
-    /* vertical position */
     position: relative;
-    top: 40%;
-    transform: translateY(-50%);
+
+    /* Responsive vertical positioning */
+    margin-top: clamp(120px, 30vh, 260px);
+
+    transform: translateY(0);
+
+    transition: transform 0.7s ease;
 }
 
 /* =========================================================
@@ -466,29 +471,25 @@ body {
 ========================================================= */
 
 .go-button {
-
-    width: 25px;
-
-    height: 17px;
+    width: 28px;
+    height: 19px;
 
     padding: 0;
 
     border: none;
-
     border-radius: 4px;
 
     background: #0798d4;
-
     color: white;
 
     font-family: inherit;
-
     font-size: 10px;
-
     font-weight: 600;
 
     cursor: pointer;
+
     align-self: center;
+
     transform: translateY(-5px);
 }
 
@@ -505,25 +506,22 @@ body {
 ========================================================= */
 
 .info-area {
-
     display: flex;
 
     align-items: flex-start;
 
     gap: 5px;
 
-    margin:
+    width: calc(100% - 80px);
+    max-width: 1400px;
 
-        26px
+    margin: 35px auto 0;
 
-        42px
-
-        0
-
-        22px;
     position: relative;
-    top: 45%;
-    transform: translateY(-50%);
+
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
 }
 
 
@@ -563,28 +561,23 @@ body {
 ========================================================= */
 
 .info-box {
-
     width: 100%;
-
-    min-height: 150px;
+    min-height: clamp(120px, 15vh, 150px);
 
     padding: 8px;
 
-    border:
-
-        1px solid #0798d4;
-
+    border: 1px solid #0798d4;
     border-radius: 11px;
 
     color: #0798d4;
 
-    font-size: 18px;
+    font-size: clamp(13px, 1.2vw, 18px);
 
     line-height: 1.3;
 
     font-weight: 400;
-    
 
+    box-sizing: border-box;
 }
 
 /* =========================================================
@@ -595,7 +588,7 @@ body {
 
     margin:
 
-        70px
+        5px
 
         52px
 
@@ -654,7 +647,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     
-    transform: translateY(300px);
+    transform: translateY(-70px);
 }
 
 .save-button:hover {
@@ -663,7 +656,7 @@ body {
 
 }
 .save-area.report-generated {
-    transform: translateY(-820px);
+    transform: translateY(clamp(-900px, -80vh, -600px));
 }
 
 /* =========================================================
@@ -1272,16 +1265,18 @@ body {
 /* =========================================
    REPORT GENERATION
 ========================================= */
+
 .builder {
     transition: transform 0.7s ease;
 }
 
 .builder.report-generated {
-    transform: translateY(-250px);
+    transform: translateY(clamp(-300px, -25vh, -150px));
 }
 
+
 /* =========================================
-   INFO BOX → RESULT
+   INFO BOX
 ========================================= */
 
 .info-area {
@@ -1294,32 +1289,43 @@ body {
     opacity: 0;
     visibility: hidden;
 
-    /* KEEP THE SPACE */
-    height: auto;
+    height: 0;
     min-height: 0;
+
+    margin: 0;
+    padding: 0;
 
     overflow: hidden;
 }
 
 
 /* =========================================
-   RESULT AREA
+   OUTPUT
 ========================================= */
 
 .output-area {
-    margin-top: 30px;
+    margin: 5px 52px 0;
 
     opacity: 0;
     visibility: hidden;
 
-    transition: opacity 0.6s ease;
+    transition:
+        opacity 0.6s ease,
+        transform 0.7s ease;
 }
 
 .output-area.report-generated {
     opacity: 1;
     visibility: visible;
 
-    margin-top: 30px;
+    /*
+       Move output up together with builder
+    */
+    transform: translateY(
+        clamp(-100px, -25vh, -150px)
+    );
+
+    margin-top: 5px;
 }
 
 
@@ -1436,7 +1442,7 @@ body {
 
     box-sizing: border-box;
 
-    padding: 10px 18px 0 18px;
+    padding: 8px 18px 0;
 
     position: relative;
 
@@ -1459,4 +1465,50 @@ body {
     cursor: pointer;
 
     white-space: nowrap;
+}
+/* =========================================
+   REPORT TYPE BUILDERS
+========================================= */
+
+.report-types {
+    width: calc(100% - 80px);
+    max-width: 1400px;
+
+    margin: 25px auto 0;
+
+    display: flex;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+.report-type {
+    min-width: 130px;
+    padding: 8px 20px;
+
+    border: 1px solid #0798d4;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #0798d4;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.report-type:hover {
+    background: #087fae;
+    color: white;
+}
+
+.report-type.active {
+    background: #0798d4;
+    color: white;
 }

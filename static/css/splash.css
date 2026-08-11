@@ -110,13 +110,13 @@ body{
 .bg-shape{
     position:absolute;
 
-    left:48.5%;
+    left:50%;
     top:50%;
 
-    width:1700px;
+    width:min(1700px, 90vw);
     height:auto;
 
-    transform:translate(-50%,-50%);
+    transform:translate(-50%, -50%);
 
     opacity:1;
 
@@ -124,7 +124,6 @@ body{
 
     pointer-events:none;
 }
-
 .topline,
 .logo,
 .features,
@@ -187,8 +186,7 @@ body{
 }
 
 .logo img{
-    width:clamp(420px,48vw,760px);
-    /* max-width:80vw; */
+    width:clamp(320px, 42vw, 760px);
     height:auto;
 
     transition:.35s;
@@ -245,17 +243,16 @@ body{
 ========================== */
 
 .enter-arrow{
-
     position:absolute;
 
-    right:180px;
+    right:clamp(30px, 9vw, 180px);
     top:55%;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    font-size:34px;
+    font-size:clamp(26px, 2.2vw, 34px);
 
     color:#1188c9;
 
@@ -270,7 +267,6 @@ body{
         bounce 2s ease-in-out infinite;
 
     animation-delay:1.5s,2.2s;
-
 }
 @keyframes arrowAppear{
 
@@ -308,7 +304,6 @@ body{
 ========================== */
 
 .login-container{
-
     position:fixed;
 
     left:50%;
@@ -316,7 +311,7 @@ body{
 
     transform:translate(-50%, -8px);
 
-    width:1200px;
+    width:min(1200px, 90vw);
     height:120px;
 
     opacity:0;
@@ -325,7 +320,6 @@ body{
     transition:.8s ease;
 
     z-index:20;
-
 }
 
 .login-container.show{
@@ -355,14 +349,12 @@ body{
 ========================== */
 
 .username-group{
-
     position:absolute;
 
-    left:180px;
+    left:clamp(20px, 15vw, 180px);
     top:20px;
 
-    width:320px;
-
+    width:clamp(200px, 27vw, 320px);
 }
 
 .username-group input{
@@ -407,14 +399,12 @@ body{
 ========================== */
 
 .password-group{
-
     position:absolute;
 
-    right:150px;
+    right:clamp(20px, 12.5vw, 150px);
     top:20px;
 
-    width:320px;
-
+    width:clamp(200px, 27vw, 320px);
 }
 
 .password-group input{
@@ -496,10 +486,9 @@ body{
 ========================== */
 
 .login-arrow{
-
     position:absolute;
 
-    right:70px;
+    right:clamp(15px, 5vw, 70px);
     top:20px;
 
     background:none;
@@ -507,12 +496,11 @@ body{
 
     color:#1188c9;
 
-    font-size:42px;
+    font-size:clamp(30px, 2.5vw, 42px);
 
     cursor:pointer;
 
     transition:.3s;
-
 }
 
 .login-arrow:hover{
@@ -735,5 +723,181 @@ body{
     font-weight: 500;
 
     letter-spacing: .3px;
+
+}
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Laptop / smaller desktop */
+@media (max-width: 1400px){
+
+    .topline{
+        top:90px;
+        font-size:20px;
+    }
+
+    .features{
+        gap:30px;
+        font-size:16px;
+    }
+
+    .left{
+        left:50px;
+    }
+
+    .right{
+        right:80px;
+    }
+
+    .login-container{
+        width:92vw;
+    }
+
+}
+
+
+/* Laptop */
+@media (max-width: 1100px){
+
+    .topline{
+        top:80px;
+        font-size:18px;
+    }
+
+    .logo{
+        margin:10px 0 35px;
+    }
+
+    .logo img{
+        width:clamp(300px, 50vw, 600px);
+    }
+
+    .features{
+        gap:20px;
+        font-size:15px;
+    }
+
+    .login-container{
+        width:94vw;
+    }
+
+    .username-group{
+        left:8%;
+        width:30%;
+    }
+
+    .password-group{
+        right:8%;
+        width:30%;
+    }
+
+    .login-arrow{
+        right:2%;
+    }
+
+    .enter-arrow{
+        right:4%;
+    }
+
+}
+
+
+/* Small laptop / tablet */
+@media (max-width: 800px){
+
+    body{
+        overflow:hidden;
+    }
+
+    .topline{
+        top:70px;
+        width:90%;
+        font-size:16px;
+        line-height:1.4;
+    }
+
+    .logo img{
+        width:65vw;
+    }
+
+    .features{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:12px 20px;
+        width:90%;
+        font-size:14px;
+    }
+
+    .enter-arrow{
+        right:25px;
+        font-size:28px;
+    }
+
+    .login-container{
+        width:90vw;
+        height:auto;
+    }
+
+    .login-form{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:25px;
+    }
+
+    .username-group,
+    .password-group{
+        position:relative;
+
+        left:auto;
+        right:auto;
+        top:auto;
+
+        width:min(400px, 80vw);
+    }
+
+    .login-arrow{
+        position:relative;
+
+        right:auto;
+        top:auto;
+
+        margin-top:5px;
+    }
+
+}
+
+
+/* Very small screen */
+@media (max-width: 500px){
+
+    .topline{
+        top:50px;
+        font-size:14px;
+    }
+
+    .logo img{
+        width:75vw;
+    }
+
+    .features{
+        font-size:12px;
+    }
+
+    .features span{
+        gap:5px;
+    }
+
+    .enter-arrow{
+        right:15px;
+        font-size:24px;
+    }
+
+    .login-links{
+        left:20px;
+        bottom:20px;
+        font-size:14px;
+    }
 
 }

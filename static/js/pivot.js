@@ -2068,3 +2068,26 @@ function openSavedReport(reportId) {
 
         });
 }
+document.querySelectorAll(".report-type").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        // Remove active from all
+        document
+            .querySelectorAll(".report-type")
+            .forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+        // Activate clicked button
+        this.classList.add("active");
+
+        // Get selected report type
+        const reportType =
+            this.dataset.type;
+
+        console.log("Selected Report:", reportType);
+
+    });
+
+});
