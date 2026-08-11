@@ -1204,6 +1204,81 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+function renderPivotTable(result) {
+
+    const output =
+        document.getElementById("output");
+
+    if (!output)
+        return;
+
+    output.innerHTML = "";
+
+    const table =
+        document.createElement("table");
+
+    table.className =
+        "pivot-result-table";
+
+    // ================================
+    // HEADER
+    // ================================
+
+    const thead =
+        document.createElement("thead");
+
+    const headerRow =
+        document.createElement("tr");
+
+    result.columns.forEach(column => {
+
+        const th =
+            document.createElement("th");
+
+        th.textContent = column;
+
+        headerRow.appendChild(th);
+
+    });
+
+    thead.appendChild(headerRow);
+
+    table.appendChild(thead);
+
+
+    // ================================
+    // BODY
+    // ================================
+
+    const tbody =
+        document.createElement("tbody");
+
+    result.data.forEach(row => {
+
+        const tr =
+            document.createElement("tr");
+
+        result.columns.forEach(column => {
+
+            const td =
+                document.createElement("td");
+
+            td.textContent =
+                row[column] ?? "";
+
+            tr.appendChild(td);
+
+        });
+
+        tbody.appendChild(tr);
+
+    });
+
+    table.appendChild(tbody);
+
+    output.appendChild(table);
+}
+
 function generatePivot() {
 
     console.log("Generate Clicked");
@@ -1218,42 +1293,68 @@ function generatePivot() {
 
     }
 
+    const layoutType =
+    document.getElementById("layoutType").value;
+
     const requestData = {
 
-    rows: pivotConfig.rows,
+        rows: pivotConfig.rows,
 
-    columns: pivotConfig.columns,
+        columns: pivotConfig.columns,
 
-    values: pivotConfig.values,
+        values: pivotConfig.values,
 
-    filters: getFilters()
+        filters: getFilters(),
 
+        layout: layoutType
     };
     console.log(requestData);
     console.log(JSON.stringify(requestData, null, 2));
 
     fetch("/generate-pivot", {
 
-    method: "POST",
+        method: "POST",
 
-    headers: {
-        "Content-Type": "application/json"
-    },
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-    body: JSON.stringify(requestData)
+        body: JSON.stringify(requestData)
 
     })
+    .then(async response => {
 
-    
+        const data =
+            await response.json();
 
-    .then(response => response.json())
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Server error while generating pivot"
+            );
+
+        }
+
+        return data;
+
+    })
 
     .then(data => {
 
         console.log("Response:", data);
 
         // Generate the result table
-        renderTable(data);
+        // Generate the result table
+        if (data.layout === "pivot") {
+
+            renderPivotTable(data);
+
+        } else {
+
+            renderTable(data);
+
+        }
 
         // ==========================
         // MOVE BUILDER UP
@@ -1304,9 +1405,15 @@ function generatePivot() {
 
     .catch(error => {
 
-        console.error(error);
+        console.error(
+            "Generate Pivot Error:",
+            error
+        );
 
-        alert("Error generating pivot");
+        alert(
+            "Error generating pivot:\n\n" +
+            error.message
+        );
 
     });
 
@@ -2091,3 +2198,1398 @@ document.querySelectorAll(".report-type").forEach(button => {
     });
 
 });
+function renderPivotTable(result) {
+
+    const output = document.getElementById("output");
+
+    if (!output)
+        return;
+
+    output.innerHTML = "";
+
+    if (!result.data || result.data.length === 0) {
+
+        output.innerHTML =
+            "<div class='no-data'>No Data Found</div>";
+
+        return;
+    }
+
+
+    // ==========================================
+    // CONFIG
+    // ==========================================
+
+    const rowFields =
+        pivotConfig.rows || [];
+
+    const columnFields =
+        pivotConfig.columns || [];
+
+    const valueFields =
+        pivotConfig.values || [];
+
+
+    const resultColumns =
+        result.columns || [];
+
+
+    // ==========================================
+    // ROW COLUMNS
+    // ==========================================
+
+    const rowColumns =
+        resultColumns.filter(
+            column =>
+                rowFields.includes(column)
+        );
+
+
+    // ==========================================
+    // VALUE / PIVOT COLUMNS
+    // ==========================================
+
+    const valueColumns =
+        resultColumns.filter(
+            column =>
+                !rowColumns.includes(column)
+        );
+
+
+    // ==========================================
+    // PARSE VALUE COLUMNS
+    // ==========================================
+
+    const parsedColumns =
+        valueColumns.map(column => {
+
+            // ----------------------------------
+            // PIVOT MODE
+            // ----------------------------------
+
+            if (column.startsWith("PV__")) {
+
+                const parts =
+                    column.split("__");
+
+                return {
+
+                    original: column,
+
+                    isPivot: true,
+
+                    pivotValue:
+                        parts[1] || "",
+
+                    aggregate:
+                        parts[2] || "",
+
+                    field:
+                        parts.slice(3).join("__")
+
+                };
+
+            }
+
+
+            // ----------------------------------
+            // NO COLUMN MODE
+            // ----------------------------------
+
+            const match =
+                column.match(
+                    /^(SUM|COUNT|AVG|MIN|MAX)_(.+)$/
+                );
+
+
+            if (match) {
+
+                return {
+
+                    original: column,
+
+                    isPivot: false,
+
+                    pivotValue: "",
+
+                    aggregate:
+                        match[1],
+
+                    field:
+                        match[2]
+
+                };
+
+            }
+
+
+            return {
+
+                original: column,
+
+                isPivot: false,
+
+                pivotValue: "",
+
+                aggregate: "",
+
+                field: column
+
+            };
+
+        });
+
+
+    // ==========================================
+    // PIVOT GROUPS
+    // ==========================================
+
+    const pivotGroups = [];
+
+
+    if (columnFields.length > 0) {
+
+        parsedColumns.forEach(item => {
+
+            let group =
+                pivotGroups.find(
+                    g =>
+                        g.label === item.pivotValue
+                );
+
+
+            if (!group) {
+
+                group = {
+
+                    label:
+                        item.pivotValue,
+
+                    columns: []
+
+                };
+
+                pivotGroups.push(group);
+
+            }
+
+
+            group.columns.push(item);
+
+        });
+
+    }
+
+
+    // ==========================================
+    // TABLE
+    // ==========================================
+
+    const table =
+        document.createElement("table");
+
+    table.className =
+        "excel-pivot-table";
+
+
+    // ==========================================
+    // HEADER
+    // ==========================================
+
+    const thead =
+        document.createElement("thead");
+
+
+    // ==========================================
+    // HEADER ROW 1
+    // ==========================================
+
+    const headerRow1 =
+        document.createElement("tr");
+
+
+    // ------------------------------------------
+    // ROW HEADERS
+    // ------------------------------------------
+
+    rowColumns.forEach(column => {
+
+        const th =
+            document.createElement("th");
+
+        th.textContent =
+            column;
+
+        th.rowSpan =
+            columnFields.length > 0
+                ? 2
+                : 1;
+
+        headerRow1.appendChild(th);
+
+    });
+
+
+    // ------------------------------------------
+    // PIVOT COLUMNS
+    // ------------------------------------------
+
+    if (columnFields.length > 0) {
+
+        pivotGroups.forEach(group => {
+
+            const th =
+                document.createElement("th");
+
+            th.textContent =
+                formatPivotHeader(
+                    group.label
+                );
+
+            th.colSpan =
+                group.columns.length;
+
+            th.className =
+                "pivot-column-group";
+
+            headerRow1.appendChild(th);
+
+        });
+
+    }
+
+
+    // ------------------------------------------
+    // NORMAL VALUE COLUMNS
+    // ------------------------------------------
+
+    else {
+
+        parsedColumns.forEach(item => {
+
+            const th =
+                document.createElement("th");
+
+            th.textContent =
+                formatValueHeader(item);
+
+            headerRow1.appendChild(th);
+
+        });
+
+    }
+
+
+    thead.appendChild(
+        headerRow1
+    );
+
+
+    // ==========================================
+    // HEADER ROW 2
+    // ==========================================
+
+    if (columnFields.length > 0) {
+
+        const headerRow2 =
+            document.createElement("tr");
+
+
+        parsedColumns.forEach(item => {
+
+            const th =
+                document.createElement("th");
+
+            th.textContent =
+                formatValueHeader(item);
+
+            headerRow2.appendChild(th);
+
+        });
+
+
+        thead.appendChild(
+            headerRow2
+        );
+
+    }
+
+
+    table.appendChild(
+        thead
+    );
+
+
+    // ==========================================
+    // TBODY
+    // ==========================================
+
+    const tbody =
+        document.createElement("tbody");
+
+
+    // ==========================================
+    // GRAND TOTAL STORAGE
+    // ==========================================
+
+    const grandTotals = {};
+
+    parsedColumns.forEach(item => {
+
+        grandTotals[item.original] = 0;
+
+    });
+
+
+    // ==========================================
+    // RENDER MULTI-ROW HIERARCHY
+    // ==========================================
+
+    renderHierarchy(
+        result.data,
+        rowColumns,
+        parsedColumns,
+        tbody,
+        grandTotals,
+        0
+    );
+
+
+    table.appendChild(
+        tbody
+    );
+
+
+    // ==========================================
+    // GRAND TOTAL
+    // ==========================================
+
+    const tfoot =
+        document.createElement("tfoot");
+
+
+    const grandRow =
+        document.createElement("tr");
+
+    grandRow.className =
+        "pivot-grand-total-row";
+
+
+    const grandLabel =
+        document.createElement("td");
+
+    grandLabel.textContent =
+        "Grand Total";
+
+    grandLabel.colSpan =
+        Math.max(
+            rowColumns.length,
+            1
+        );
+
+    grandRow.appendChild(
+        grandLabel
+    );
+
+
+    let overallTotal = 0;
+
+
+    parsedColumns.forEach(item => {
+
+        const td =
+            document.createElement("td");
+
+
+        const total =
+            grandTotals[item.original] || 0;
+
+
+        td.textContent =
+            formatNumber(total);
+
+        td.style.textAlign =
+            "right";
+
+
+        overallTotal +=
+            total;
+
+
+        grandRow.appendChild(td);
+
+    });
+
+
+    tfoot.appendChild(
+        grandRow
+    );
+
+
+    table.appendChild(
+        tfoot
+    );
+
+
+    output.appendChild(
+        table
+    );
+
+}
+function renderHierarchy(
+    data,
+    rowColumns,
+    parsedColumns,
+    tbody,
+    grandTotals
+) {
+
+    renderGroupLevel(
+        data,
+        rowColumns,
+        parsedColumns,
+        tbody,
+        grandTotals,
+        0
+    );
+
+}
+function renderGroupLevel(
+    data,
+    rowColumns,
+    parsedColumns,
+    tbody,
+    grandTotals,
+    level,
+    parentGroupId = null
+) {
+
+    const field =
+        rowColumns[level];
+
+    // ==========================================
+    // GROUP DATA
+    // ==========================================
+
+    const groups = new Map();
+
+    data.forEach(row => {
+
+        const key =
+            row[field] ?? "(Blank)";
+
+        if (!groups.has(key)) {
+            groups.set(key, []);
+        }
+
+        groups.get(key).push(row);
+
+    });
+
+
+    // ==========================================
+    // PROCESS EACH GROUP
+    // ==========================================
+
+    groups.forEach(
+        (groupRows, groupValue) => {
+
+            const groupId =
+                "pivot-group-" +
+                level +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2, 10);
+
+
+            // ======================================
+            // LAST LEVEL = CUSTOMER
+            // ======================================
+
+            if (
+                level ===
+                rowColumns.length - 1
+            ) {
+
+                // ----------------------------------
+                // CUSTOMER ROWS
+                // ----------------------------------
+
+                groupRows.forEach(row => {
+
+                    const tr =
+                        createLeafRow(
+                            row,
+                            rowColumns,
+                            parsedColumns,
+                            grandTotals
+                        );
+
+                    if (parentGroupId) {
+
+                        tr.dataset.parentGroup =
+                            parentGroupId;
+
+                    }
+
+                    tbody.appendChild(tr);
+
+                });
+
+
+                // ----------------------------------
+                // CUSTOMER SUBTOTAL
+                // ----------------------------------
+
+                const subtotal =
+                    createGroupSubtotal(
+                        groupRows,
+                        groupValue,
+                        rowColumns,
+                        parsedColumns,
+                        level
+                    );
+
+                if (parentGroupId) {
+
+                    subtotal.dataset.parentGroup =
+                        parentGroupId;
+
+                }
+
+                tbody.appendChild(
+                    subtotal
+                );
+
+                return;
+            }
+
+
+            // ======================================
+            // CREATE PARENT ROW
+            // ======================================
+
+            const parentRow =
+                document.createElement("tr");
+
+            parentRow.className =
+                "pivot-parent-row";
+
+            parentRow.dataset.groupId =
+                groupId;
+
+            if (parentGroupId) {
+
+                parentRow.dataset.parentGroup =
+                    parentGroupId;
+
+            }
+
+
+            // ======================================
+            // EMPTY CELLS BEFORE CURRENT LEVEL
+            // ======================================
+
+            for (let i = 0; i < level; i++) {
+
+                const emptyTd =
+                    document.createElement("td");
+
+                emptyTd.textContent = "";
+
+                parentRow.appendChild(
+                    emptyTd
+                );
+
+            }
+
+
+            // ======================================
+            // LABEL CELL
+            // ======================================
+
+            const labelTd =
+                document.createElement("td");
+
+            labelTd.className =
+                "pivot-parent-label";
+
+
+            // ======================================
+            // TOGGLE
+            // ======================================
+
+            const toggle =
+                createPivotToggle(
+                    groupId,
+                    true
+                );
+
+            labelTd.appendChild(
+                toggle
+            );
+
+
+            // ======================================
+            // LABEL
+            // ======================================
+
+            const label =
+                document.createElement("span");
+
+            label.textContent =
+                groupValue;
+
+            labelTd.appendChild(
+                label
+            );
+
+
+            parentRow.appendChild(
+                labelTd
+            );
+
+
+            // ======================================
+            // EMPTY VALUE CELLS
+            // ======================================
+
+            parsedColumns.forEach(() => {
+
+                const td =
+                    document.createElement("td");
+
+                td.textContent = "";
+
+                parentRow.appendChild(
+                    td
+                );
+
+            });
+
+
+            // ======================================
+            // EMPTY GRAND TOTAL
+            // ======================================
+
+            // const totalTd =
+            //     document.createElement("td");
+
+            // totalTd.textContent = "";
+
+            // parentRow.appendChild(
+            //     totalTd
+            // );
+
+
+            // ======================================
+            // ADD PARENT ROW
+            // ======================================
+
+            tbody.appendChild(
+                parentRow
+            );
+
+
+            // ======================================
+            // CHILD LEVEL
+            // ======================================
+
+            renderGroupLevel(
+                groupRows,
+                rowColumns,
+                parsedColumns,
+                tbody,
+                grandTotals,
+                level + 1,
+                groupId
+            );
+
+
+            // ======================================
+            // GROUP SUBTOTAL
+            // ======================================
+
+            const subtotal =
+                createGroupSubtotal(
+                    groupRows,
+                    groupValue,
+                    rowColumns,
+                    parsedColumns,
+                    level
+                );
+
+            subtotal.dataset.parentGroup =
+                parentGroupId || "";
+
+            tbody.appendChild(
+                subtotal
+            );
+
+        }
+    );
+}
+function createLeafRow(
+    row,
+    rowColumns,
+    parsedColumns,
+    grandTotals
+) {
+
+    const tr =
+        document.createElement("tr");
+
+
+    tr.className =
+        "pivot-leaf-row";
+
+
+    // ==========================================
+    // ROW FIELDS
+    // ==========================================
+
+    rowColumns.forEach(
+        (column, index) => {
+
+            const td =
+                document.createElement("td");
+
+
+            // ======================================
+            // ONLY SHOW LOWEST LEVEL
+            // ======================================
+
+            if (
+                index ===
+                rowColumns.length - 1
+            ) {
+
+                td.textContent =
+                    row[column] ?? "";
+
+
+                td.style.paddingLeft =
+                    `${rowColumns.length * 20}px`;
+
+            }
+            else {
+
+                // Parent fields are already
+                // displayed above
+
+                td.textContent =
+                    "";
+
+            }
+
+
+            tr.appendChild(
+                td
+            );
+
+        }
+    );
+
+
+    // ==========================================
+    // VALUES
+    // ==========================================
+
+    appendPivotValues(
+        tr,
+        row,
+        parsedColumns,
+        grandTotals
+    );
+
+
+    return tr;
+
+}
+function createGroupSubtotal(
+    groupRows,
+    groupValue,
+    rowColumns,
+    parsedColumns,
+    level
+) {
+
+    const tr = document.createElement("tr");
+
+    tr.className = "pivot-subtotal";
+
+
+    // ==========================================
+    // FIND ACTUAL VALUE COLUMNS
+    // ==========================================
+
+    if (!groupRows || groupRows.length === 0) {
+        return tr;
+    }
+
+    const firstRow = groupRows[0];
+
+    const valueColumns =
+        Object.keys(firstRow).filter(
+            column => !rowColumns.includes(column)
+        );
+
+
+    // ==========================================
+    // EMPTY CELLS BEFORE CURRENT LEVEL
+    // ==========================================
+
+    for (let i = 0; i < level; i++) {
+
+        const td = document.createElement("td");
+
+        td.textContent = "";
+
+        tr.appendChild(td);
+    }
+
+
+    // ==========================================
+    // TOTAL LABEL
+    // ==========================================
+
+    const labelTd =
+        document.createElement("td");
+
+    labelTd.className =
+        "pivot-subtotal-label";
+
+    labelTd.textContent =
+        groupValue + " Total";
+
+    tr.appendChild(labelTd);
+
+
+    // ==========================================
+    // EMPTY CELLS FOR LOWER ROW LEVELS
+    // ==========================================
+
+    for (
+        let i = level + 1;
+        i < rowColumns.length;
+        i++
+    ) {
+
+        const td =
+            document.createElement("td");
+
+        td.textContent = "";
+
+        tr.appendChild(td);
+    }
+
+
+    // ==========================================
+    // CALCULATE VALUE TOTALS
+    // ==========================================
+
+    valueColumns.forEach(column => {
+
+        const td =
+            document.createElement("td");
+
+        let total = 0;
+
+        groupRows.forEach(row => {
+
+            const rawValue =
+                row[column];
+
+            if (
+                rawValue !== null &&
+                rawValue !== undefined &&
+                rawValue !== ""
+            ) {
+
+                const numericValue =
+                    Number(rawValue);
+
+                if (!isNaN(numericValue)) {
+
+                    total += numericValue;
+
+                }
+
+            }
+
+        });
+
+
+        td.textContent =
+            total.toLocaleString("en-IN");
+
+        td.style.textAlign = "right";
+
+        tr.appendChild(td);
+
+    });
+
+
+
+    return tr;
+}
+function appendPivotValues(
+    tr,
+    row,
+    parsedColumns,
+    grandTotals
+) {
+
+    let rowTotal = 0;
+
+
+    parsedColumns.forEach(
+        item => {
+
+            const td =
+                document.createElement("td");
+
+
+            const rawValue =
+                row[item.original];
+
+
+            if (
+                rawValue !== null &&
+                rawValue !== undefined &&
+                rawValue !== "" &&
+                !isNaN(rawValue)
+            ) {
+
+                const number =
+                    Number(rawValue);
+
+
+                td.textContent =
+                    formatNumber(number);
+
+
+                td.style.textAlign =
+                    "right";
+
+
+                grandTotals[
+                    item.original
+                ] += number;
+
+
+                rowTotal += number;
+
+            }
+            else {
+
+                td.textContent = "";
+
+            }
+
+
+            tr.appendChild(
+                td
+            );
+
+        }
+    );
+
+
+    // ==========================================
+    // ROW GRAND TOTAL
+    // ==========================================
+
+    // const totalTd =
+    //     document.createElement("td");
+
+
+    // totalTd.textContent =
+    //     formatNumber(
+    //         rowTotal
+    //     );
+
+
+    // totalTd.style.textAlign =
+    //     "right";
+
+
+    // totalTd.className =
+    //     "pivot-grand-total";
+
+
+    // tr.appendChild(
+    //     totalTd
+    // );
+
+}
+function formatNumber(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        isNaN(value)
+    ) {
+
+        return "";
+
+    }
+
+
+    return Number(value)
+        .toLocaleString(
+            "en-IN",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+function formatValueHeader(item) {
+
+    let field =
+        item.field
+            .replace(
+                /_/g,
+                " "
+            );
+
+
+    if (item.aggregate) {
+
+        return `${field} (${item.aggregate})`;
+
+    }
+
+
+    return field;
+
+}
+function formatPivotHeader(value) {
+
+    if (!value)
+        return "";
+
+    /*
+        2025_04_01
+        ↓
+        01-Apr-2025
+    */
+
+    const match =
+        value.match(
+            /^(\d{4})_(\d{2})_(\d{2})$/
+        );
+
+
+    if (match) {
+
+        const year =
+            match[1];
+
+        const month =
+            match[2];
+
+        const day =
+            match[3];
+
+
+        const date =
+            new Date(
+                Number(year),
+                Number(month) - 1,
+                Number(day)
+            );
+
+
+        return date.toLocaleDateString(
+            "en-GB",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    return value.replace(
+        /_/g,
+        " "
+    );
+
+}
+function getValueDisplayName(
+    column,
+    valueFields
+) {
+
+    for (const value of valueFields) {
+
+        const safeField =
+            value.field.replace(
+                /[^A-Za-z0-9_]/g,
+                "_"
+            );
+
+        const suffix =
+            `_${value.aggregate}_${safeField}`;
+
+
+        if (column.endsWith(suffix)) {
+
+            return `${value.field} (${value.aggregate})`;
+
+        }
+
+    }
+
+
+    return column;
+}
+function buildPivotColumnGroups(
+    pivotColumns,
+    valueFields
+) {
+
+    const groups = [];
+
+    pivotColumns.forEach(column => {
+
+        let matchedValue = null;
+        let groupLabel = column;
+
+
+        // ======================================
+        // FIND VALUE FIELD
+        // ======================================
+
+        for (const value of valueFields) {
+
+            const safeField =
+                value.field.replace(
+                    /[^A-Za-z0-9_]/g,
+                    "_"
+                );
+
+            const suffix =
+                `_${value.aggregate}_${safeField}`;
+
+
+            if (column.endsWith(suffix)) {
+
+                matchedValue = value;
+
+                groupLabel =
+                    column.slice(
+                        0,
+                        -suffix.length
+                    );
+
+                break;
+
+            }
+
+        }
+
+
+        // ======================================
+        // FIND EXISTING GROUP
+        // ======================================
+
+        let group =
+            groups.find(
+                g => g.label === groupLabel
+            );
+
+
+        if (!group) {
+
+            group = {
+
+                label: groupLabel,
+
+                values: []
+
+            };
+
+            groups.push(group);
+
+        }
+
+
+        group.values.push({
+
+            column: column,
+
+            value: matchedValue
+
+        });
+
+    });
+
+
+    return groups;
+}
+function createPivotToggle(
+    groupId,
+    initiallyExpanded = true
+) {
+
+    const button =
+        document.createElement("button");
+
+
+    button.className =
+        "pivot-toggle";
+
+
+    button.type =
+        "button";
+
+
+    button.textContent =
+        initiallyExpanded
+            ? "−"
+            : "+";
+
+
+    button.dataset.groupId =
+        groupId;
+
+
+    button.onclick =
+        function(e) {
+
+            e.stopPropagation();
+
+
+            const expanded =
+                button.textContent === "−";
+
+
+            togglePivotGroup(
+                groupId,
+                !expanded
+            );
+
+
+            button.textContent =
+                expanded
+                    ? "+"
+                    : "−";
+
+        };
+
+
+    return button;
+
+}
+function togglePivotGroup(
+    groupId,
+    expanded
+) {
+
+    // ==========================================
+    // FIND ALL ROWS BELONGING TO GROUP
+    // ==========================================
+
+    const rows =
+        document.querySelectorAll(
+            `[data-parent-group="${groupId}"]`
+        );
+
+
+    rows.forEach(row => {
+
+        if (expanded) {
+
+            row.classList.remove(
+                "pivot-hidden"
+            );
+
+        }
+        else {
+
+            row.classList.add(
+                "pivot-hidden"
+            );
+
+        }
+
+    });
+
+
+    // ==========================================
+    // FIND NESTED GROUPS
+    // ==========================================
+
+    const nestedGroups =
+        document.querySelectorAll(
+            `[data-parent-group="${groupId}"][data-group-id]`
+        );
+
+
+    nestedGroups.forEach(
+        nestedGroup => {
+
+            const nestedId =
+                nestedGroup.dataset.groupId;
+
+
+            if (!expanded) {
+
+                nestedGroup.classList.add(
+                    "pivot-hidden"
+                );
+
+
+                // Hide everything below it
+
+                hideNestedRows(
+                    nestedId
+                );
+
+            }
+            else {
+
+                nestedGroup.classList.remove(
+                    "pivot-hidden"
+                );
+
+            }
+
+        }
+    );
+
+}
+function hideNestedRows(groupId) {
+
+    const children =
+        document.querySelectorAll(
+            `[data-parent-group="${groupId}"]`
+        );
+
+
+    children.forEach(row => {
+
+        row.classList.add(
+            "pivot-hidden"
+        );
+
+
+        if (
+            row.dataset.groupId
+        ) {
+
+            hideNestedRows(
+                row.dataset.groupId
+            );
+
+        }
+
+    });
+
+}

@@ -68,7 +68,7 @@ body {
 
     margin: 0;
 
-    background:#f7f7db;
+    background:#dbedf7;
 
     padding-bottom: 20px;
 
@@ -215,6 +215,7 @@ body {
     transform: translateY(0);
 
     transition: transform 0.7s ease;
+    z-index: 1000;
 }
 
 /* =========================================================
@@ -447,15 +448,14 @@ body {
 
 
 .remove-btn {
-
     margin-left: 5px;
-
     color: #008dcc;
-
     font-size: 13px;
-
     cursor: pointer;
 
+    position: relative;
+    z-index: 10000;
+    pointer-events: auto;
 }
 
 
@@ -1309,6 +1309,9 @@ body {
     opacity: 0;
     visibility: hidden;
 
+    position: relative;
+    z-index: 1;
+
     transition:
         opacity 0.6s ease,
         transform 0.7s ease;
@@ -1511,4 +1514,340 @@ body {
 .report-type.active {
     background: #0798d4;
     color: white;
+}
+.layout-select {
+    height: 22px;
+    min-width: 75px;
+
+    padding: 0 5px;
+
+    border: 1px solid #0798d4;
+    border-radius: 3px;
+
+    background: #fff;
+    color: #0798d4;
+
+    font-family: inherit;
+    font-size: 10px;
+
+    outline: none;
+    cursor: pointer;
+}
+/* =========================================
+   EXCEL PIVOT TABLE
+========================================= */
+
+.excel-pivot-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    background: white;
+
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.excel-pivot-table thead th {
+
+    background: #0798d4;
+
+    color: white;
+
+    border: 1px solid #d0d0d0;
+
+    padding: 7px 10px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
+.excel-pivot-table tbody td {
+
+    padding: 6px 10px;
+
+    border: 1px solid #d5d5d5;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================
+   ROW FIELD
+========================================= */
+
+.excel-pivot-table
+.pivot-row-cell {
+
+    text-align: left;
+
+}
+
+
+/* =========================================
+   GRAND TOTAL
+========================================= */
+
+.excel-pivot-table
+.pivot-grand-total {
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   GRAND TOTAL ROW
+========================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row {
+
+    font-weight: 700;
+
+    border-top: 2px solid #0798d4;
+
+}
+
+
+/* =========================================
+   GRAND TOTAL CELLS
+========================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row td {
+
+    font-weight: 700;
+
+    background: #eaf6fb;
+
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.excel-pivot-table
+tbody tr:hover {
+
+    background: #f5fafc;
+
+}
+.excel-pivot-table .pivot-column-group {
+
+    text-align: center;
+
+    font-weight: 700;
+
+}
+
+
+.excel-pivot-table thead th {
+
+    white-space: nowrap;
+
+}
+
+
+.excel-pivot-table
+.pivot-grand-header {
+
+    text-align: center;
+
+}
+
+
+.excel-pivot-table
+.pivot-grand-total-row td {
+
+    font-weight: 700;
+
+    background: #eaf6fb;
+
+    border-top: 2px solid #0798d4;
+
+}
+/* =========================================
+   MULTI ROW PIVOT
+========================================= */
+
+.excel-pivot-table
+.pivot-subtotal-row td {
+
+    font-weight: bold;
+
+    background: #eaf6fb;
+
+    border-top: 1px solid #0798d4;
+
+}
+
+
+/* =========================================
+   HIERARCHY INDENT
+========================================= */
+
+.excel-pivot-table
+tbody td {
+
+    vertical-align: middle;
+
+}
+
+
+/* =========================================
+   GRAND TOTAL
+========================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row td {
+
+    font-weight: 700;
+
+    background: #dff2fa;
+
+    border-top: 2px solid #0798d4;
+
+}
+.excel-pivot-table .pivot-parent-cell {
+    vertical-align: top;
+    font-weight: 600;
+    padding-top: 8px;
+}
+
+
+.excel-pivot-table .pivot-subtotal-row td {
+    font-weight: 700;
+    background: #eaf6fb;
+    border-top: 1px solid #0798d4;
+}
+
+
+.excel-pivot-table .pivot-subtotal-row {
+    border-bottom: 1px solid #0798d4;
+}
+/* =========================================
+   PIVOT EXPAND / COLLAPSE
+========================================= */
+
+.pivot-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 16px;
+    height: 16px;
+
+    margin-right: 6px;
+
+    padding: 0;
+
+    border: 1px solid #0798d4;
+    border-radius: 2px;
+
+    background: white;
+    color: #0798d4;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    line-height: 14px;
+
+    cursor: pointer;
+}
+
+.pivot-toggle:hover {
+    background: #0798d4;
+    color: white;
+}
+
+
+.pivot-group-row td {
+    font-weight: 600;
+}
+
+
+.pivot-group-label {
+    padding-left: 6px;
+}
+
+
+.pivot-hidden {
+    display: none;
+}
+.pivot-parent-row td {
+    font-weight: 600;
+    background: #f5fbfd;
+}
+
+
+.pivot-parent-label {
+    color: #111;
+}
+
+
+.pivot-leaf-row td {
+    background: white;
+}
+
+
+.pivot-hidden {
+    display: none !important;
+}
+
+
+.pivot-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 16px;
+    height: 16px;
+
+    margin-right: 6px;
+
+    padding: 0;
+
+    border: 1px solid #0798d4;
+    border-radius: 2px;
+
+    background: white;
+    color: #0798d4;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.pivot-toggle:hover {
+    background: #0798d4;
+    color: white;
+}
+/* ================================
+   PIVOT SUBTOTAL ROW
+================================ */
+
+.pivot-subtotal td {
+    font-weight: 700;
 }

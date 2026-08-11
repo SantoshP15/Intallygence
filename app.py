@@ -157,31 +157,59 @@ def generate_pivot():
 
     config = request.get_json()
 
-    sql = build_query(config)
+    try:
 
-    if sql is None:
+        sql = build_query(config)
+
+        if sql is None:
+            return jsonify({
+                "error": "Please select at least one Row and one Value."
+            }), 400
+
+        print("=================================")
+        print("GENERATED SQL:")
+        print(sql)
+        print("=================================")
+
+        db = get_db_connection()
+
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute(sql)
+
+        data = cursor.fetchall()
+
+        # IMPORTANT:
+        # Get column names BEFORE closing cursor
+        columns = [desc[0] for desc in cursor.description]
+
+        cursor.close()
+        db.close()
+
+        print("CONFIG:")
+        print(config)
+
         return jsonify({
-            "error": "Please select at least one Row and one Value."
-        }), 400
 
-    print(sql)
+            "columns": columns,
 
-    db = get_db_connection()
+            "data": data,
 
-    cursor = db.cursor(dictionary=True)
+            # Send layout back to JavaScript
+            "layout": config.get("layout", "tabular")
 
-    cursor.execute(sql)
+        })
 
-    data = cursor.fetchall()
+    except Exception as e:
 
-    cursor.close()
-    db.close()
-    print(config)
-    return jsonify({
-    "columns": [desc[0] for desc in cursor.description],
-    "data": data
-    })
+        print("=================================")
+        print("GENERATE PIVOT ERROR:")
+        print(str(e))
+        print("=================================")
 
+        return jsonify({
+            "error": str(e)
+        }), 500
 @app.route("/save-report", methods=["POST"])
 def save_report():
 
@@ -489,6 +517,7 @@ def build_query(config):
     columns = config.get("columns", [])
     values = config.get("values", [])
     filters = config.get("filters", [])
+    layout = config.get("layout", "tabular")
 
     if not rows or not values:
         return None
@@ -702,6 +731,479 @@ END
     db.close()
 
     return sql
+def build_pivot_query(config):
 
+    rows = config.get("rows", [])
+    columns = config.get("columns", [])
+    values = config.get("values", [])
+    filters = config.get("filters", [])
+
+    if not rows or not values:
+        return None
+
+    # =====================================================
+    # DATABASE
+    # =====================================================
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute(
+        "SHOW COLUMNS FROM SalesMaster"
+    )
+
+    valid_columns = {
+        row[0]
+        for row in cursor.fetchall()
+    }
+
+    # =====================================================
+    # VALIDATION
+    # =====================================================
+
+    for col in rows:
+
+        if col not in valid_columns:
+
+            cursor.close()
+            db.close()
+
+            raise ValueError(
+                f"Invalid Row: {col}"
+            )
+
+    for col in columns:
+
+        if col not in valid_columns:
+
+            cursor.close()
+            db.close()
+
+            raise ValueError(
+                f"Invalid Column: {col}"
+            )
+
+    allowed_functions = {
+        "SUM",
+        "COUNT",
+        "AVG",
+        "MIN",
+        "MAX"
+    }
+
+    for value in values:
+
+        field = value.get("field")
+        aggregate = value.get("aggregate")
+
+        if field not in valid_columns:
+
+            cursor.close()
+            db.close()
+
+            raise ValueError(
+                f"Invalid Value: {field}"
+            )
+
+        if aggregate not in allowed_functions:
+
+            cursor.close()
+            db.close()
+
+            raise ValueError(
+                f"Invalid Aggregate: {aggregate}"
+            )
+
+    # =====================================================
+    # WHERE CLAUSE
+    # =====================================================
+
+    where_clause = []
+
+    from datetime import datetime
+
+    for f in filters:
+
+        field = f.get("field")
+
+        if field not in valid_columns:
+            continue
+
+        # =================================================
+        # SELECTED DATE VALUES
+        # =================================================
+
+        selected_dates = f.get(
+            "selectedDates",
+            []
+        )
+
+        if selected_dates:
+
+            escaped_dates = []
+
+            for d in selected_dates:
+
+                escaped_dates.append(
+                    "'" +
+                    str(d).replace(
+                        "'",
+                        "''"
+                    ) +
+                    "'"
+                )
+
+            where_clause.append(
+                f"""
+                `{field}` IN (
+                    {",".join(escaped_dates)}
+                )
+                """
+            )
+
+            continue
+
+        # =================================================
+        # DATE RANGE
+        # =================================================
+
+        from_date = f.get("from")
+        to_date = f.get("to")
+
+        if from_date and to_date:
+
+            where_clause.append(
+                f"""
+                `{field}` BETWEEN
+                '{str(from_date).replace("'", "''")}'
+                AND
+                '{str(to_date).replace("'", "''")}'
+                """
+            )
+
+            continue
+
+        # =================================================
+        # NORMAL FILTER
+        # =================================================
+
+        filter_values = f.get(
+            "values",
+            []
+        )
+
+        if not filter_values:
+            continue
+
+        escaped = []
+
+        for v in filter_values:
+
+            try:
+
+                v = datetime.strptime(
+                    str(v),
+                    "%d-%b-%y"
+                ).strftime(
+                    "%Y-%m-%d"
+                )
+
+            except ValueError:
+                pass
+
+            escaped.append(
+                "'" +
+                str(v).replace(
+                    "'",
+                    "''"
+                ) +
+                "'"
+            )
+
+        where_clause.append(
+            f"""
+            `{field}` IN (
+                {",".join(escaped)}
+            )
+            """
+        )
+
+    # =====================================================
+    # WHERE SQL
+    # =====================================================
+
+    where_sql = ""
+
+    if where_clause:
+
+        where_sql = (
+            "WHERE "
+            +
+            " AND ".join(where_clause)
+        )
+
+    # =====================================================
+    # SELECT - ROWS
+    # =====================================================
+
+    select_clause = []
+
+    group_clause = []
+
+    for row in rows:
+
+        select_clause.append(
+            f"`{row}`"
+        )
+
+        group_clause.append(
+            f"`{row}`"
+        )
+
+    # =====================================================
+    # NO COLUMNS
+    # =====================================================
+
+    if not columns:
+
+        for value in values:
+
+            field = value["field"]
+            aggregate = value["aggregate"]
+
+            safe_field = re.sub(
+                r'[^A-Za-z0-9_]',
+                '_',
+                field
+            )
+
+            if aggregate == "COUNT":
+
+                select_clause.append(
+                    f"""
+                    COUNT(`{field}`)
+                    AS `{aggregate}_{safe_field}`
+                    """
+                )
+
+            else:
+
+                select_clause.append(
+                    f"""
+                    {aggregate}(`{field}`)
+                    AS `{aggregate}_{safe_field}`
+                    """
+                )
+
+    # =====================================================
+    # MULTI-COLUMN PIVOT
+    # =====================================================
+
+    else:
+
+        # -------------------------------------------------
+        # IMPORTANT:
+        # Apply the filters BEFORE finding pivot values.
+        # -------------------------------------------------
+
+        cursor.execute(
+            f"""
+            SELECT DISTINCT
+                {",".join(
+                    f"`{col}`"
+                    for col in columns
+                )}
+
+            FROM SalesMaster
+
+            {where_sql}
+
+            ORDER BY
+                {",".join(
+                    f"`{col}`"
+                    for col in columns
+                )}
+            """
+        )
+
+        pivot_combinations = cursor.fetchall()
+
+        # -------------------------------------------------
+        # CREATE ONE PIVOT AREA FOR EVERY COMBINATION
+        # -------------------------------------------------
+
+        for combination in pivot_combinations:
+
+            # ---------------------------------------------
+            # Build condition for this combination
+            # ---------------------------------------------
+
+            conditions = []
+
+            display_parts = []
+
+            alias_parts = []
+
+            for index, col in enumerate(columns):
+
+                value = combination[index]
+
+                if value is None:
+
+                    conditions.append(
+                        f"`{col}` IS NULL"
+                    )
+
+                    display_parts.append(
+                        "(Blank)"
+                    )
+
+                    alias_parts.append(
+                        "Blank"
+                    )
+
+                else:
+
+                    value_sql = str(
+                        value
+                    ).replace(
+                        "'",
+                        "''"
+                    )
+
+                    conditions.append(
+                        f"""
+                        `{col}` =
+                        '{value_sql}'
+                        """
+                    )
+
+                    display_parts.append(
+                        str(value)
+                    )
+
+                    safe_value = re.sub(
+                        r'[^A-Za-z0-9_]',
+                        '_',
+                        str(value)
+                    )
+
+                    alias_parts.append(
+                        safe_value
+                    )
+
+            combination_condition = (
+                " AND ".join(
+                    conditions
+                )
+            )
+
+            display_label = " | ".join(
+                display_parts
+            )
+
+            alias_label = "__".join(
+                alias_parts
+            )
+
+            # ---------------------------------------------
+            # CREATE VALUE COLUMNS
+            # ---------------------------------------------
+
+            for value in values:
+
+                field = value["field"]
+                aggregate = value["aggregate"]
+
+                safe_field = re.sub(
+                    r'[^A-Za-z0-9_]',
+                    '_',
+                    field
+                )
+
+                # =========================================
+                # COUNT
+                # =========================================
+
+                if aggregate == "COUNT":
+
+                    expression = f"""
+                    COUNT(
+                        CASE
+                            WHEN
+                                {combination_condition}
+                            THEN `{field}`
+                        END
+                    )
+                    """
+
+                # =========================================
+                # SUM / AVG / MIN / MAX
+                # =========================================
+
+                else:
+
+                    expression = f"""
+                    {aggregate}(
+                        CASE
+                            WHEN
+                                {combination_condition}
+                            THEN `{field}`
+                            ELSE NULL
+                        END
+                    )
+                    """
+
+                # -----------------------------------------
+                # UNIQUE SQL ALIAS
+                # -----------------------------------------
+
+                sql_alias = (
+                    f"PV__{alias_label}"
+                    f"__{aggregate}"
+                    f"__{safe_field}"
+                )
+
+                select_clause.append(
+                    f"""
+                    {expression}
+                    AS `{sql_alias}`
+                    """
+                )
+
+    # =====================================================
+    # GROUP BY
+    # =====================================================
+
+    group_sql = ""
+
+    if group_clause:
+
+        group_sql = (
+            "GROUP BY "
+            +
+            ",".join(group_clause)
+        )
+
+    # =====================================================
+    # FINAL SQL
+    # =====================================================
+
+    sql = f"""
+        SELECT
+
+            {",".join(select_clause)}
+
+        FROM SalesMaster
+
+        {where_sql}
+
+        {group_sql}
+    """
+
+    cursor.close()
+    db.close()
+
+    return sql
 if __name__ == "__main__":
     app.run(debug=True)
