@@ -10,6 +10,12 @@ let pivotConfig = {
     period: null,
     filters: []
 };
+// =======================================
+// LAST GENERATED TABULAR REPORT
+// =======================================
+
+let lastTabularReport = null;
+let lastPivotReport = null;
 
 // ================================
 // Utility
@@ -1344,16 +1350,52 @@ function generatePivot() {
 
         console.log("Response:", data);
 
-        // Generate the result table
-        // Generate the result table
+        // =======================================
+        // HANDLE EXPORT CSV
+        // =======================================
+
+        const exportCsvBtn = document.getElementById("exportCsvBtn");
+
+        const exportPdfBtn = document.getElementById("exportPdfBtn");
+
+
         if (data.layout === "pivot") {
+
+            // Store Pivot result
+            lastPivotReport = data;
+            lastTabularReport = null;
+
+            // Show PDF
+            if (exportPdfBtn) {
+                exportPdfBtn.style.display = "inline-block";
+            }
+
+            // Hide CSV
+            if (exportCsvBtn) {
+                exportCsvBtn.style.display = "none";
+            }
 
             renderPivotTable(data);
 
-        } else {
+        }
+        else {
+
+            // Store Tabular result
+            lastTabularReport = data;
+            lastPivotReport = null;
+
+            // Show CSV
+            if (exportCsvBtn) {
+                exportCsvBtn.style.display = "inline-block";
+            }
+
+            // Hide PDF
+            if (exportPdfBtn) {
+                exportPdfBtn.style.display = "none";
+            }
+
 
             renderTable(data);
-
         }
 
         // ==========================
@@ -3595,7 +3637,7 @@ function hideNestedRows(groupId) {
 }
 /* =========================================
    RESPONSIVE 1920 × 1080 CANVAS
-   ========================================= */
+========================================= */
 
 (function () {
 
@@ -3609,39 +3651,30 @@ function hideNestedRows(groupId) {
         document.querySelector(".pivot-wrapper");
 
     if (!canvas || !wrapper) {
-        console.warn(
-            "Pivot canvas/wrapper not found."
-        );
+        console.warn("Pivot canvas/wrapper not found.");
         return;
     }
 
     function updateCanvasScale() {
 
         const viewportWidth =
-            window.innerWidth;
+            document.documentElement.clientWidth;
 
         const viewportHeight =
-            window.innerHeight;
+            document.documentElement.clientHeight;
 
         /*
-         * Fit the 1920 × 1080 design
-         * inside the browser viewport.
+         * Base scale on browser width.
+         * This makes the 1920px canvas use the
+         * available browser width at Ctrl + 0.
          */
-        const scaleX =
+        let scale =
             viewportWidth / DESIGN_WIDTH;
 
-        const scaleY =
-            viewportHeight / DESIGN_HEIGHT;
-
-        let scale =
-            Math.min(scaleX, scaleY);
-
         /*
-         * Do not enlarge the design
-         * beyond its original size.
+         * Do not enlarge beyond 100%.
          */
-        scale =
-            Math.min(scale, 1);
+        scale = Math.min(scale, 1);
 
         /*
          * Apply scale.
@@ -3653,7 +3686,7 @@ function hideNestedRows(groupId) {
             );
 
         /*
-         * Give wrapper the scaled height.
+         * Keep wrapper height synchronized.
          */
         wrapper.style.minHeight =
             (DESIGN_HEIGHT * scale) + "px";
@@ -3667,3 +3700,405 @@ function hideNestedRows(groupId) {
     );
 
 })();
+
+// =======================================
+// EXPORT TABULAR REPORT TO CSV
+// =======================================
+
+function exportTabularCSV() {
+
+    if (!lastTabularReport) {
+        alert(
+            "CSV export is available only for Tabular reports."
+        );
+        return;
+    }
+
+    const columns =
+        lastTabularReport.columns;
+
+    const data =
+        lastTabularReport.data;
+
+    // ---------------------------------------
+    // CSV escape helper
+    // ---------------------------------------
+
+    function escapeCSV(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+        value = String(value);
+
+        // Escape quotes
+        value = value.replace(/"/g, '""');
+
+        // Wrap every value in quotes
+        return `"${value}"`;
+    }
+
+    // ---------------------------------------
+    // Header
+    // ---------------------------------------
+
+    const csvRows = [];
+
+    csvRows.push(
+        columns
+            .map(column => escapeCSV(column))
+            .join(",")
+    );
+
+    // ---------------------------------------
+    // Data
+    // ---------------------------------------
+
+    data.forEach(row => {
+
+        const rowData =
+            columns.map(column => {
+
+                return escapeCSV(
+                    row[column]
+                );
+
+            });
+
+        csvRows.push(
+            rowData.join(",")
+        );
+    });
+
+    // ---------------------------------------
+    // Create CSV file
+    // ---------------------------------------
+
+    const csvContent =
+        "\uFEFF" +
+        csvRows.join("\r\n");
+
+    const blob =
+        new Blob(
+            [csvContent],
+            {
+                type: "text/csv;charset=utf-8;"
+            }
+        );
+
+    // ---------------------------------------
+    // File name
+    // ---------------------------------------
+
+    const fileName =
+        "Tabular_Report_" +
+        new Date()
+            .toISOString()
+            .slice(0, 10) +
+        ".csv";
+
+    // ---------------------------------------
+    // Download
+    // ---------------------------------------
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+// =======================================
+// EXPORT CSV BUTTON
+// =======================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const exportCsvBtn =
+            document.getElementById(
+                "exportCsvBtn"
+            );
+
+        if (exportCsvBtn) {
+
+            exportCsvBtn.addEventListener(
+                "click",
+                exportTabularCSV
+            );
+
+        }
+
+    }
+);
+// =======================================
+// EXPORT PIVOT REPORT TO PDF
+// CAPTURE EXACT PIVOT SHOWN ON SCREEN
+// =======================================
+async function exportCurrentPivotPDF() {
+
+    console.log("PDF Export clicked");
+
+    const pivotTable =
+        document.querySelector(".excel-pivot-table");
+
+    if (!pivotTable) {
+        alert("Pivot table not found.");
+        return;
+    }
+
+    if (typeof html2canvas === "undefined") {
+        alert("html2canvas is not loaded.");
+        return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("jsPDF is not loaded.");
+        return;
+    }
+
+    try {
+
+        // ===================================
+        // CAPTURE PIVOT
+        // ===================================
+
+        const canvas = await html2canvas(
+            pivotTable,
+            {
+                scale: 1,
+
+                backgroundColor: "#ffffff",
+
+                useCORS: true,
+
+                logging: false,
+
+                imageTimeout: 0
+            }
+        );
+
+
+        // ===================================
+        // CREATE PDF
+        // ===================================
+
+        const { jsPDF } = window.jspdf;
+
+        const pdf = new jsPDF({
+            orientation: "landscape",
+            unit: "mm",
+            format: "a4",
+
+            compress: true
+        });
+
+
+        const pageWidth =
+            pdf.internal.pageSize.getWidth();
+
+        const pageHeight =
+            pdf.internal.pageSize.getHeight();
+
+
+        const margin = 5;
+
+        const usableWidth =
+            pageWidth - (margin * 2);
+
+        const usableHeight =
+            pageHeight - (margin * 2);
+
+
+        // ===================================
+        // SCALE
+        // ===================================
+
+        const scale =
+            usableWidth / canvas.width;
+
+        const pagePixelHeight =
+            usableHeight / scale;
+
+
+        // ===================================
+        // SPLIT INTO PAGES
+        // ===================================
+
+        let sourceY = 0;
+
+        let pageNumber = 0;
+
+
+        while (sourceY < canvas.height) {
+
+            if (pageNumber > 0) {
+                pdf.addPage();
+            }
+
+
+            const currentHeight =
+                Math.min(
+                    pagePixelHeight,
+                    canvas.height - sourceY
+                );
+
+
+            // =================================
+            // TEMPORARY CANVAS
+            // =================================
+
+            const pageCanvas =
+                document.createElement("canvas");
+
+
+            pageCanvas.width =
+                canvas.width;
+
+            pageCanvas.height =
+                currentHeight;
+
+
+            const ctx =
+                pageCanvas.getContext("2d");
+
+
+            ctx.fillStyle = "#ffffff";
+
+            ctx.fillRect(
+                0,
+                0,
+                pageCanvas.width,
+                pageCanvas.height
+            );
+
+
+            // =================================
+            // COPY CURRENT PAGE
+            // =================================
+
+            ctx.drawImage(
+                canvas,
+
+                0,
+                sourceY,
+
+                canvas.width,
+                currentHeight,
+
+                0,
+                0,
+
+                canvas.width,
+                currentHeight
+            );
+
+
+            // =================================
+            // JPEG COMPRESSION
+            // =================================
+
+            const imageData =
+                pageCanvas.toDataURL(
+                    "image/jpeg",
+                    0.60
+                );
+
+
+            // =================================
+            // ADD IMAGE
+            // =================================
+
+            pdf.addImage(
+                imageData,
+
+                "JPEG",
+
+                margin,
+                margin,
+
+                usableWidth,
+
+                currentHeight * scale,
+
+                undefined,
+
+                "FAST"
+            );
+
+
+            sourceY += currentHeight;
+
+            pageNumber++;
+        }
+
+
+        // ===================================
+        // SAVE
+        // ===================================
+
+        pdf.save(
+            "Pivot_Report_" +
+            new Date()
+                .toISOString()
+                .slice(0, 10) +
+            ".pdf"
+        );
+
+
+        console.log(
+            "PDF exported successfully."
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "PDF Export Error:",
+            error
+        );
+
+        alert(
+            "PDF export failed.\n\n" +
+            error.message
+        );
+    }
+}
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const pdfButton =
+            document.getElementById(
+                "exportPdfBtn"
+            );
+
+        if (!pdfButton) {
+
+            console.warn(
+                "Export PDF button not found."
+            );
+
+            return;
+        }
+
+        pdfButton.onclick =
+            exportCurrentPivotPDF;
+
+    }
+);

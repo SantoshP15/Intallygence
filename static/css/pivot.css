@@ -14,7 +14,7 @@ body {
 
     width: 100%;
     min-height: 100%;
-    background:#dbedf7;
+    background:#dff3fb;
 
 }
 
@@ -147,7 +147,7 @@ body {
     right: 18px;
 
     z-index: 4000;
-
+    
 }
 
 
@@ -156,7 +156,8 @@ body {
     border: none;
 
     background: #0798d4;
-
+    /* border: 1px solid #0798d4;
+    border-radius: 5px; */
     color: #fff;
 
     border-radius: 5px;
@@ -176,7 +177,7 @@ body {
 
 #savedReportsBtn:hover {
 
-    background: #087fae;
+    font-size: 18px;
 
 }
 
@@ -496,7 +497,7 @@ body {
 
 .go-button:hover {
 
-    background: #087fae;
+    background: #72c0df;
 
 }
 
@@ -1938,9 +1939,10 @@ body {
     width: 100%;
     max-width: none;
     margin: 0;
-    padding-top: 142px;
+    padding-top: 75px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 20px; 
     align-items: flex-end;
     gap: 8px;
     background: #d9edf7;
@@ -2049,7 +2051,7 @@ body {
     width: 165px;
     min-width: 165px;
     height: 28px;
-    margin-bottom: 21px;
+    margin-bottom: 28px;
     padding: 0 9px;
     border: none;
     border-radius: 7px;
@@ -2063,7 +2065,7 @@ body {
     align-self: end;
     width: 43px;
     height: 28px;
-    margin-bottom: 21px;
+    margin-bottom: 28px;
     border: none;
     border-radius: 7px;
     background: #fff;
@@ -2079,7 +2081,7 @@ body {
 .info-area {
     width: calc(100% - 14%);
     max-width: none;
-    margin: 28px auto 0;
+    margin: 20px auto 0;
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -2096,13 +2098,13 @@ body {
 
 .info-box {
     width: 100%;
-    min-height: 255px;
+    min-height: 200px;
     padding: 14px 22px;
     border: 2px solid #0798d4;
     border-radius: 16px;
     background: #fff;
     color: #c4c6ca;
-    font-size: 30px;
+    font-size: 26px;
     line-height: 1.42;
 }
 
@@ -2123,8 +2125,17 @@ body {
     width: calc(100% - 6%);
     margin: 15px auto 0;
     padding: 0;
+
     display: flex;
     justify-content: flex-end;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
 }
 
 .save-button {
@@ -2313,7 +2324,7 @@ body::-webkit-scrollbar {
 
 .pivot-canvas {
     position: relative;
-
+    
     width: 1920px;
     min-width: 1920px;
 
@@ -2323,8 +2334,9 @@ body::-webkit-scrollbar {
     margin: 0;
     padding: 0;
 
-    transform: scale(var(--canvas-scale, 1));
-    transform-origin: top corner;
+    left: 50%;
+    transform: translateX(-50%) scale(var(--canvas-scale, 1));
+    transform-origin: top center;
 
     overflow: visible;
 }
@@ -2356,11 +2368,13 @@ body::-webkit-scrollbar {
 
 .pivot-canvas .report-types {
     width: 1920px;
-    padding-top: 142px;
+    padding-top: 75px;
 }
 
 .pivot-canvas .builder {
     width: 1920px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .pivot-canvas .info-area {
@@ -2382,10 +2396,14 @@ body::-webkit-scrollbar {
 .pivot-canvas .table-container {
     background: rgba(255, 255, 255, 0.92);
 }
+/* =========================================
+   SAVE REPORT - SHOW AFTER GO
+========================================= */
 
-/* =========================================================
-   NOTE
-   =========================================================
-   Do NOT use #pageWrapper here.
-   The .pivot-canvas is the single element that is scaled.
-   ========================================================= */
+.save-area.report-generated {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transform: none;
+}

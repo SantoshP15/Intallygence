@@ -13,7 +13,7 @@
     <!-- Flatpickr -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    
     <!-- Pivot CSS -->
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/pivot.css') }}">
@@ -27,6 +27,10 @@
 
     <!-- DataTables -->
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </head>
 
@@ -445,6 +449,27 @@
 
     <div class="save-area">
 
+        <!-- TABULAR EXPORT -->
+        <button
+            id="exportCsvBtn"
+            class="save-button export-csv-button"
+            style="display: none;">
+
+            Export CSV
+
+        </button>
+
+        <!-- PIVOT EXPORT -->
+        <button
+            id="exportPdfBtn"
+            class="save-button export-pdf-button"
+            style="display: none;">
+
+            Export PDF
+
+        </button>
+
+        <!-- SAVE REPORT -->
         <button
             id="saveReportBtn"
             class="save-button">
