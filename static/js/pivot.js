@@ -3593,3 +3593,77 @@ function hideNestedRows(groupId) {
     });
 
 }
+/* =========================================
+   RESPONSIVE 1920 × 1080 CANVAS
+   ========================================= */
+
+(function () {
+
+    const DESIGN_WIDTH = 1920;
+    const DESIGN_HEIGHT = 1080;
+
+    const canvas =
+        document.querySelector(".pivot-canvas");
+
+    const wrapper =
+        document.querySelector(".pivot-wrapper");
+
+    if (!canvas || !wrapper) {
+        console.warn(
+            "Pivot canvas/wrapper not found."
+        );
+        return;
+    }
+
+    function updateCanvasScale() {
+
+        const viewportWidth =
+            window.innerWidth;
+
+        const viewportHeight =
+            window.innerHeight;
+
+        /*
+         * Fit the 1920 × 1080 design
+         * inside the browser viewport.
+         */
+        const scaleX =
+            viewportWidth / DESIGN_WIDTH;
+
+        const scaleY =
+            viewportHeight / DESIGN_HEIGHT;
+
+        let scale =
+            Math.min(scaleX, scaleY);
+
+        /*
+         * Do not enlarge the design
+         * beyond its original size.
+         */
+        scale =
+            Math.min(scale, 1);
+
+        /*
+         * Apply scale.
+         */
+        document.documentElement.style
+            .setProperty(
+                "--canvas-scale",
+                scale
+            );
+
+        /*
+         * Give wrapper the scaled height.
+         */
+        wrapper.style.minHeight =
+            (DESIGN_HEIGHT * scale) + "px";
+    }
+
+    updateCanvasScale();
+
+    window.addEventListener(
+        "resize",
+        updateCanvasScale
+    );
+
+})();

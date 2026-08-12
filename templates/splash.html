@@ -1,150 +1,330 @@
 <!doctype html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>InTallygence</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css') }}">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- =====================================================
+         SPLASH CSS
+         ===================================================== -->
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/splash.css') }}"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+         ===================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
 </head>
 
+
 <body>
 
-    <!-- Blueprint Lines -->
-    <div class="blueprint">
 
-        <div class="vline left"></div>
-        <div class="vline right"></div>
-        <div class="hline left-line"></div>
-        <div class="hline right-line"></div>
+    <!-- =====================================================
+         SPLASH WRAPPER
 
-    </div>
+         This controls the visible scaled size of the
+         1920 × 1080 canvas.
+         ===================================================== -->
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <main class="splash-wrapper">
 
-        <!-- Background Shape -->
-        <img
-        src="{{ url_for('static', filename='images/intallygence home screen eye.png') }}"
-        class="bg-shape">
 
-        <!-- Heading -->
-        <p class="topline">
-            Transforming Tally Data Into Business Intelligence
-        </p>
+        <!-- =================================================
+             1920 × 1080 DESIGN CANVAS
+             ================================================= -->
 
-        <!-- Logo -->
-        <div class="logo">
+        <section class="hero">
+
+
+            <!-- =============================================
+                 BACKGROUND IMAGE
+                 ============================================= -->
 
             <img
-                src="{{ url_for('static', filename='images/logo.svg') }}"
-                alt="InTallygence">
+                src="{{ url_for(
+                    'static',
+                    filename='images/intallygence home-screen.jpg'
+                ) }}"
+                class="splash-image"
+                alt=""
+            >
 
-        </div>
 
-        <!-- Features -->
-        <div class="features">
+            <!-- =============================================
+                 BLUEPRINT LINES
+                 ============================================= -->
 
-            <span>
-                <i class="fa-solid fa-check"></i>
-                Real-Time Analytics
-            </span>
+            <!--
+            <div class="blueprint">
 
-            <span>
-                <i class="fa-solid fa-check"></i>
-                Interactive Reports
-            </span>
+                <div class="vline left"></div>
 
-            <span>
-                <i class="fa-solid fa-check"></i>
-                Smart Insights
-            </span>
+                <div class="vline right"></div>
 
-        </div>
+                <div class="hline left-line"></div>
 
-        <!-- Enter Button -->
-        <div id="enterBtn" class="enter-arrow">
-            <i class="fa-solid fa-arrow-right"></i>
-        </div>
+                <div class="hline right-line"></div>
 
-    </section>
+            </div>
+            -->
 
-    <!-- Login -->
+
+            <!-- =============================================
+                 TOPLINE
+                 ============================================= -->
+
+            <p class="topline">
+
+                Transforming Tally Data Into Business Intelligence
+
+            </p>
+
+
+            <!-- =============================================
+                 LOGO
+                 ============================================= -->
+
+            <div class="logo">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/logo.svg'
+                    ) }}"
+                    alt="InTallygence"
+                >
+
+            </div>
+
+
+            <!-- =============================================
+                 FEATURES
+                 ============================================= -->
+
+            <div class="features">
+
+
+                <span>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Real-Time Analytics
+
+                </span>
+
+
+                <span>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Interactive Reports
+
+                </span>
+
+
+                <span>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Smart Insights
+
+                </span>
+
+
+            </div>
+
+
+            <!-- =============================================
+                 ENTER ARROW
+                 ============================================= -->
+
+            <div
+                id="enterBtn"
+                class="enter-arrow"
+            >
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         LOGIN CONTAINER
+         ===================================================== -->
+
     <div class="login-container">
+
 
         <form
             class="login-form"
             action="{{ url_for('login') }}"
-            method="POST">
+            method="POST"
+        >
+
+
+            <!-- Username -->
+
             <div class="username-group">
+
                 <input
-                type="text"
-                name="username"
-                placeholder="User name"
-                required>   
+                    type="text"
+                    name="username"
+                    placeholder="User name"
+                    required
+                >
+
             </div>
 
+
+            <!-- Password -->
+
             <div class="password-group">
+
                 <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                required>
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                >
+
             </div>
-            <button type="submit" class="login-arrow">
+
+
+            <!-- Login -->
+
+            <button
+                type="submit"
+                class="login-arrow"
+            >
+
                 <i class="fa-solid fa-arrow-right"></i>
+
             </button>
+
 
         </form>
 
+
     </div>
+
+
+    <!-- =====================================================
+         LOGIN LINKS
+         ===================================================== -->
+
     <div class="login-links">
 
-    <a href="#">Forgot password</a>
+        <a href="#">
+            Forgot password
+        </a>
 
-    <span>|</span>
+        <span>|</span>
 
-    <a href="#">Sign Up</a>
-
-</div>
-
-
-<!-- =================================
-     LOGIN LOADING SCREEN
-================================= -->
-
-<div id="loginLoader" class="login-loader">
-
-    <div class="loader-content">
-
-        <img
-            src="{{ url_for('static', filename='images/logo.svg') }}"
-            alt="InTallygence"
-            class="loader-logo">
-
-        <div class="loader-line">
-            <div class="loader-progress"></div>
-        </div>
-
-        <p>Loading your dashboard...</p>
+        <a href="#">
+            Sign Up
+        </a>
 
     </div>
 
-</div>
+
+    <!-- =====================================================
+         LOGIN LOADER
+         ===================================================== -->
+
+    <div
+        id="loginLoader"
+        class="login-loader"
+    >
+
+        <div class="loader-content">
 
 
-<script src="{{ url_for('static', filename='js/splash.js') }}"></script>
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='images/logo.svg'
+                ) }}"
+                alt="InTallygence"
+                class="loader-logo"
+            >
+
+
+            <div class="loader-line">
+
+                <div class="loader-progress"></div>
+
+            </div>
+
+
+            <p>
+                Loading your dashboard...
+            </p>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script
+        src="{{ url_for(
+            'static',
+            filename='js/splash.js'
+        ) }}"
+    ></script>
+
+
 </body>
 
 </html>

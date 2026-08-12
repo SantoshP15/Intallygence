@@ -1,583 +1,727 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:'Montserrat', sans-serif;
-    background:#dbedf7;
-    overflow:hidden;
-    color:#1188c9;
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    background: #eaf6fa;
 }
 
-/* ==========================
-   BLUEPRINT LINES
-========================== */
 
-.blueprint{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:5;
+body {
+    font-family: 'Montserrat', sans-serif;
+
+    color: #1188c9;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    /* Hide scrollbar but keep scrolling */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
+
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================================
+   SPLASH WRAPPER
+   ========================================================= */
+
+.splash-wrapper {
+    position: relative;
+
+    width: 100%;
+
+    /*
+       JavaScript changes this height.
+    */
+    height: calc(
+        1080px * var(--canvas-scale, 1)
+    );
+
+    min-height: 0;
+
+    background: #eaf6fa;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    overflow: visible;
+}
+
+
+/* =========================================================
+   1920 × 1080 CANVAS
+   ========================================================= */
+
+.hero {
+    position: relative;
+
+    /*
+       The design itself ALWAYS remains
+       1920 × 1080.
+
+       JavaScript scales this entire element.
+    */
+    width: 1920px;
+    height: 1080px;
+
+    flex-shrink: 0;
+
+    /*
+       EVERYTHING inside this canvas scales together.
+    */
+    transform: scale(
+        var(--canvas-scale, 1)
+    );
+
+    transform-origin: top center;
+
+    overflow: visible;
+
+    text-align: center;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+.splash-image {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 1920px;
+    height: 1080px;
+
+    display: block;
+
+    /*
+       Original image = 1920 × 1080.
+    */
+    object-fit: fill;
+
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BLUEPRINT
+   ========================================================= */
+
+.blueprint {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 1920px;
+    height: 1080px;
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
 
 .vline,
-.hline{
-    position:absolute;
-    background:#008bbf;
-    /* opacity:.6; */
+.hline {
+    position: absolute;
+
+    background: #008bbf;
 }
 
-/* Vertical Lines */
 
-.vline{
-    width:3px;
-    background:#008bbf;
+.vline {
+    width: 3px;
 }
 
-.left{
-    left:80px;
-    top:0;
-    height:500px;
 
-    transform-origin:top;
-    transform:scaleY(0);
-    transition:1s ease;
+.left {
+    left: 80px;
+    top: 0;
+
+    height: 500px;
+
+    transform-origin: top;
+
+    transform: scaleY(0);
+
+    transition: 1s ease;
 }
 
-.right{
-    right:140px;
-    bottom:0;
-    height:500px;
 
-    transform-origin:bottom;
-    transform:scaleY(0);
-    transition:1s ease;
+.right {
+    right: 140px;
+    bottom: 0;
+
+    height: 500px;
+
+    transform-origin: bottom;
+
+    transform: scaleY(0);
+
+    transition: 1s ease;
 }
 
-/* Horizontal Lines */
 
-.hline{
-    height:3px;
-    top:50%;
-    background:#1592cf;
+.hline {
+    height: 3px;
+
+    top: 50%;
 }
 
-.left-line{
-    left:0;
-    width:calc(50% - 23px);
 
-    transform-origin:left;
-    transform:scaleX(0);
-    transition:.8s ease;
+.left-line {
+    left: 0;
+
+    width: calc(50% - 23px);
+
+    transform-origin: left;
+
+    transform: scaleX(0);
+
+    transition: .8s ease;
 }
 
-.right-line{
-    right:0;
-    width:calc(50% - 92px);
 
-    transform-origin:right;
-    transform:scaleX(0);
-    transition:.8s ease;
+.right-line {
+    right: 0;
+
+    width: calc(50% - 92px);
+
+    transform-origin: right;
+
+    transform: scaleX(0);
+
+    transition: .8s ease;
 }
 
-/* ==========================
-   HERO
-========================== */
 
-.hero{
-    position:fixed;
-    inset:0;
+/* =========================================================
+   TOPLINE
+   ========================================================= */
 
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+.topline {
+    position: absolute;
 
-    overflow:hidden;
-    text-align:center;
+    top: 15.5%;
+    left: 30%;
 
-    transition:.8s ease;
+    margin: 0;
+
+    transform: translateX(-50%);
+
+    font-family: 'Montserrat', sans-serif;
+
+    /*
+       Fixed inside the 1920px design.
+       The complete canvas is scaled by JS.
+    */
+    font-size: 15px;
+
+    font-weight: 500;
+
+    letter-spacing: .4px;
+
+    white-space: nowrap;
+
+    z-index: 2;
+
+    opacity: 0;
+
+    animation:
+        toplineFade
+        1.5s
+        ease
+        forwards;
 }
 
-/* Background Shape */
 
-/* ==========================
-   BACKGROUND WATERMARK
-========================== */
+@keyframes toplineFade {
 
-.bg-shape{
-    position:absolute;
+    from {
+        opacity: 0;
 
-    left:50%;
-    top:50%;
-
-    width:min(1700px, 90vw);
-    height:auto;
-
-    transform:translate(-50%, -50%);
-
-    opacity:1;
-
-    z-index:1;
-
-    pointer-events:none;
-}
-.topline,
-.logo,
-.features,
-.enter-arrow{
-    position:relative;
-    z-index:2;
-}
-/* ==========================
-   TOP TEXT
-========================== */
-
-.topline{
-    position:absolute;
-
-    top:120px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-family:'Montserrat', sans-serif;
-    font-size:22px;
-    font-weight:500;
-
-    letter-spacing:.4px;
-
-    z-index:2;
-    animation:toplineFade 1.5s ease forwards;
-    opacity:0;
-}
-@keyframes toplineFade{
-
-    from{
-        opacity:0;
-        transform:translateX(-50%) translateY(  25px);
+        transform:
+            translateX(-50%)
+            translateY(25px);
     }
 
-    to{
-        opacity:1;
-        transform:translateX(-50%) translateY(0);
-    }
+    to {
+        opacity: 1;
 
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
 }
 
-/* ==========================
+
+/* =========================================================
    LOGO
-========================== */
+   ========================================================= */
 
-.logo{
-    width:80%;
+.logo {
+    position: absolute;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    /*
+       Move logo vertically here.
+    */
+    top: 25%;
 
-    margin:10px 0 50px;
+    left: 50%;
 
-    animation:logoFade 1.5s ease forwards;
-    opacity:0;
+    /*
+       42% of the 1920px canvas.
+    */
+    width: 42%;
+
+    margin: 0;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 2;
+
+    opacity: 0;
+
+    animation:
+        logoFade
+        1.5s
+        ease
+        forwards;
 }
 
-.logo img{
-    width:clamp(320px, 42vw, 760px);
-    height:auto;
 
-    transition:.35s;
+.logo img {
+    width: 100%;
+    height: auto;
 
-    filter:drop-shadow(0 15px 35px rgba(17,136,201,.18));
+    display: block;
+
+    transition: .35s;
+
+    filter:
+        drop-shadow(
+            0 15px 35px
+            rgba(
+                17,
+                136,
+                201,
+                .18
+            )
+        );
 }
 
-.logo img:hover{
-    transform:scale(1.02);
+
+.logo img:hover {
+    transform: scale(1.02);
 }
 
-@keyframes logoFade{
 
-    from{
-        opacity:0;
-        transform:translateY(30px);
+@keyframes logoFade {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(30px);
     }
 
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    to {
+        opacity: 1;
 
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
 }
 
-/* ==========================
+
+/* =========================================================
    FEATURES
-========================== */
+   ========================================================= */
 
-.features{
-    display:flex;
-    gap:50px;
+.features {
+    position: absolute;
 
-    margin-top:25px;
+    top: 49%;
 
-    font-size:18px;
-    font-weight:500;
+    left: 50%;
 
-    font-family:'Montserrat', sans-serif;
+    transform:
+        translateX(-50%);
+
+    margin: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    /*
+       Fixed spacing inside the canvas.
+       It scales together with the canvas.
+    */
+    gap: 50px;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 18px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    z-index: 2;
 }
 
-.features span{
-    display:flex;
-    align-items:center;
-    gap:8px;
+
+.features span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
 }
 
-.features i{
-    color:#1188c9;
+
+.features i {
+    color: #1188c9;
 }
 
-/* ==========================
+
+/* =========================================================
    ENTER ARROW
-========================== */
+   ========================================================= */
 
-.enter-arrow{
-    position:absolute;
+.enter-arrow {
+    position: absolute;
 
-    right:clamp(30px, 9vw, 180px);
-    top:55%;
+    right: 8%;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    top: 50%;
 
-    font-size:clamp(26px, 2.2vw, 34px);
+    display: flex;
 
-    color:#1188c9;
+    justify-content: center;
+    align-items: center;
 
-    cursor:pointer;
+    font-size: 34px;
 
-    opacity:0;
+    color: #1188c9;
 
-    transform:translateY(-50%) translateX(30px);
+    cursor: pointer;
+
+    opacity: 0;
+
+    transform:
+        translateY(-50%)
+        translateX(30px);
+
+    z-index: 2;
 
     animation:
         arrowAppear .6s ease forwards,
         bounce 2s ease-in-out infinite;
 
-    animation-delay:1.5s,2.2s;
+    animation-delay:
+        1.5s,
+        2.2s;
 }
-@keyframes arrowAppear{
 
-    from{
-        opacity:0;
-        transform:translateY(-50%) translateX(30px);
+
+@keyframes arrowAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-50%)
+            translateX(30px);
     }
 
-    to{
-        opacity:1;
-        transform:translateY(-50%) translateX(0);
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(-50%)
+            translateX(0);
+    }
+}
+
+
+.enter-arrow:hover {
+    transform:
+        translateY(-50%)
+        translateX(8px);
+}
+
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform:
+            translateY(-50%);
     }
 
-}
-
-.enter-arrow:hover{
-
-    transform:translateY(-50%) translateX(8px);
-
-}
-
-@keyframes bounce{
-
-    0%,100%{
-        transform:translateY(-50%);
+    50% {
+        transform:
+            translateY(-50%)
+            translateX(10px);
     }
-
-    50%{
-        transform:translateY(-50%) translateX(10px);
-    }
-
-}
-/* ==========================
-   LOGIN CONTAINER
-========================== */
-
-.login-container{
-    position:fixed;
-
-    left:50%;
-    top:50%;
-
-    transform:translate(-50%, -8px);
-
-    width:min(1200px, 90vw);
-    height:120px;
-
-    opacity:0;
-    visibility:hidden;
-
-    transition:.8s ease;
-
-    z-index:20;
-}
-
-.login-container.show{
-
-    opacity:1;
-    visibility:visible;
-
 }
 
 
-/* ==========================
-   LOGIN FORM
-========================== */
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
-.login-form{
+.login-container {
+    position: fixed;
 
-    position:relative;
+    left: 50%;
+    top: 50%;
 
-    width:100%;
-    height:100%;
+    transform:
+        translate(-50%, -8px);
 
+    width: min(
+        1200px,
+        90vw
+    );
+
+    height: 120px;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: .8s ease;
+
+    z-index: 20;
 }
 
 
-/* ==========================
-   USERNAME
-========================== */
+.login-container.show {
+    opacity: 1;
 
-.username-group{
-    position:absolute;
-
-    left:clamp(20px, 15vw, 180px);
-    top:20px;
-
-    width:clamp(200px, 27vw, 320px);
-}
-
-.username-group input{
-
-    width:100%;
-
-    background:transparent;
-
-    border:none;
-    /* border-bottom:2px solid #1188c9; */
-
-    outline:none;
-
-    padding:8px 0;
-
-    color:#1188c9;
-
-    font-family:'Montserrat',sans-serif;
-    font-size:17px;
-    font-weight:500;
-
-    transition:.3s;
-
-}
-
-.username-group input::placeholder{
-
-    color:#1188c9;
-    opacity:.75;
-
-}
-
-.username-group input:focus{
-
-    border-bottom:3px solid #1188c9;
-
+    visibility: visible;
 }
 
 
-/* ==========================
-   PASSWORD
-========================== */
+.login-form {
+    position: relative;
 
-.password-group{
-    position:absolute;
-
-    right:clamp(20px, 12.5vw, 150px);
-    top:20px;
-
-    width:clamp(200px, 27vw, 320px);
-}
-
-.password-group input{
-
-    width:100%;
-
-    background:transparent;
-
-    border:none;
-    /* border-bottom:2px solid #1188c9; */
-
-    outline:none;
-
-    padding:8px 0;
-
-    color:#1188c9;
-
-    font-family:'Montserrat',sans-serif;
-    font-size:17px;
-    font-weight:500;
-
-    transition:.3s;
-
-}
-
-.password-group input::placeholder{
-
-    color:#1188c9;
-    opacity:.75;
-
-}
-
-.password-group input:focus{
-
-    border-bottom:3px solid #1188c9;
-
-}
-/* Animated Underline */
-
-.username-group::after,
-.password-group::after{
-
-    content:"";
-
-    position:absolute;
-
-    left:0;
-    bottom:0;
-
-    width:100%;
-    height:2px;
-
-    background:#1188c9;
-
-    transform:scaleX(0);
-
-    transform-origin:left;
-
-    transition:.6s ease;
-
-}
-.login-container.show .username-group::after{
-
-    transform:scaleX(1);
-
-}
-
-.login-container.show .password-group::after{
-
-    transform:scaleX(1);
-
-    transition-delay:.35s;
-
+    width: 100%;
+    height: 100%;
 }
 
 
-/* ==========================
-   LOGIN ARROW
-========================== */
+.username-group {
+    position: absolute;
 
-.login-arrow{
-    position:absolute;
+    left: clamp(
+        20px,
+        15vw,
+        180px
+    );
 
-    right:clamp(15px, 5vw, 70px);
-    top:20px;
+    top: 20px;
 
-    background:none;
-    border:none;
-
-    color:#1188c9;
-
-    font-size:clamp(30px, 2.5vw, 42px);
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.login-arrow:hover{
-
-    transform:translateX(8px);
-
+    width: clamp(
+        200px,
+        27vw,
+        320px
+    );
 }
 
 
-/* ==========================
-   BOTTOM LINKS
-========================== */
+.username-group input {
+    width: 100%;
 
-.login-links{
+    background: transparent;
 
-    position:fixed;
+    border: none;
 
-    left:70px;
-    bottom:35px;
+    outline: none;
 
-    display:flex;
-    align-items:center;
+    padding: 8px 0;
 
-    gap:14px;
+    color: #1188c9;
 
-    z-index:30;
+    font-family: 'Montserrat', sans-serif;
 
-    font-family:'Montserrat',sans-serif;
-    font-size:20px;
-    font-weight:500;
+    font-size: 17px;
 
-}
-
-.login-links a{
-
-    color:#1188c9;
-
-    text-decoration:none;
-
-    transition:.3s;
-
-}
-
-.login-links a:hover{
-
-    color:#0b6fae;
-
-}
-
-.login-links span{
-
-    color:#1188c9;
-
+    font-weight: 500;
 }
 
 
-/* ==========================
-   ERROR
-========================== */
+.username-group input::placeholder {
+    color: #1188c9;
 
-.error{
-
-    margin-top:20px;
-
-    color:#d32f2f;
-
-    text-align:center;
-
-    font-size:14px;
-
+    opacity: .75;
 }
-/* =========================================
-   LOGIN LOADING SCREEN
-========================================= */
+
+
+.username-group input:focus {
+    border-bottom:
+        3px solid #1188c9;
+}
+
+
+.password-group {
+    position: absolute;
+
+    right: clamp(
+        20px,
+        12.5vw,
+        150px
+    );
+
+    top: 20px;
+
+    width: clamp(
+        200px,
+        27vw,
+        320px
+    );
+}
+
+
+.password-group input {
+    width: 100%;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    padding: 8px 0;
+
+    color: #1188c9;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 17px;
+
+    font-weight: 500;
+}
+
+
+.password-group input::placeholder {
+    color: #1188c9;
+
+    opacity: .75;
+}
+
+
+.password-group input:focus {
+    border-bottom:
+        3px solid #1188c9;
+}
+
+
+/* =========================================================
+   LOGIN LINKS
+   ========================================================= */
+
+.login-links {
+    position: fixed;
+
+    left: 70px;
+    bottom: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    z-index: 30;
+
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 20px;
+
+    font-weight: 500;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
+}
+
+
+.login-links.show {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+.login-links a {
+    color: #1188c9;
+
+    text-decoration: none;
+}
+
+
+.login-links span {
+    color: #1188c9;
+}
+
+
+/* =========================================================
+   LOGIN LOADER
+   ========================================================= */
 
 .login-loader {
-
     position: fixed;
 
     inset: 0;
@@ -587,7 +731,6 @@ body{
     display: flex;
 
     justify-content: center;
-
     align-items: center;
 
     z-index: 999999;
@@ -597,27 +740,19 @@ body{
     visibility: hidden;
 
     transition:
-        opacity 0.5s ease,
-        visibility 0.5s ease;
-
+        opacity .5s ease,
+        visibility .5s ease;
 }
 
 
-/* Show loader */
-
 .login-loader.show {
-
     opacity: 1;
 
     visibility: visible;
-
 }
 
 
-/* Loader content */
-
 .loader-content {
-
     display: flex;
 
     flex-direction: column;
@@ -625,26 +760,23 @@ body{
     align-items: center;
 
     justify-content: center;
-
 }
 
 
-/* Logo */
-
 .loader-logo {
-
     width: 280px;
 
     height: auto;
 
     margin-bottom: 35px;
 
-    animation: loaderLogo 1.2s ease-in-out infinite alternate;
-
+    animation:
+        loaderLogo
+        1.2s
+        ease-in-out
+        infinite alternate;
 }
 
-
-/* Logo animation */
 
 @keyframes loaderLogo {
 
@@ -657,31 +789,29 @@ body{
         transform: scale(1);
         opacity: 1;
     }
-
 }
 
 
-/* Progress line */
-
 .loader-line {
-
     width: 280px;
 
     height: 3px;
 
-    background: rgba(17,136,201,.15);
+    background:
+        rgba(
+            17,
+            136,
+            201,
+            .15
+        );
 
     overflow: hidden;
 
     border-radius: 10px;
-
 }
 
 
-/* Moving line */
-
 .loader-progress {
-
     width: 35%;
 
     height: 100%;
@@ -690,214 +820,53 @@ body{
 
     border-radius: 10px;
 
-    animation: loadingProgress 1.2s ease-in-out infinite;
-
+    animation:
+        loadingProgress
+        1.2s
+        ease-in-out
+        infinite;
 }
 
 
 @keyframes loadingProgress {
 
     0% {
-        transform: translateX(-120%);
+        transform:
+            translateX(-120%);
     }
 
     100% {
-        transform: translateX(400%);
+        transform:
+            translateX(400%);
     }
-
 }
 
 
-/* Loading text */
-
 .loader-content p {
-
     margin-top: 18px;
 
     color: #1188c9;
 
-    font-family: 'Montserrat', sans-serif;
-
     font-size: 14px;
 
     font-weight: 500;
-
-    letter-spacing: .3px;
-
-}
-/* =========================================
-   RESPONSIVE DESIGN
-   ========================================= */
-
-/* Laptop / smaller desktop */
-@media (max-width: 1400px){
-
-    .topline{
-        top:90px;
-        font-size:20px;
-    }
-
-    .features{
-        gap:30px;
-        font-size:16px;
-    }
-
-    .left{
-        left:50px;
-    }
-
-    .right{
-        right:80px;
-    }
-
-    .login-container{
-        width:92vw;
-    }
-
 }
 
 
-/* Laptop */
-@media (max-width: 1100px){
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
-    .topline{
-        top:80px;
-        font-size:18px;
-    }
+@media (max-width: 600px) {
 
-    .logo{
-        margin:10px 0 35px;
-    }
+    .login-form {
+        display: flex;
 
-    .logo img{
-        width:clamp(300px, 50vw, 600px);
-    }
+        flex-direction: column;
 
-    .features{
-        gap:20px;
-        font-size:15px;
-    }
+        align-items: center;
 
-    .login-container{
-        width:94vw;
-    }
-
-    .username-group{
-        left:8%;
-        width:30%;
-    }
-
-    .password-group{
-        right:8%;
-        width:30%;
-    }
-
-    .login-arrow{
-        right:2%;
-    }
-
-    .enter-arrow{
-        right:4%;
-    }
-
-}
-
-
-/* Small laptop / tablet */
-@media (max-width: 800px){
-
-    body{
-        overflow:hidden;
-    }
-
-    .topline{
-        top:70px;
-        width:90%;
-        font-size:16px;
-        line-height:1.4;
-    }
-
-    .logo img{
-        width:65vw;
-    }
-
-    .features{
-        flex-wrap:wrap;
-        justify-content:center;
-        gap:12px 20px;
-        width:90%;
-        font-size:14px;
-    }
-
-    .enter-arrow{
-        right:25px;
-        font-size:28px;
-    }
-
-    .login-container{
-        width:90vw;
-        height:auto;
-    }
-
-    .login-form{
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:25px;
-    }
-
-    .username-group,
-    .password-group{
-        position:relative;
-
-        left:auto;
-        right:auto;
-        top:auto;
-
-        width:min(400px, 80vw);
-    }
-
-    .login-arrow{
-        position:relative;
-
-        right:auto;
-        top:auto;
-
-        margin-top:5px;
-    }
-
-}
-
-
-/* Very small screen */
-@media (max-width: 500px){
-
-    .topline{
-        top:50px;
-        font-size:14px;
-    }
-
-    .logo img{
-        width:75vw;
-    }
-
-    .features{
-        font-size:12px;
-    }
-
-    .features span{
-        gap:5px;
-    }
-
-    .enter-arrow{
-        right:15px;
-        font-size:24px;
-    }
-
-    .login-links{
-        left:20px;
-        bottom:20px;
-        font-size:14px;
+        gap: 25px;
     }
 
 }

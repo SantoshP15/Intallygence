@@ -98,7 +98,7 @@ body {
 
     border-bottom: 2px solid #1196d2;
 
-    background: #ffffff;
+    background: #d9edf7;
 
     z-index: 5000;
 }
@@ -272,7 +272,7 @@ body {
 
     width: 100%;
 
-    height: 22px;
+    height: 25px;
 
     min-width: 0;
 
@@ -1851,3 +1851,541 @@ tbody td {
 .pivot-subtotal td {
     font-weight: 700;
 }
+
+/* =========================================================
+   REFERENCE DESIGN OVERRIDES
+   ========================================================= */
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    background: #dff3fb;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+.report-panel {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    margin: 0;
+    padding: 0 0 30px;
+    background: #dff3fb;
+}
+
+/* HEADER */
+.report-header {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 88px;
+    padding: 0 22px 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: #fff;
+    border-bottom: 3px solid #0798d4;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand img {
+    width: 205px;
+    height: auto;
+}
+
+.report-title {
+    margin-left: 25px;
+    padding-left: 24px;
+    border-left: 2px solid #0798d4;
+    color: #008dcc;
+    font-size: 21px;
+    font-weight: 400;
+}
+
+.saved-reports {
+    position: absolute;
+    top: 0;
+    right: 22px;
+    width: auto;
+    height: 88px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    z-index: 6000;
+}
+
+#savedReportsBtn {
+    border: none;
+    background: transparent;
+    color: #008dcc;
+    padding: 5px 0;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 400;
+}
+
+/* REPORT TYPE TABS */
+.report-types {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-top: 142px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+    background: #d9edf7;
+}
+
+.report-type {
+    min-width: 100px;
+    height: 39px;
+    padding: 0 14px;
+    border: 2px solid #0798d4;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    background: #ffffff;
+    color: #008dcc;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.report-type.active {
+    background: #0798d4;
+    color: #fff;
+}
+
+.report-type:hover {
+    background: #eaf7fc;
+    color: #087fae;
+}
+
+/* BLUE BUILDER BAR */
+.builder {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 8px 4.5% 10px;
+    display: grid;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr)
+        minmax(0,1fr)
+        minmax(0,1fr)
+        minmax(0,1fr)
+        auto
+        auto;
+    column-gap: 10px;
+    align-items: start;
+    background: #0798d4;
+    transform: none;
+    box-sizing: border-box;
+}
+
+.builder-section > label {
+    display: block;
+    margin-bottom: 4px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.control-row {
+    width: 100%;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.control-row select {
+    width: 100%;
+    height: 28px;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 0 9px;
+    border: none;
+    border-radius: 7px;
+    background: #fff;
+    color: #008dcc;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.add-btn {
+    width: 18px;
+    height: 22px;
+    flex: 0 0 18px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 25px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    color: #eaf7fc;
+}
+
+#aggregate {
+    height: 28px;
+    flex: 0 0 165px;
+}
+
+.layout-select {
+    align-self: end;
+    width: 165px;
+    min-width: 165px;
+    height: 28px;
+    margin-bottom: 21px;
+    padding: 0 9px;
+    border: none;
+    border-radius: 7px;
+    background: #fff;
+    color: #008dcc;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.go-button {
+    align-self: end;
+    width: 43px;
+    height: 28px;
+    margin-bottom: 21px;
+    border: none;
+    border-radius: 7px;
+    background: #fff;
+    color: #0798d4;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transform: none;
+}
+
+/* INFO BOX */
+.info-area {
+    width: calc(100% - 14%);
+    max-width: none;
+    margin: 28px auto 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.info-icon {
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    background: #0798d4;
+    color: #fff;
+    font-size: 19px;
+}
+
+.info-box {
+    width: 100%;
+    min-height: 255px;
+    padding: 14px 22px;
+    border: 2px solid #0798d4;
+    border-radius: 16px;
+    background: #fff;
+    color: #c4c6ca;
+    font-size: 30px;
+    line-height: 1.42;
+}
+
+/* OUTPUT */
+.output-area {
+    width: calc(100% - 6%);
+    margin: 28px auto 0;
+}
+
+.table-container {
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+/* SAVE */
+.save-area {
+    position: relative;
+    width: calc(100% - 6%);
+    margin: 15px auto 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-button {
+    transform: none;
+}
+
+/* AFTER GENERATION */
+.builder.report-generated {
+    transform: translateY(0);
+}
+
+.info-area.report-generated {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.output-area.report-generated {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .brand img { width: 175px; }
+    .report-title { font-size: 18px; }
+    .report-types { padding-top: 110px; gap: 5px; }
+    .report-type { min-width: 88px; padding: 0 9px; font-size: 12px; }
+    .builder { padding-left: 3%; padding-right: 3%; }
+    .builder-section > label { font-size: 12px; }
+    .control-row select, .layout-select { font-size: 11px; }
+    .info-box { font-size: 22px; }
+}
+
+@media (max-width: 900px) {
+    .report-header { height: 70px; }
+    .brand img { width: 145px; }
+    .report-title { font-size: 16px; margin-left: 14px; padding-left: 14px; }
+    .saved-reports { height: 70px; }
+    .report-types { padding-top: 90px; overflow-x: auto; justify-content: flex-start; }
+    .builder { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 8px; }
+    .info-box { font-size: 18px; min-height: 180px; }
+}
+
+@media (max-width: 600px) {
+    .report-header { height: 62px; padding: 0 10px; }
+    .brand img { width: 120px; }
+    .report-title { font-size: 13px; margin-left: 8px; padding-left: 8px; }
+    .saved-reports { display: none; }
+    .report-types { padding-top: 80px; }
+    .builder { grid-template-columns: 1fr; padding: 10px 18px 14px; }
+    .layout-select, .go-button { width: 100%; margin-bottom: 0; }
+    .info-area { width: calc(100% - 30px); }
+    .info-box { font-size: 14px; min-height: 150px; }
+}
+
+
+/* =========================================================
+   SPLASH BACKGROUND + CANVAS SCROLL LOGIC
+   ========================================================= */
+
+/*
+   The Splash page uses the 1920 × 1080 home-screen image as
+   one complete canvas. The pivot page now uses the same image.
+*/
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Splash background */
+.background-page {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    z-index: 0 !important;
+    pointer-events: none;
+
+    background: #dff3fb !important;
+}
+
+/* Remove the old empty background layer */
+.background-content {
+    display: none !important;
+}
+
+/* =========================================
+   PIVOT RESPONSIVE CANVAS
+   ========================================= */
+
+:root {
+    --canvas-scale: 1;
+}
+
+/* =========================================================
+   PAGE / VIEWPORT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* =========================================================
+   SPLASH-STYLE BACKGROUND
+   ========================================================= */
+
+.background-page {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    z-index: 0 !important;
+    pointer-events: none;
+
+    background: #dff3fb !important;
+}
+
+.background-content {
+    display: none !important;
+}
+
+/* =========================================================
+   OUTER PIVOT VIEWPORT
+   ========================================================= */
+
+.pivot-wrapper {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    min-height: calc(1080px * var(--canvas-scale, 1));
+
+    margin: 0;
+    padding: 0;
+
+    z-index: 10;
+
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+/* =========================================================
+   FIXED 1920 × 1080 DESIGN CANVAS
+   ========================================================= */
+
+.pivot-canvas {
+    position: relative;
+
+    width: 1920px;
+    min-width: 1920px;
+
+    height: 1080px;
+    min-height: 1080px;
+
+    margin: 0;
+    padding: 0;
+
+    transform: scale(var(--canvas-scale, 1));
+    transform-origin: top corner;
+
+    overflow: visible;
+}
+
+/* =========================================================
+   REPORT PANEL
+   ========================================================= */
+
+.pivot-canvas .report-panel {
+    position: relative;
+
+    width: 1920px;
+    min-height: 1080px;
+    height: auto;
+
+    margin: 0;
+    padding-bottom: 30px;
+
+    background: transparent !important;
+}
+
+/* =========================================================
+   FIXED DESIGN WIDTHS
+   ========================================================= */
+
+.pivot-canvas .report-header {
+    width: 1920px;
+}
+
+.pivot-canvas .report-types {
+    width: 1920px;
+    padding-top: 142px;
+}
+
+.pivot-canvas .builder {
+    width: 1920px;
+}
+
+.pivot-canvas .info-area {
+    width: 1650px;
+}
+
+.pivot-canvas .output-area {
+    width: 1800px;
+}
+
+.pivot-canvas .save-area {
+    width: 1800px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.pivot-canvas .table-container {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+/* =========================================================
+   NOTE
+   =========================================================
+   Do NOT use #pageWrapper here.
+   The .pivot-canvas is the single element that is scaled.
+   ========================================================= */

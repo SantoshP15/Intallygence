@@ -49,7 +49,9 @@
      MAIN REPORT PANEL
 ===================================== -->
 
-<div class="report-panel">
+<div class="pivot-wrapper">
+    <div class="pivot-canvas">
+        <div class="report-panel">
 
 
     <!-- =================================
@@ -95,21 +97,14 @@
 
     <div class="report-types">
 
-        <button class="report-type active" data-type="sales">
-            Sales
-        </button>
-
-        <button class="report-type" data-type="purchase">
-            Purchase
-        </button>
-
-        <button class="report-type" data-type="credit-note">
-            Credit Note
-        </button>
-
-        <button class="report-type" data-type="debit-note">
-            Debit Note
-        </button>
+        <button class="report-type active" data-type="sales">Sales</button>
+        <button class="report-type" data-type="purchase">Purchase</button>
+        <button class="report-type" data-type="debit-note">Debit Note</button>
+        <button class="report-type" data-type="credit-note">Credit Note</button>
+        <button class="report-type" data-type="payment">Payment</button>
+        <button class="report-type" data-type="receipt">Receipt</button>
+        <button class="report-type" data-type="day-book">Day Book</button>
+        <button class="report-type" data-type="stock-register">Stock Register</button>
 
     </div>
 
@@ -461,6 +456,8 @@
     </div>
 
 
+        </div>
+    </div>
 </div>
 
 
@@ -482,6 +479,55 @@ const COLUMN_TYPES =
 <!-- Flatpickr -->
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
+<script>
+(function () {
+
+    const CANVAS_WIDTH = 1920;
+    const CANVAS_HEIGHT = 1080;
+
+    const wrapper = document.querySelector(".pivot-wrapper");
+
+    if (!wrapper) return;
+
+    function updatePivotCanvasScale() {
+
+        const viewportWidth = document.documentElement.clientWidth;
+
+        /*
+         * Same principle as the Splash page:
+         * - never enlarge above the original 1920px canvas
+         * - scale down when the viewport is narrower
+         */
+        const scale = Math.min(
+            viewportWidth / CANVAS_WIDTH,
+            1
+        );
+
+        document.documentElement.style.setProperty(
+            "--canvas-scale",
+            scale
+        );
+
+        /*
+         * The wrapper keeps the scaled 1080px canvas height,
+         * so vertical scrolling works naturally on short screens.
+         */
+        wrapper.style.minHeight =
+            (CANVAS_HEIGHT * scale) + "px";
+    }
+
+    updatePivotCanvasScale();
+
+    window.addEventListener(
+        "resize",
+        updatePivotCanvasScale
+    );
+
+})();
+</script>
 
 
 <!-- Pivot JS -->
