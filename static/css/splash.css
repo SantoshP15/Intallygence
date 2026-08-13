@@ -26,7 +26,7 @@ body {
 
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 
     color: #1188c9;
 
@@ -241,7 +241,7 @@ body::-webkit-scrollbar {
 
     transform: translateX(-50%);
 
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 
     /*
        Fixed inside the 1920px design.
@@ -400,7 +400,7 @@ body::-webkit-scrollbar {
 
     gap: 50px;
 
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 18px;
     font-weight: 500;
 
@@ -575,7 +575,7 @@ body::-webkit-scrollbar {
 
     color: #1188c9;
 
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 
     font-size: 17px;
 
@@ -619,7 +619,7 @@ body::-webkit-scrollbar {
 
     color: #1188c9;
 
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 
     font-size: 17px;
 
@@ -658,7 +658,7 @@ body::-webkit-scrollbar {
 
     z-index: 30;
 
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 
     font-size: 20px;
 

@@ -27,7 +27,7 @@ body {
     min-height: 100vh;
 
     /* background: #000; */
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 
@@ -116,7 +116,7 @@ body {
 .report-title {
 
     color: #008dcc;
-
+    font-family: "Oswald", sans-serif;
     font-size: 13px;
 
     font-weight: 600;
@@ -164,7 +164,7 @@ body {
 
     padding: 5px 10px;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
 
     font-size: 11px;
 
@@ -288,7 +288,7 @@ body {
     background: #fff;
 
     color: #0798d4;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
 
     font-size: 11px;
 
@@ -482,7 +482,7 @@ body {
     background: #0798d4;
     color: white;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 10px;
     font-weight: 600;
 
@@ -642,7 +642,7 @@ body {
     background: #0798d4;
     color: #fff;
     padding: 5px 10px;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 11px;
     font-weight: 500;
     cursor: pointer;
@@ -979,7 +979,7 @@ body {
 
 .flatpickr-calendar {
 
-    font-family: Poppins, sans-serif;
+    font-family: "Inter", sans-serif;
 
     z-index: 999999 !important;
 
@@ -1204,7 +1204,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
 }
 
 
@@ -1462,7 +1462,7 @@ body {
 
     padding: 5px 10px;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 11px;
 
     cursor: pointer;
@@ -1495,7 +1495,7 @@ body {
     background: transparent;
     color: #0798d4;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-weight: 600;
 
@@ -1527,7 +1527,7 @@ body {
     background: #fff;
     color: #0798d4;
 
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 10px;
 
     outline: none;
@@ -1543,8 +1543,7 @@ body {
 
     border-collapse: collapse;
 
-    font-family: inherit;
-
+    font-family: "Inter", sans-serif;
     font-size: 16px;
 
     background: white;
@@ -1864,7 +1863,7 @@ html, body {
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Inter", sans-serif;
     overflow-x: hidden;
 }
 
@@ -1928,7 +1927,7 @@ body {
     background: transparent;
     color: #008dcc;
     padding: 5px 0;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 17px;
     font-weight: 400;
 }
@@ -1956,7 +1955,7 @@ body {
     border-radius: 12px 12px 0 0;
     background: #ffffff;
     color: #008dcc;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -2021,7 +2020,7 @@ body {
     border-radius: 7px;
     background: #fff;
     color: #008dcc;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
 }
 
@@ -2057,7 +2056,7 @@ body {
     border-radius: 7px;
     background: #fff;
     color: #008dcc;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
 }
 
@@ -2070,7 +2069,7 @@ body {
     border-radius: 7px;
     background: #fff;
     color: #0798d4;
-    font-family: inherit;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
@@ -2538,7 +2537,7 @@ body::-webkit-scrollbar {
 #valueField,
 #periodField,
 #filterField {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: "Inter", sans-serif;
     font-size: 16px !important;
     font-weight: 500 !important;
     color: #008dcc !important;
@@ -2550,7 +2549,7 @@ body::-webkit-scrollbar {
 #valueField option,
 #periodField option,
 #filterField option {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: "Inter", sans-serif;
     font-size: 12px !important;
     font-weight: 500 !important;
     color: #008dcc !important;
