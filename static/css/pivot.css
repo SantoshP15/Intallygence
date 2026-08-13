@@ -1600,43 +1600,92 @@ body {
 
 }
 
+/* =========================================================
+   GRAND TOTAL - PIVOT
+========================================================= */
 
-/* =========================================
-   GRAND TOTAL
-========================================= */
+.excel-pivot-table .pivot-grand-total-row {
 
-.excel-pivot-table
-.pivot-grand-total {
+    background: #0798d4 !important;
+
+    color: #ffffff !important;
 
     font-weight: 700;
+
+    border-top: 3px solid #057eaf;
+
+    border-bottom: none;
+
+    height: 42px;
 
 }
 
 
-/* =========================================
-   GRAND TOTAL ROW
-========================================= */
-
-.excel-pivot-table
-.pivot-grand-total-row {
-
-    font-weight: 700;
-
-    border-top: 2px solid #0798d4;
-
-}
-
-
-/* =========================================
+/* =========================================================
    GRAND TOTAL CELLS
-========================================= */
+========================================================= */
 
-.excel-pivot-table
-.pivot-grand-total-row td {
+.excel-pivot-table .pivot-grand-total-row td {
+
+    background: #0798d4 !important;
+
+    color: #ffffff !important;
+
+    font-size: 16px;
 
     font-weight: 700;
 
-    background: #eaf6fb;
+    padding: 10px 14px;
+
+    border-top: none;
+
+    border-bottom: none;
+
+    vertical-align: middle;
+
+}
+
+
+/* =========================================================
+   GRAND TOTAL LABEL
+========================================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row td:first-child {
+
+    text-align: left;
+
+    font-size: 17px;
+
+    letter-spacing: 0.2px;
+
+}
+
+
+/* =========================================================
+   GRAND TOTAL NUMBERS
+========================================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row td:not(:first-child) {
+
+    text-align: right;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   GRAND TOTAL HOVER
+========================================================= */
+
+.excel-pivot-table
+.pivot-grand-total-row:hover td {
+
+    background: #0798d4 !important;
 
 }
 

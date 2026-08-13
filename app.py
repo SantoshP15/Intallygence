@@ -7,21 +7,18 @@ from flask import (
     url_for,
     session
 )
-import mysql.connector
+
 import re
 import json
+
+from database import connect, get_dbms
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 
 def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="untitled09",
-        database="untitled"
-    )
+    return connect()
 
 @app.route("/")
 def splash():
@@ -44,7 +41,10 @@ def login():
         WHERE username=%s
         AND password=%s
         """,
-        (username, password)
+        (
+            username,
+            password
+        )
     )
 
     user = cursor.fetchone()
@@ -80,10 +80,35 @@ def home():
     cursor.execute("SELECT COUNT(*) AS total FROM SalesMaster")
     total = cursor.fetchone()["total"]
 
-    cursor.execute(
-        "SELECT * FROM SalesMaster LIMIT %s OFFSET %s",
-        (per_page, offset)
-    )
+    if get_dbms() == "sqlserver":
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM SalesMaster
+            ORDER BY (SELECT NULL)
+            OFFSET ? ROWS
+            FETCH NEXT ? ROWS ONLY
+            """,
+            (
+                offset,
+            per_page
+            )
+        )
+
+    else:
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM SalesMaster
+            LIMIT %s OFFSET %s
+            """,
+            (
+                per_page,
+                offset
+            )
+        )
 
     data = cursor.fetchall()
 
@@ -422,28 +447,74 @@ def delete_saved_report(report_id):
     return jsonify({
         "success": True
     })
+
+
+
 @app.route("/filter-values/<path:column>")
 def filter_values(column):
 
     if "user" not in session:
         return jsonify([])
 
+
     db = get_db_connection()
     cursor = db.cursor()
 
+
+    cursor.execute(
+        "SHOW COLUMNS FROM SalesMaster"
+    )
+
+    valid_columns = {
+        row[0]
+        for row in cursor.fetchall()
+    }
+
+
+    if column not in valid_columns:
+
+        cursor.close()
+        db.close()
+
+        return jsonify([])
+
+
+    if get_dbms() == "mysql":
+
+        quoted = f"`{column}`"
+
+    elif get_dbms() in (
+        "postgres",
+        "postgresql"
+    ):
+
+        quoted = f'"{column}"'
+
+    else:
+
+        quoted = f'[{column}]'
+
+
     query = f"""
-        SELECT DISTINCT `{column}`
+        SELECT DISTINCT
+            {quoted}
         FROM SalesMaster
-        WHERE `{column}` IS NOT NULL
-        ORDER BY `{column}`
+        WHERE {quoted} IS NOT NULL
+        ORDER BY {quoted}
     """
+
 
     cursor.execute(query)
 
-    values = [row[0] for row in cursor.fetchall()]
+    values = [
+        row[0]
+        for row in cursor.fetchall()
+    ]
+
 
     cursor.close()
     db.close()
+
 
     return jsonify(values)
 
@@ -456,60 +527,213 @@ def date_hierarchy(column):
     if "user" not in session:
         return jsonify({})
 
+
     db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor()
 
-    query = f"""
-        SELECT DISTINCT
 
-            `{column}` AS FullDate,
+    try:
 
-            YEAR(`{column}`) AS YearNo,
+        # =================================================
+        # GET VALID COLUMNS
+        # =================================================
 
-            MONTH(`{column}`) AS MonthNo,
+        cursor.execute(
+            "SHOW COLUMNS FROM SalesMaster"
+        )
 
-            MONTHNAME(`{column}`) AS MonthName,
+        column_info = cursor.fetchall()
 
-            DAY(`{column}`) AS DayNo
+        valid_columns = {
+            row[0]
+            for row in column_info
+        }
 
-        FROM SalesMaster
 
-        WHERE `{column}` IS NOT NULL
+        # =================================================
+        # VALIDATE COLUMN
+        # =================================================
 
-        ORDER BY
-            YEAR(`{column}`),
-            MONTH(`{column}`),
-            DAY(`{column}`)
-    """
+        if column not in valid_columns:
 
-    cursor.execute(query)
+            return jsonify({})
 
-    rows = cursor.fetchall()
 
-    cursor.close()
-    db.close()
+        # =================================================
+        # QUOTE COLUMN ACCORDING TO DBMS
+        # =================================================
 
-    hierarchy = {}
+        dbms = get_dbms()
 
-    for row in rows:
 
-        if row["FullDate"] is None:
-            continue
+        if dbms == "mysql":
 
-        year = str(row["YearNo"])
-        month = row["MonthName"]
+            quoted_column = f"`{column}`"
 
-        date = row["FullDate"].strftime("%Y-%m-%d")
 
-        if year not in hierarchy:
-            hierarchy[year] = {}
+        elif dbms in (
+            "postgres",
+            "postgresql"
+        ):
 
-        if month not in hierarchy[year]:
-            hierarchy[year][month] = []
+            quoted_column = f'"{column}"'
 
-        hierarchy[year][month].append(date)
 
-    return jsonify(hierarchy)
+        elif dbms in (
+            "sqlserver",
+            "mssql"
+        ):
+
+            quoted_column = f'[{column}]'
+
+
+        else:
+
+            raise ValueError(
+                f"Unsupported DBMS: {dbms}"
+            )
+
+
+        # =================================================
+        # GET DISTINCT DATES
+        #
+        # IMPORTANT:
+        # We don't use YEAR(), MONTH(), MONTHNAME()
+        # or DAY() here.
+        #
+        # Python handles the date hierarchy.
+        # This makes this endpoint DBMS-independent.
+        # =================================================
+
+        query = f"""
+            SELECT DISTINCT
+                {quoted_column}
+            FROM SalesMaster
+            WHERE {quoted_column} IS NOT NULL
+            ORDER BY {quoted_column}
+        """
+
+
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+
+        # =================================================
+        # BUILD HIERARCHY
+        # =================================================
+
+        hierarchy = {}
+
+
+        for row in rows:
+
+            full_date = row[0]
+
+
+            if full_date is None:
+                continue
+
+
+            # -------------------------------------------------
+            # Convert date/datetime/string to YYYY-MM-DD
+            # -------------------------------------------------
+
+            if hasattr(full_date, "year"):
+
+                year = str(full_date.year)
+
+                month_number = full_date.month
+
+                month_name = full_date.strftime("%B")
+
+                date_string = full_date.strftime(
+                    "%Y-%m-%d"
+                )
+
+
+            else:
+
+                date_string = str(
+                    full_date
+                )[:10]
+
+
+                # Try to parse YYYY-MM-DD
+
+                try:
+
+                    from datetime import datetime
+
+                    parsed_date = datetime.strptime(
+                        date_string,
+                        "%Y-%m-%d"
+                    )
+
+                    year = str(
+                        parsed_date.year
+                    )
+
+                    month_number = (
+                        parsed_date.month
+                    )
+
+                    month_name = (
+                        parsed_date.strftime("%B")
+                    )
+
+
+                except ValueError:
+
+                    continue
+
+
+            # -------------------------------------------------
+            # Create Year
+            # -------------------------------------------------
+
+            if year not in hierarchy:
+
+                hierarchy[year] = {}
+
+
+            # -------------------------------------------------
+            # Create Month
+            # -------------------------------------------------
+
+            if month_name not in hierarchy[year]:
+
+                hierarchy[year][month_name] = []
+
+
+            # -------------------------------------------------
+            # Add Date
+            # -------------------------------------------------
+
+            hierarchy[year][month_name].append(
+                date_string
+            )
+
+
+        return jsonify(hierarchy)
+
+
+    except Exception as e:
+
+        print(
+            "DATE HIERARCHY ERROR:",
+            str(e)
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+    finally:
+
+        cursor.close()
+        db.close()
 
 def build_query(config):
 
