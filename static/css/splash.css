@@ -53,7 +53,6 @@ body::-webkit-scrollbar {
     position: relative;
 
     width: 100%;
-
     /*
        JavaScript changes this height.
     */
@@ -64,7 +63,6 @@ body::-webkit-scrollbar {
     min-height: 0;
 
     background: #eaf6fa;
-
     display: flex;
 
     justify-content: center;
@@ -236,7 +234,7 @@ body::-webkit-scrollbar {
 .topline {
     position: absolute;
 
-    top: 15.5%;
+    top: 32%;
     left: 30%;
 
     margin: 0;
@@ -299,7 +297,7 @@ body::-webkit-scrollbar {
     /*
        Move logo vertically here.
     */
-    top: 25%;
+    top: 37%;
 
     left: 50%;
 
@@ -379,40 +377,36 @@ body::-webkit-scrollbar {
 /* =========================================================
    FEATURES
    ========================================================= */
+/* =========================================================
+   FEATURES
+   ========================================================= */
 
 .features {
-    position: absolute;
+    position: absolute !important;
 
-    top: 49%;
+    top: 60% !important;
+    left: 50% !important;
 
-    left: 50%;
+    width: max-content;
 
-    transform:
-        translateX(-50%);
+    transform: translateX(-50%) !important;
 
-    margin: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    /*
-       Fixed spacing inside the canvas.
-       It scales together with the canvas.
-    */
     gap: 50px;
 
     font-family: 'Montserrat', sans-serif;
-
     font-size: 18px;
-
     font-weight: 500;
 
     white-space: nowrap;
 
-    z-index: 2;
+    z-index: 10;
 }
 
 
@@ -517,36 +511,36 @@ body::-webkit-scrollbar {
    LOGIN
    ========================================================= */
 
+/* =========================================================
+   LOGIN CONTAINER
+   ========================================================= */
+
 .login-container {
     position: fixed;
 
     left: 50%;
     top: 50%;
 
-    transform:
-        translate(-50%, -8px);
-
-    width: min(
-        1200px,
-        90vw
-    );
-
+    width: 1200px;
     height: 120px;
 
-    opacity: 0;
+    transform: translate(-50%, -50%);
 
+    opacity: 0;
     visibility: hidden;
 
-    transition: .8s ease;
+    transition: opacity 0.8s ease;
 
     z-index: 20;
-}
 
+    pointer-events: none;
+}
 
 .login-container.show {
     opacity: 1;
-
     visibility: visible;
+
+    pointer-events: auto;
 }
 
 
@@ -561,19 +555,10 @@ body::-webkit-scrollbar {
 .username-group {
     position: absolute;
 
-    left: clamp(
-        20px,
-        15vw,
-        180px
-    );
-
+    left: 180px;
     top: 20px;
 
-    width: clamp(
-        200px,
-        27vw,
-        320px
-    );
+    width: 320px;
 }
 
 
@@ -614,19 +599,10 @@ body::-webkit-scrollbar {
 .password-group {
     position: absolute;
 
-    right: clamp(
-        20px,
-        12.5vw,
-        150px
-    );
-
+    right: 150px;
     top: 20px;
 
-    width: clamp(
-        200px,
-        27vw,
-        320px
-    );
+    width: 320px;
 }
 
 
@@ -869,4 +845,26 @@ body::-webkit-scrollbar {
         gap: 25px;
     }
 
+}
+/* .hero-content {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transform: translateY(390px);
+} */
+/* =========================================================
+   HIDE TOPLINE & FEATURES AFTER ENTER
+   ========================================================= */
+
+.topline,
+.features {
+    transition: opacity 0.4s ease;
+}
+
+.hide-on-enter {
+    opacity: 0 !important;
+    pointer-events: none;
 }

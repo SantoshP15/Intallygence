@@ -2865,7 +2865,7 @@ function renderGroupLevel(
             const toggle =
                 createPivotToggle(
                     groupId,
-                    true
+                    false
                 );
 
             labelTd.appendChild(
@@ -3477,57 +3477,60 @@ function buildPivotColumnGroups(
 }
 function createPivotToggle(
     groupId,
-    initiallyExpanded = true
+    initiallyExpanded = false
 ) {
-
     const button =
         document.createElement("button");
-
 
     button.className =
         "pivot-toggle";
 
-
     button.type =
         "button";
-
 
     button.textContent =
         initiallyExpanded
             ? "−"
             : "+";
 
-
     button.dataset.groupId =
         groupId;
-
 
     button.onclick =
         function(e) {
 
             e.stopPropagation();
 
-
             const expanded =
                 button.textContent === "−";
-
 
             togglePivotGroup(
                 groupId,
                 !expanded
             );
 
-
             button.textContent =
                 expanded
                     ? "+"
                     : "−";
-
         };
 
+    /*
+       Start collapsed
+    */
+    if (!initiallyExpanded) {
+
+        setTimeout(() => {
+
+            togglePivotGroup(
+                groupId,
+                false
+            );
+
+        }, 0);
+    }
 
     return button;
-
 }
 function togglePivotGroup(
     groupId,
