@@ -515,16 +515,25 @@ body::-webkit-scrollbar {
    LOGIN CONTAINER
    ========================================================= */
 
+/* =========================================================
+   LOGIN CONTAINER
+   SAME 1920 × 1080 CANVAS AS LOGO
+========================================================= */
+
 .login-container {
-    position: fixed;
+    position: absolute;
 
+    width: 1920px;
+    height: 1080px;
+
+    top: 0;
     left: 50%;
-    top: 50%;
 
-    width: 1200px;
-    height: 120px;
+    transform:
+        translateX(-50%)
+        scale(var(--canvas-scale, 1));
 
-    transform: translate(-50%, -50%);
+    transform-origin: top center;
 
     opacity: 0;
     visibility: hidden;
@@ -535,6 +544,7 @@ body::-webkit-scrollbar {
 
     pointer-events: none;
 }
+
 
 .login-container.show {
     opacity: 1;
@@ -549,37 +559,38 @@ body::-webkit-scrollbar {
 
     width: 100%;
     height: 100%;
+    top: 10%;
 }
-
 
 .username-group {
     position: absolute;
 
-    left: 180px;
-    top: 20px;
+    left: 620px;
+    top: 500px;
 
-    width: 320px;
+    width: 420px;
 }
 
-
-.username-group input {
+.username-group input,
+.password-group input {
     width: 100%;
+
+    height: 55px;
+
+    padding: 0 12px;
+
+    border: none;
+    border-bottom: 2px solid #0798d4;
 
     background: transparent;
 
-    border: none;
+    font-family: 'Montserrat', sans-serif;
+
+    font-size: 20px;
+
+    color: #0798d4;
 
     outline: none;
-
-    padding: 8px 0;
-
-    color: #1188c9;
-
-    font-family: "Inter", sans-serif;
-
-    font-size: 17px;
-
-    font-weight: 500;
 }
 
 
@@ -595,17 +606,16 @@ body::-webkit-scrollbar {
         3px solid #1188c9;
 }
 
-
 .password-group {
     position: absolute;
 
-    right: 150px;
-    top: 20px;
+    left: 1160px;
+    top: 500px;
 
-    width: 320px;
+    width: 420px;
 }
 
-
+/* 
 .password-group input {
     width: 100%;
 
@@ -624,7 +634,7 @@ body::-webkit-scrollbar {
     font-size: 17px;
 
     font-weight: 500;
-}
+} */
 
 
 .password-group input::placeholder {
@@ -867,4 +877,66 @@ body::-webkit-scrollbar {
 .hide-on-enter {
     opacity: 0 !important;
     pointer-events: none;
+}
+/* =========================================================
+   LOGIN ARROW
+========================================================= */
+
+.login-arrow {
+    position: absolute;
+
+    left: 1460px;
+    top: 680px;
+
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #0798d4;
+    color: #ffffff;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.login-arrow:hover {
+    background: #057eaf;
+
+    transform:
+        translateX(5px);
+}
+
+.login-arrow i {
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   CLICK
+========================================================= */
+
+.login-arrow:active {
+    transform:
+        translateY(-50%)
+        scale(0.94);
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.login-arrow:focus {
+    outline: none;
 }

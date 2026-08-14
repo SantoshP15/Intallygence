@@ -7,12 +7,36 @@ let pivotConfig = {
     rows: [],
     columns: [],
     values: [],
-    period: null,
-    filters: []
+    period: null,   
+    filters: [],
+    layout: null
 };
+// =======================================
+// LAYOUT CHANGE
+// =======================================
+
+const layoutSelect =
+    document.getElementById("layoutType");
+
+if (layoutSelect) {
+
+    layoutSelect.addEventListener(
+        "change",
+        function () {
+
+            pivotConfig.layout =
+                this.value;
+
+        }
+    );
+
+}
+
+
 // =======================================
 // LAST GENERATED TABULAR REPORT
 // =======================================
+
 
 let lastTabularReport = null;
 let lastPivotReport = null;
@@ -1200,11 +1224,38 @@ function renderTable(response) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const btn = document.getElementById("generate");
+    const btn =
+        document.getElementById("generate");
 
     if (btn) {
-        btn.addEventListener("click", generatePivot);
+        btn.addEventListener(
+            "click",
+            generatePivot
+        );
     }
+
+
+    // =================================
+    // LAYOUT CHANGE
+    // =================================
+
+    const layoutSelect =
+        document.getElementById("layoutType");
+
+    if (layoutSelect) {
+
+        layoutSelect.addEventListener(
+            "change",
+            function () {
+
+                pivotConfig.layout =
+                    this.value;
+
+            }
+        );
+
+    }
+
 
     updateRowColumnOptions();
 
@@ -1299,20 +1350,25 @@ function generatePivot() {
 
     }
 
-    const layoutType =
-    document.getElementById("layoutType").value;
+    const layoutSelect =
+    document.getElementById("layoutType");
+
+    if (!layoutSelect) {
+        console.error(
+            "Layout selector not found"
+        );
+        return;
+    }
+
+    pivotConfig.layout =
+        layoutSelect.value;
 
     const requestData = {
-
         rows: pivotConfig.rows,
-
         columns: pivotConfig.columns,
-
         values: pivotConfig.values,
-
         filters: getFilters(),
-
-        layout: layoutType
+        layout: pivotConfig.layout
     };
     console.log(requestData);
     console.log(JSON.stringify(requestData, null, 2));
@@ -1356,7 +1412,7 @@ function generatePivot() {
 
         const exportCsvBtn = document.getElementById("exportCsvBtn");
 
-        const exportPdfBtn = document.getElementById("exportPdfBtn");
+        const exportExcelBtn = document.getElementById("exportExcelBtn");
 
 
         if (data.layout === "pivot") {
@@ -1365,14 +1421,16 @@ function generatePivot() {
             lastPivotReport = data;
             lastTabularReport = null;
 
-            // Show PDF
-            if (exportPdfBtn) {
-                exportPdfBtn.style.display = "inline-block";
+            // Show Excel
+            if (exportExcelBtn) {
+                exportExcelBtn.style.display =
+                    "inline-block";
             }
 
             // Hide CSV
             if (exportCsvBtn) {
-                exportCsvBtn.style.display = "none";
+                exportCsvBtn.style.display =
+                    "none";
             }
 
             renderPivotTable(data);
@@ -1386,14 +1444,15 @@ function generatePivot() {
 
             // Show CSV
             if (exportCsvBtn) {
-                exportCsvBtn.style.display = "inline-block";
+                exportCsvBtn.style.display =
+                    "inline-block";
             }
 
-            // Hide PDF
-            if (exportPdfBtn) {
-                exportPdfBtn.style.display = "none";
+            // Hide Excel
+            if (exportExcelBtn) {
+                exportExcelBtn.style.display =
+                    "none";
             }
-
 
             renderTable(data);
         }
@@ -1948,6 +2007,17 @@ if (saveReportBtn) {
 
 function saveCurrentReport() {
 
+
+    const layoutSelect =
+        document.getElementById("layoutType");
+
+    if (layoutSelect) {
+
+        pivotConfig.layout =
+            layoutSelect.value;
+
+    }
+
     // -----------------------------------
     // Make sure something was selected
     // -----------------------------------
@@ -2161,6 +2231,19 @@ function openSavedReport(reportId) {
             // =================================
 
             pivotConfig = report.report_config;
+
+            const layoutSelect =
+                document.getElementById("layoutType");
+
+            if (
+                layoutSelect &&
+                pivotConfig.layout
+            ) {
+
+                layoutSelect.value =
+                    pivotConfig.layout;
+
+            }
 
 
             // Make sure period exists
@@ -3850,258 +3933,292 @@ document.addEventListener(
     }
 );
 // =======================================
-// EXPORT PIVOT REPORT TO PDF
-// CAPTURE EXACT PIVOT SHOWN ON SCREEN
+// EXPORT PIVOT REPORT TO EXCEL
 // =======================================
-async function exportCurrentPivotPDF() {
 
-    console.log("PDF Export clicked");
+function exportCurrentPivotExcel() {
+
+    console.log("Excel Export clicked");
+
+
+    // ---------------------------------------
+    // Check Pivot report
+    // ---------------------------------------
+
+    if (!lastPivotReport) {
+
+        alert(
+            "Excel export is available only for Pivot reports."
+        );
+
+        return;
+    }
+
+
+    // ---------------------------------------
+    // Check SheetJS
+    // ---------------------------------------
+
+    if (typeof XLSX === "undefined") {
+
+        alert(
+            "Excel export library is not loaded."
+        );
+
+        return;
+    }
+
+
+    // ---------------------------------------
+    // Find Pivot table
+    // ---------------------------------------
 
     const pivotTable =
-        document.querySelector(".excel-pivot-table");
-
-    if (!pivotTable) {
-        alert("Pivot table not found.");
-        return;
-    }
-
-    if (typeof html2canvas === "undefined") {
-        alert("html2canvas is not loaded.");
-        return;
-    }
-
-    if (!window.jspdf || !window.jspdf.jsPDF) {
-        alert("jsPDF is not loaded.");
-        return;
-    }
-
-    try {
-
-        // ===================================
-        // CAPTURE PIVOT
-        // ===================================
-
-        const canvas = await html2canvas(
-            pivotTable,
-            {
-                scale: 1,
-
-                backgroundColor: "#ffffff",
-
-                useCORS: true,
-
-                logging: false,
-
-                imageTimeout: 0
-            }
+        document.querySelector(
+            ".excel-pivot-table"
         );
 
 
-        // ===================================
-        // CREATE PDF
-        // ===================================
+    if (!pivotTable) {
 
-        const { jsPDF } = window.jspdf;
+        alert(
+            "Pivot table not found."
+        );
 
-        const pdf = new jsPDF({
-            orientation: "landscape",
-            unit: "mm",
-            format: "a4",
-
-            compress: true
-        });
+        return;
+    }
 
 
-        const pageWidth =
-            pdf.internal.pageSize.getWidth();
+    try {
 
-        const pageHeight =
-            pdf.internal.pageSize.getHeight();
+        // -----------------------------------
+        // Clone table
+        // -----------------------------------
 
-
-        const margin = 5;
-
-        const usableWidth =
-            pageWidth - (margin * 2);
-
-        const usableHeight =
-            pageHeight - (margin * 2);
+        const exportTable =
+            pivotTable.cloneNode(true);
 
 
-        // ===================================
-        // SCALE
-        // ===================================
+        // -----------------------------------
+        // Remove interactive buttons
+        // -----------------------------------
 
-        const scale =
-            usableWidth / canvas.width;
+        exportTable
+            .querySelectorAll(
+                ".pivot-toggle"
+            )
+            .forEach(button => {
 
-        const pagePixelHeight =
-            usableHeight / scale;
+                /*
+                   Keep the hierarchy indentation
+                   but remove the +/- button
+                   itself from Excel.
+                */
+
+                button.remove();
+
+            });
 
 
-        // ===================================
-        // SPLIT INTO PAGES
-        // ===================================
+        // -----------------------------------
+        // Remove other interactive elements
+        // -----------------------------------
 
-        let sourceY = 0;
+        exportTable
+            .querySelectorAll(
+                "button"
+            )
+            .forEach(button => {
 
-        let pageNumber = 0;
+                button.remove();
+
+            });
 
 
-        while (sourceY < canvas.height) {
+        // -----------------------------------
+        // Create workbook
+        // -----------------------------------
 
-            if (pageNumber > 0) {
-                pdf.addPage();
+        const workbook =
+            XLSX.utils.book_new();
+
+
+        // -----------------------------------
+        // Convert Pivot table
+        // -----------------------------------
+
+        const worksheet =
+            XLSX.utils.table_to_sheet(
+                exportTable,
+                {
+                    raw: true
+                }
+            );
+
+
+        // -----------------------------------
+        // Column widths
+        // -----------------------------------
+
+        const range =
+            XLSX.utils.decode_range(
+                worksheet["!ref"]
+            );
+
+
+        const columnWidths = [];
+
+
+        for (
+            let column = range.s.c;
+            column <= range.e.c;
+            column++
+        ) {
+
+            let maxLength = 0;
+
+
+            for (
+                let row = range.s.r;
+                row <= range.e.r;
+                row++
+            ) {
+
+                const cellAddress =
+                    XLSX.utils.encode_cell({
+                        r: row,
+                        c: column
+                    });
+
+
+                const cell =
+                    worksheet[cellAddress];
+
+
+                if (!cell)
+                    continue;
+
+
+                const value =
+                    String(
+                        cell.v ?? ""
+                    );
+
+
+                maxLength =
+                    Math.max(
+                        maxLength,
+                        value.length
+                    );
+
             }
 
 
-            const currentHeight =
-                Math.min(
-                    pagePixelHeight,
-                    canvas.height - sourceY
-                );
+            columnWidths.push({
 
+                wch:
+                    Math.min(
+                        Math.max(
+                            maxLength + 2,
+                            12
+                        ),
+                        35
+                    )
 
-            // =================================
-            // TEMPORARY CANVAS
-            // =================================
+            });
 
-            const pageCanvas =
-                document.createElement("canvas");
-
-
-            pageCanvas.width =
-                canvas.width;
-
-            pageCanvas.height =
-                currentHeight;
-
-
-            const ctx =
-                pageCanvas.getContext("2d");
-
-
-            ctx.fillStyle = "#ffffff";
-
-            ctx.fillRect(
-                0,
-                0,
-                pageCanvas.width,
-                pageCanvas.height
-            );
-
-
-            // =================================
-            // COPY CURRENT PAGE
-            // =================================
-
-            ctx.drawImage(
-                canvas,
-
-                0,
-                sourceY,
-
-                canvas.width,
-                currentHeight,
-
-                0,
-                0,
-
-                canvas.width,
-                currentHeight
-            );
-
-
-            // =================================
-            // JPEG COMPRESSION
-            // =================================
-
-            const imageData =
-                pageCanvas.toDataURL(
-                    "image/jpeg",
-                    0.60
-                );
-
-
-            // =================================
-            // ADD IMAGE
-            // =================================
-
-            pdf.addImage(
-                imageData,
-
-                "JPEG",
-
-                margin,
-                margin,
-
-                usableWidth,
-
-                currentHeight * scale,
-
-                undefined,
-
-                "FAST"
-            );
-
-
-            sourceY += currentHeight;
-
-            pageNumber++;
         }
 
 
-        // ===================================
-        // SAVE
-        // ===================================
+        worksheet["!cols"] =
+            columnWidths;
 
-        pdf.save(
+
+        // -----------------------------------
+        // Freeze header
+        // -----------------------------------
+
+        worksheet["!freeze"] = {
+            xSplit: 0,
+            ySplit: 2
+        };
+
+
+        // -----------------------------------
+        // Add worksheet
+        // -----------------------------------
+
+        XLSX.utils.book_append_sheet(
+            workbook,
+            worksheet,
+            "Pivot Report"
+        );
+
+
+        // -----------------------------------
+        // File name
+        // -----------------------------------
+
+        const fileName =
             "Pivot_Report_" +
             new Date()
                 .toISOString()
                 .slice(0, 10) +
-            ".pdf"
+            ".xlsx";
+
+
+        // -----------------------------------
+        // Download
+        // -----------------------------------
+
+        XLSX.writeFile(
+            workbook,
+            fileName
         );
 
 
         console.log(
-            "PDF exported successfully."
+            "Excel exported successfully."
         );
 
     }
     catch (error) {
 
         console.error(
-            "PDF Export Error:",
+            "Excel Export Error:",
             error
         );
 
         alert(
-            "PDF export failed.\n\n" +
+            "Excel export failed.\n\n" +
             error.message
         );
+
     }
+
 }
+// =======================================
+// EXPORT EXCEL BUTTON
+// =======================================
+
 document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-        const pdfButton =
+        const exportExcelBtn =
             document.getElementById(
-                "exportPdfBtn"
+                "exportExcelBtn"
             );
 
-        if (!pdfButton) {
 
-            console.warn(
-                "Export PDF button not found."
+        if (exportExcelBtn) {
+
+            exportExcelBtn.addEventListener(
+                "click",
+                exportCurrentPivotExcel
             );
 
-            return;
         }
-
-        pdfButton.onclick =
-            exportCurrentPivotPDF;
 
     }
 );

@@ -164,7 +164,7 @@ body {
 
     padding: 5px 10px;
 
-    font-family: "Inter", sans-serif;
+    font-family: "Oswald", sans-serif;
 
     font-size: 11px;
 
@@ -419,7 +419,7 @@ body {
 
     border-radius: 3px;
 
-    background: #eaf7fc;
+    background: #ffffff;
 
     color: #008dcc;
 
@@ -456,13 +456,20 @@ body {
     position: relative;
     z-index: 10000;
     pointer-events: auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
+    height: 14px;
+    width: 14px;
+
+    transform: translateY(0px);
 }
 
-
 .remove-btn:hover {
-
     color: #d22;
-
 }
 
 
@@ -482,7 +489,7 @@ body {
     background: #0798d4;
     color: white;
 
-    font-family: "Inter", sans-serif;
+    font-family: "Oswald", sans-serif;
     font-size: 10px;
     font-weight: 600;
 
@@ -1462,7 +1469,7 @@ body {
 
     padding: 5px 10px;
 
-    font-family: "Inter", sans-serif;
+    font-family: "Oswald", sans-serif;
     font-size: 11px;
 
     cursor: pointer;
@@ -1516,21 +1523,27 @@ body {
     color: white;
 }
 .layout-select {
-    height: 22px;
-    min-width: 75px;
+    align-self: start !important;
 
-    padding: 0 5px;
+    width: 165px;
+    min-width: 165px;
 
-    border: 1px solid #0798d4;
-    border-radius: 3px;
+    height: 28px;
+
+    margin-top: 18px !important;
+    margin-bottom: 0 !important;
+
+    padding: 0 9px;
+
+    border: none;
+    border-radius: 7px;
 
     background: #fff;
-    color: #0798d4;
+    color: #008dcc;
 
     font-family: "Inter", sans-serif;
-    font-size: 10px;
+    font-size: 14px;
 
-    outline: none;
     cursor: pointer;
 }
 /* =========================================
@@ -1815,10 +1828,10 @@ tbody td {
     background: white;
     color: #0798d4;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
 
-    line-height: 14px;
+    line-height: 1;
 
     cursor: pointer;
 }
@@ -1976,9 +1989,9 @@ body {
     background: transparent;
     color: #008dcc;
     padding: 5px 0;
-    font-family: "Inter", sans-serif;
+    font-family: "Oswald", sans-serif;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 100;
 }
 
 /* REPORT TYPE TABS */
@@ -2107,22 +2120,33 @@ body {
     color: #008dcc;
     font-family: "Inter", sans-serif;
     font-size: 14px;
+    font-weight: 700;
 }
 
 .go-button {
-    align-self: end;
+    align-self: start !important;
+
     width: 43px;
     height: 28px;
-    margin-bottom: 28px;
+
+    margin-top: 18px !important;
+    margin-bottom: 0 !important;
+
+    padding: 0;
+
     border: none;
     border-radius: 7px;
+
     background: #fff;
     color: #0798d4;
+
     font-family: "Inter", sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
+
     cursor: pointer;
-    transform: none;
+
+    transform: none !important;
 }
 
 /* INFO BOX */

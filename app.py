@@ -184,35 +184,116 @@ def generate_pivot():
 
     try:
 
-        sql = build_query(config)
+        # ============================================
+        # GET SELECTED LAYOUT
+        # ============================================
 
-        if sql is None:
+        layout = config.get("layout")
+
+
+        # ============================================
+        # LAYOUT IS REQUIRED
+        # ============================================
+
+        if not layout:
+
             return jsonify({
-                "error": "Please select at least one Row and one Value."
+                "error": "Please select a layout."
             }), 400
 
+
+        # ============================================
+        # BUILD QUERY ACCORDING TO LAYOUT
+        # ============================================
+
+        if layout == "pivot":
+
+            sql = build_pivot_query(config)
+
+        else:
+
+            sql = build_query(config)
+
+
+        # ============================================
+        # VALIDATE QUERY
+        # ============================================
+
+        if sql is None:
+
+            return jsonify({
+                "error":
+                    "Please select at least one Row "
+                    "and one Value."
+            }), 400
+
+
+        # ============================================
+        # PRINT DEBUG INFORMATION
+        # ============================================
+
         print("=================================")
+
+        print("SELECTED LAYOUT:")
+        print(layout)
+
+        print("=================================")
+
         print("GENERATED SQL:")
         print(sql)
+
         print("=================================")
+
+
+        # ============================================
+        # EXECUTE QUERY
+        # ============================================
 
         db = get_db_connection()
 
-        cursor = db.cursor(dictionary=True)
+        cursor = db.cursor(
+            dictionary=True
+        )
+
 
         cursor.execute(sql)
 
         data = cursor.fetchall()
 
-        # IMPORTANT:
-        # Get column names BEFORE closing cursor
-        columns = [desc[0] for desc in cursor.description]
+
+        # ============================================
+        # GET COLUMN NAMES
+        # ============================================
+
+        columns = [
+            desc[0]
+            for desc in cursor.description
+        ]
+
+
+        # ============================================
+        # CLOSE DATABASE
+        # ============================================
 
         cursor.close()
+
         db.close()
 
+
+        # ============================================
+        # DEBUG CONFIG
+        # ============================================
+
         print("CONFIG:")
+
         print(config)
+
+        print("=================================")
+
+
+        # ============================================
+        # RETURN RESULT
+        # ============================================
 
         return jsonify({
 
@@ -220,21 +301,30 @@ def generate_pivot():
 
             "data": data,
 
-            # Send layout back to JavaScript
-            "layout": config.get("layout", "tabular")
+            "layout": layout
 
         })
+
 
     except Exception as e:
 
         print("=================================")
-        print("GENERATE PIVOT ERROR:")
+
+        print("GENERATE REPORT ERROR:")
+
         print(str(e))
+
         print("=================================")
 
+
         return jsonify({
+
             "error": str(e)
+
         }), 500
+        
+        
+        
 @app.route("/save-report", methods=["POST"])
 def save_report():
 
