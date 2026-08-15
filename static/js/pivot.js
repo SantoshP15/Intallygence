@@ -2131,6 +2131,10 @@ if (savedReportsBtn) {
 }
 
 
+// =======================================
+// LOAD SAVED REPORTS
+// =======================================
+
 function loadSavedReports() {
 
     fetch("/saved-reports")
@@ -2141,75 +2145,920 @@ function loadSavedReports() {
 
         .then(reports => {
 
-            if (!reports.length) {
+            const modal =
+                document.getElementById(
+                    "savedReportsModal"
+                );
 
-                alert(
-                    "You don't have any saved reports."
+            const list =
+                document.getElementById(
+                    "savedReportsList"
+                );
+
+
+            // -----------------------------------
+            // CHECK MODAL
+            // -----------------------------------
+
+            if (!modal || !list) {
+
+                console.error(
+                    "Saved Reports modal not found."
                 );
 
                 return;
             }
 
 
-            let message =
-                "MY SAVED REPORTS\n\n";
+            // -----------------------------------
+            // REMOVE ANY OPEN MENUS
+            // -----------------------------------
 
+            document
+                .querySelectorAll(
+                    ".saved-report-menu"
+                )
+                .forEach(menu => {
+
+                    menu.remove();
+
+                });
+
+
+            // -----------------------------------
+            // CLEAR OLD REPORTS
+            // -----------------------------------
+
+            list.innerHTML = "";
+
+
+            // -----------------------------------
+            // NO REPORTS
+            // -----------------------------------
+
+            if (!reports.length) {
+
+                list.innerHTML = `
+
+                    <div class="saved-reports-empty">
+
+                        <i
+                            class="fa-solid fa-folder-open"
+                            style="
+                                font-size: 28px;
+                                margin-bottom: 10px;
+                                display: block;
+                                color: #0798d4;
+                            "
+                        ></i>
+
+                        You don't have any
+                        saved reports yet.
+
+                    </div>
+
+                `;
+
+                openSavedReportsModal();
+
+                return;
+            }
+
+
+            // -----------------------------------
+            // CREATE REPORT ITEMS
+            // -----------------------------------
 
             reports.forEach(
                 (report, index) => {
 
-                    message +=
-                        `${index + 1}. ` +
-                        `${report.report_name}\n`;
+
+                    // =================================
+                    // REPORT ITEM
+                    // =================================
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "saved-report-item";
+
+
+                    // =================================
+                    // REPORT HTML
+                    // =================================
+
+                    item.innerHTML = `
+
+                        <span
+                            class="saved-report-number"
+                        >
+                            ${index + 1}
+                        </span>
+
+
+                        <span
+                            class="saved-report-details"
+                        >
+
+                            <span
+                                class="saved-report-name"
+                                title="${escapeHtml(
+                                    report.report_name
+                                )}"
+                            >
+                                ${escapeHtml(
+                                    report.report_name
+                                )}
+                            </span>
+
+
+                            ${
+                                report.created_at
+                                ?
+                                `
+                                <span
+                                    class="saved-report-date"
+                                >
+                                    Created:
+                                    ${formatSavedReportDate(
+                                        report.created_at
+                                    )}
+                                </span>
+                                `
+                                :
+                                ""
+                            }
+
+                        </span>
+
+
+                        <!-- THREE DOT BUTTON -->
+
+                        <button
+                            type="button"
+                            class="saved-report-menu-btn"
+                            title="More options"
+                        >
+
+                            <i
+                                class="fa-solid fa-ellipsis-vertical"
+                            ></i>
+
+                        </button>
+
+
+                        <!-- OPEN ARROW -->
+
+                        <i
+                            class="
+                                fa-solid
+                                fa-arrow-right
+                                saved-report-arrow
+                            "
+                        ></i>
+
+                    `;
+
+
+                    // =================================
+                    // MENU BUTTON
+                    // =================================
+
+                    const menuButton =
+                        item.querySelector(
+                            ".saved-report-menu-btn"
+                        );
+
+
+                    // =================================
+                    // OPEN REPORT BY CLICKING ITEM
+                    // =================================
+
+                    item.addEventListener(
+                        "click",
+                        function (event) {
+
+                            /*
+                               Don't open report if
+                               three-dot button was clicked.
+                            */
+
+                            if (
+                                event.target.closest(
+                                    ".saved-report-menu-btn"
+                                )
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            closeSavedReportsModal();
+
+                            openSavedReport(
+                                report.id
+                            );
+
+                        }
+                    );
+
+
+                    // =================================
+                    // THREE DOT MENU
+                    // =================================
+
+                    menuButton.addEventListener(
+                        "click",
+                        function (event) {
+
+                            event.stopPropagation();
+
+
+                            // =================================
+                            // REMOVE EXISTING MENUS
+                            // =================================
+
+                            document
+                                .querySelectorAll(
+                                    ".saved-report-menu"
+                                )
+                                .forEach(
+                                    menu => {
+
+                                        menu.remove();
+
+                                    }
+                                );
+
+
+                            // =================================
+                            // CREATE MENU
+                            // =================================
+
+                            const menu =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            menu.className =
+                                "saved-report-menu";
+
+
+                            // =================================
+                            // MENU HTML
+                            // =================================
+
+                            menu.innerHTML = `
+
+                                <button
+                                    type="button"
+                                    class="saved-menu-open"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-folder-open"
+                                    ></i>
+
+                                    <span>
+                                        Open
+                                    </span>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="saved-menu-rename"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-pen"
+                                    ></i>
+
+                                    <span>
+                                        Rename
+                                    </span>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="saved-menu-duplicate"
+                                >
+
+                                    <i
+                                        class="fa-regular fa-copy"
+                                    ></i>
+
+                                    <span>
+                                        Duplicate
+                                    </span>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="saved-menu-delete"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-trash"
+                                    ></i>
+
+                                    <span>
+                                        Delete
+                                    </span>
+
+                                </button>
+
+                            `;
+
+
+                            // =================================
+                            // FORCE MENU VISIBILITY
+                            // =================================
+
+                            menu.style.position =
+                                "fixed";
+
+                            menu.style.zIndex =
+                                "999999";
+
+                            menu.style.display =
+                                "block";
+
+                            menu.style.visibility =
+                                "visible";
+
+                            menu.style.opacity =
+                                "1";
+
+                            menu.style.background =
+                                "#ffffff";
+
+                            menu.style.color =
+                                "#222222";
+
+                            menu.style.width =
+                                "160px";
+
+                            menu.style.padding =
+                                "6px 0";
+
+                            menu.style.borderRadius =
+                                "8px";
+
+                            menu.style.boxShadow =
+                                "0 8px 25px rgba(0,0,0,0.25)";
+
+
+                            // =================================
+                            // ADD MENU TO BODY
+                            // =================================
+
+                            document.body.appendChild(
+                                menu
+                            );
+
+
+                            // =================================
+                            // GET BUTTON POSITION
+                            // =================================
+
+                            const buttonRect =
+                                menuButton.getBoundingClientRect();
+
+
+                            const menuWidth =
+                                160;
+
+                            const menuHeight =
+                                menu.offsetHeight ||
+                                170;
+
+                            const spacing =
+                                6;
+
+
+                            let left =
+                                buttonRect.right -
+                                menuWidth;
+
+                            let top =
+                                buttonRect.bottom +
+                                spacing;
+
+
+                            // =================================
+                            // KEEP INSIDE RIGHT EDGE
+                            // =================================
+
+                            if (
+                                left +
+                                menuWidth >
+                                window.innerWidth -
+                                10
+                            ) {
+
+                                left =
+                                    window.innerWidth -
+                                    menuWidth -
+                                    10;
+
+                            }
+
+
+                            // =================================
+                            // KEEP INSIDE LEFT EDGE
+                            // =================================
+
+                            if (
+                                left < 10
+                            ) {
+
+                                left = 10;
+
+                            }
+
+
+                            // =================================
+                            // OPEN UPWARD IF NEEDED
+                            // =================================
+
+                            if (
+                                top +
+                                menuHeight >
+                                window.innerHeight -
+                                10
+                            ) {
+
+                                top =
+                                    buttonRect.top -
+                                    menuHeight -
+                                    spacing;
+
+                            }
+
+
+                            // =================================
+                            // APPLY POSITION
+                            // =================================
+
+                            menu.style.left =
+                                `${left}px`;
+
+                            menu.style.top =
+                                `${top}px`;
+
+
+                            // =================================
+                            // OPEN
+                            // =================================
+
+                            const openButton =
+                                menu.querySelector(
+                                    ".saved-menu-open"
+                                );
+
+
+                            if (openButton) {
+
+                                openButton.addEventListener(
+                                    "click",
+                                    function (e) {
+
+                                        e.stopPropagation();
+
+                                        menu.remove();
+
+                                        closeSavedReportsModal();
+
+                                        openSavedReport(
+                                            report.id
+                                        );
+
+                                    }
+                                );
+
+                            }
+
+
+                            // =================================
+                            // RENAME
+                            // =================================
+
+                            const renameButton =
+                                menu.querySelector(
+                                    ".saved-menu-rename"
+                                );
+
+
+                            if (renameButton) {
+
+                                renameButton.addEventListener(
+                                    "click",
+                                    function (e) {
+
+                                        e.stopPropagation();
+
+                                        menu.remove();
+
+                                        renameSavedReport(
+                                            report
+                                        );
+
+                                    }
+                                );
+
+                            }
+
+
+                            // =================================
+                            // DUPLICATE
+                            // =================================
+
+                            const duplicateButton =
+                                menu.querySelector(
+                                    ".saved-menu-duplicate"
+                                );
+
+
+                            if (duplicateButton) {
+
+                                duplicateButton.addEventListener(
+                                    "click",
+                                    function (e) {
+
+                                        e.stopPropagation();
+
+                                        menu.remove();
+
+                                        alert(
+                                            "Duplicate functionality will be added next."
+                                        );
+
+                                    }
+                                );
+
+                            }
+
+
+                            // =================================
+                            // DELETE
+                            // =================================
+
+                            const deleteButton =
+                                menu.querySelector(
+                                    ".saved-menu-delete"
+                                );
+
+
+                            if (deleteButton) {
+
+                                deleteButton.addEventListener(
+                                    "click",
+                                    function (e) {
+
+                                        e.stopPropagation();
+
+                                        menu.remove();
+
+                                        deleteSavedReport(
+                                            report
+                                        );
+
+                                    }
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    // =================================
+                    // ADD REPORT ITEM TO LIST
+                    // =================================
+
+                    list.appendChild(
+                        item
+                    );
 
                 }
             );
 
 
-            const choice =
-                prompt(
-                    message +
-                    "\nEnter report number to open:"
-                );
+            // =================================
+            // OPEN SAVED REPORTS MODAL
+            // =================================
 
-
-            if (!choice)
-                return;
-
-
-            const index =
-                parseInt(choice) - 1;
-
-
-            if (
-                index < 0 ||
-                index >= reports.length
-            ) {
-
-                alert(
-                    "Invalid report number."
-                );
-
-                return;
-            }
-
-
-            openSavedReport(
-                reports[index].id
-            );
+            openSavedReportsModal();
 
         })
 
 
+        // =================================
+        // ERROR
+        // =================================
+
         .catch(error => {
 
-            console.error(error);
-
-            alert(
-                "Error loading saved reports."
+            console.error(
+                "Saved Reports Error:",
+                error
             );
 
+
+            const modal =
+                document.getElementById(
+                    "savedReportsModal"
+                );
+
+            const list =
+                document.getElementById(
+                    "savedReportsList"
+                );
+
+
+            if (
+                modal &&
+                list
+            ) {
+
+                list.innerHTML = `
+
+                    <div
+                        class="saved-reports-empty"
+                    >
+
+                        Unable to load
+                        saved reports.
+
+                    </div>
+
+                `;
+
+                openSavedReportsModal();
+
+            }
+
         });
+
+}
+// =======================================
+// OPEN MODAL
+// =======================================
+
+function openSavedReportsModal() {
+
+    const modal =
+        document.getElementById(
+            "savedReportsModal"
+        );
+
+
+    if (!modal)
+        return;
+
+
+    modal.classList.add(
+        "show"
+    );
+
+}
+
+
+// =======================================
+// CLOSE MODAL
+// =======================================
+
+// =========================================================
+// CLOSE SAVED REPORTS MODAL
+// =========================================================
+
+function closeSavedReportsModal() {
+
+    // -----------------------------------------
+    // REMOVE ALL OPEN SAVED REPORT MENUS
+    // -----------------------------------------
+
+    document
+        .querySelectorAll(
+            ".saved-report-floating-menu, .saved-report-menu"
+        )
+        .forEach(menu => {
+            menu.remove();
+        });
+
+
+    // -----------------------------------------
+    // CLOSE MODAL
+    // -----------------------------------------
+
+    const modal =
+        document.getElementById(
+            "savedReportsModal"
+        );
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.remove(
+        "show"
+    );
+
+}
+
+
+// =======================================
+// CLOSE BUTTONS
+// =======================================
+
+// =========================================================
+// CLOSE BUTTON
+// =========================================================
+
+const closeSavedReports =
+    document.getElementById(
+        "closeSavedReports"
+    );
+
+
+if (closeSavedReports) {
+
+    closeSavedReports.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            closeSavedReportsModal();
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// CANCEL BUTTON
+// =========================================================
+
+const cancelSavedReports =
+    document.getElementById(
+        "cancelSavedReports"
+    );
+
+
+if (cancelSavedReports) {
+
+    cancelSavedReports.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            closeSavedReportsModal();
+
+        }
+    );
+
+}
+
+
+// =======================================
+// CLOSE WHEN CLICKING OUTSIDE
+// =======================================
+
+// =========================================================
+// CLOSE SAVED REPORTS WHEN CLICKING OUTSIDE
+// =========================================================
+
+const savedReportsOverlay =
+    document.querySelector(
+        ".saved-reports-overlay"
+    );
+
+
+if (savedReportsOverlay) {
+
+    savedReportsOverlay.addEventListener(
+        "click",
+        function (event) {
+
+            // Only close when the actual overlay
+            // is clicked.
+
+            if (
+                event.target ===
+                savedReportsOverlay
+            ) {
+
+                closeSavedReportsModal();
+
+            }
+
+        }
+    );
+
+}
+
+
+// =======================================
+// ESCAPE KEY
+// =======================================
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeSavedReportsModal();
+
+        }
+
+    }
+);
+// =======================================
+// ESCAPE HTML
+// =======================================
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+// =======================================
+// FORMAT DATE
+// =======================================
+
+function formatSavedReportDate(
+    dateValue
+) {
+
+    const date =
+        new Date(dateValue);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
 
 }
 function openSavedReport(reportId) {
@@ -4222,3 +5071,81 @@ document.addEventListener(
 
     }
 );
+// =======================================
+// RENAME SAVED REPORT
+// =======================================
+
+function renameSavedReport(report) {
+
+    const newName =
+        prompt(
+            "Enter new report name:",
+            report.report_name
+        );
+
+
+    if (
+        newName === null ||
+        !newName.trim()
+    ) {
+
+        return;
+
+    }
+
+
+    fetch(
+        `/saved-report/${report.id}/rename`,
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+
+                report_name:
+                    newName.trim()
+
+            })
+
+        }
+    )
+
+    .then(response =>
+        response.json()
+    )
+
+    .then(result => {
+
+        if (result.error) {
+
+            alert(
+                result.error
+            );
+
+            return;
+
+        }
+
+
+        loadSavedReports();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Unable to rename report."
+        );
+
+    });
+
+}

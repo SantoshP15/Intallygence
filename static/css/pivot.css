@@ -2666,3 +2666,777 @@ body::-webkit-scrollbar {
     min-width: 165px;
     flex: 0 0 165px;
 }
+/* =========================================================
+   SAVED REPORTS MODAL
+========================================================= */
+
+.saved-reports-modal {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 45, 65, 0.42);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    z-index: 99999;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+
+/* =========================================================
+   MODAL OPEN
+========================================================= */
+
+.saved-reports-modal.show,
+#savedReportsModal.show {
+
+    display: flex !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.saved-reports-overlay {
+
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 50, 70, 0.38);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   DIALOG
+========================================================= */
+
+.saved-reports-dialog {
+
+    position: relative;
+
+    width: 620px;
+    max-width: calc(100vw - 40px);
+
+    max-height: 80vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+
+    border:
+        1px solid #bde4f2;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 70, 100, 0.28);
+
+    overflow: visible;
+
+    z-index: 2;
+
+    pointer-events: auto;
+
+    animation:
+        savedReportsOpen
+        0.22s
+        ease
+        forwards;
+}
+
+
+@keyframes savedReportsOpen {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(15px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.saved-reports-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 22px;
+
+    background: #0798d4;
+
+    color: #ffffff;
+
+    border-radius:
+        14px
+        14px
+        0
+        0;
+}
+
+
+.saved-reports-header h2 {
+
+    margin: 0;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+
+.saved-reports-header p {
+
+    margin:
+        4px 0 0;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 12px;
+
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.saved-reports-close {
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.16);
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.saved-reports-close:hover {
+
+    background:
+        rgba(255,255,255,0.30);
+
+    transform: rotate(90deg);
+}
+
+
+/* =========================================================
+   REPORT LIST
+========================================================= */
+
+.saved-reports-list {
+
+    position: relative;
+
+    padding: 18px;
+
+    max-height: 50vh;
+
+    overflow-y: auto;
+    overflow-x: visible;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   REPORT ITEM
+========================================================= */
+
+.saved-report-item {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    margin-bottom: 9px;
+
+    border:
+        1px solid #d8eaf1;
+
+    border-radius: 9px;
+
+    background: #f8fcfe;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.saved-report-item:last-child {
+
+    margin-bottom: 0;
+}
+
+
+.saved-report-item:hover {
+
+    background: #eefaff;
+
+    border-color: #0798d4;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 140, 190, 0.10);
+
+    transform:
+        translateX(2px);
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+.saved-report-number {
+
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #0798d4;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   REPORT DETAILS
+========================================================= */
+
+.saved-report-details {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+.saved-report-name {
+
+    display: block;
+
+    color: #123;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 20px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.saved-report-date {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #82939a;
+
+    font-size: 11px;
+
+    line-height: 16px;
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.saved-report-arrow {
+
+    flex-shrink: 0;
+
+    color: #0798d4;
+
+    font-size: 14px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.saved-report-item:hover
+.saved-report-arrow {
+
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   THREE DOT BUTTON
+========================================================= */
+
+.saved-report-menu-btn {
+
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #70858d;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    position: relative;
+
+    z-index: 10;
+}
+
+
+.saved-report-menu-btn:hover {
+
+    background: #e5f4f9;
+
+    color: #0798d4;
+}
+
+
+/* =========================================================
+   THREE DOT MENU
+========================================================= */
+
+.saved-report-menu {
+
+    position: absolute;
+
+    top: 42px;
+    right: 10px;
+
+    width: 150px;
+
+    padding: 6px;
+
+    display: none;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border:
+        1px solid #d7e9ef;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 70, 100, 0.18);
+
+    z-index: 999999;
+
+    overflow: visible;
+}
+
+
+.saved-report-menu.show {
+
+    display: flex !important;
+}
+
+
+/* =========================================================
+   MENU OPENING UPWARD
+========================================================= */
+
+.saved-report-menu.open-up {
+
+    top: auto;
+
+    bottom: 42px;
+}
+
+
+/* =========================================================
+   MENU BUTTONS
+========================================================= */
+
+.saved-report-menu button {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px 10px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #263b42;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 13px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+
+.saved-report-menu button:hover {
+
+    background: #edf8fb;
+
+    color: #0798d4;
+}
+
+
+.saved-report-menu button i {
+
+    width: 16px;
+
+    flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+.saved-report-menu
+.saved-menu-delete {
+
+    color: #d64545;
+}
+
+
+.saved-report-menu
+.saved-menu-delete:hover {
+
+    background: #fff0f0;
+
+    color: #c62828;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.saved-reports-empty {
+
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: #82939a;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.saved-reports-footer {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding: 14px 18px;
+
+    border-top:
+        1px solid #e2edf1;
+
+    background: #fafcfd;
+
+    border-radius:
+        0
+        0
+        14px
+        14px;
+}
+
+
+.saved-reports-cancel {
+
+    padding:
+        8px 18px;
+
+    border:
+        1px solid #0798d4;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #0798d4;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.saved-reports-cancel:hover {
+
+    background: #0798d4;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.saved-reports-list::-webkit-scrollbar {
+
+    width: 6px;
+}
+
+
+.saved-reports-list::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.saved-reports-list::-webkit-scrollbar-thumb {
+
+    background: #9ed7e8;
+
+    border-radius: 10px;
+}
+
+
+.saved-reports-list::-webkit-scrollbar-thumb:hover {
+
+    background: #0798d4;
+}
+
+
+/* =========================================================
+   IMPORTANT CLICK / LAYER FIX
+========================================================= */
+
+.saved-reports-dialog,
+.saved-reports-dialog * {
+
+    pointer-events: auto;
+}
+
+
+.saved-reports-overlay {
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .saved-reports-dialog {
+
+        width:
+            calc(100vw - 24px);
+
+        max-width:
+            calc(100vw - 24px);
+    }
+
+    .saved-reports-header {
+
+        padding:
+            16px 18px;
+    }
+
+    .saved-reports-list {
+
+        padding:
+            14px;
+    }
+
+    .saved-report-item {
+
+        min-height: 58px;
+
+        padding:
+            10px 12px;
+    }
+
+    .saved-report-name {
+
+        font-size: 13px;
+    }
+
+}

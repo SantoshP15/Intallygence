@@ -1,0 +1,344 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>InTallygence</title>
+
+
+    <!-- Inter -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- Dashboard CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for(
+            'static',
+            filename='css/report-dashboard.css'
+        ) }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <main class="report-dashboard">
+
+
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
+
+        <header class="dashboard-header">
+
+            <div class="dashboard-logo">
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/logo.svg'
+                    ) }}"
+                    alt="InTallygence"
+                >
+
+            </div>
+
+
+            <div class="dashboard-user">
+
+                <span>
+                    Welcome, {{ session["user"] }}
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CREATE YOUR OWN REPORT
+        ================================================== -->
+
+        <section class="create-report-section">
+
+            <button
+                type="button"
+                class="create-report-btn"
+                onclick="createOwnReport()"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                <span>
+                    Create Your Own Report
+                </span>
+
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             REPORT TYPES
+        ================================================== -->
+
+        <section class="report-section">
+
+            <h1>
+                Reports
+            </h1>
+
+            <p class="report-subtitle">
+                Select a report to get started
+            </p>
+
+
+            <div class="report-grid">
+
+
+                <!-- SALES -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('sales')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Sales
+                        </h2>
+
+                        <p>
+                            Analyse sales data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+                <!-- PURCHASE -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('purchase')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-cart-shopping"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Purchase
+                        </h2>
+
+                        <p>
+                            Analyse purchase data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+                <!-- DEBIT NOTE -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('debit-note')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-file-invoice"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Debit Note
+                        </h2>
+
+                        <p>
+                            Analyse debit note data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+                <!-- CREDIT NOTE -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('credit-note')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-file-circle-minus"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Credit Note
+                        </h2>
+
+                        <p>
+                            Analyse credit note data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+                <!-- STOCK -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('stock')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-boxes-stacked"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Stock
+                        </h2>
+
+                        <p>
+                            Analyse stock data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+                <!-- LEDGER -->
+
+                <button
+                    class="report-card"
+                    onclick="openReport('ledger')"
+                >
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-book"></i>
+
+                    </div>
+
+                    <div class="report-info">
+
+                        <h2>
+                            Ledger
+                        </h2>
+
+                        <p>
+                            Analyse ledger data
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-arrow-right card-arrow"
+                    ></i>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <script
+        src="{{ url_for(
+            'static',
+            filename='js/report-dashboard.js'
+        ) }}"
+    ></script>
+
+
+</body>
+
+</html>

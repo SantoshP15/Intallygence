@@ -20,6 +20,23 @@ app.secret_key = "your_secret_key_here"
 def get_db_connection():
     return connect()
 
+# =========================================================
+# REPORT DASHBOARD
+# =========================================================
+
+@app.route("/report-dashboard")
+def report_dashboard():
+
+    if "user" not in session:
+
+        return redirect(
+            url_for("splash")
+        )
+
+    return render_template(
+        "report-dashboard.html"
+    )
+
 @app.route("/")
 def splash():
     error = request.args.get("error")
@@ -56,7 +73,7 @@ def login():
 
         session["user"] = user["username"]
 
-        return redirect(url_for("pivot"))
+        return redirect(url_for("report_dashboard"))
 
     return redirect("/#login")
 
