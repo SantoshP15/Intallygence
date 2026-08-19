@@ -3442,3 +3442,49 @@ body::-webkit-scrollbar {
     }
 
 }
+/* Columns disabled until a Row is selected */
+#columnSelect:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #e9eef1;
+}
+/* =========================================================
+   RESET BUTTON
+   ========================================================= */
+
+#resetReportBtn {
+    position: absolute;
+    right: 82px;
+    top: 65px;
+
+    width: 45px;
+    height: 20px;
+
+    padding: 0;
+
+    border: 1px solid #0798d4;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #0798d4;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+#resetReportBtn:hover {
+    background: #0798d4;
+    color: #ffffff;
+}
+
+#resetReportBtn:active {
+    transform: scale(0.97);
+}

@@ -11,6 +11,8 @@ let pivotConfig = {
     filters: [],
     layout: null
 };
+
+
 // =======================================
 // LAYOUT CHANGE
 // =======================================
@@ -101,6 +103,38 @@ function updateRowColumnOptions() {
     });
 
 }
+// =======================================
+// ENABLE / DISABLE COLUMNS
+// Columns can only be used after a Row
+// has been selected
+// =======================================
+
+function updateColumnAccess() {
+
+    const columnSelect =
+        document.getElementById("columnField");
+
+    if (!columnSelect)
+        return;
+
+    const hasRows =
+        pivotConfig.rows.length > 0;
+
+    columnSelect.disabled = !hasRows;
+
+    // Optional visual indication
+    if (hasRows) {
+
+        columnSelect.style.opacity = "1";
+        columnSelect.style.cursor = "pointer";
+
+    } else {
+
+        columnSelect.style.opacity = "0.55";
+        columnSelect.style.cursor = "not-allowed";
+
+    }
+}
 
 // ================================
 // Create Chip
@@ -155,6 +189,7 @@ function renderRows() {
                 renderRows();
 
                 updateRowColumnOptions();
+                updateColumnAccess();
 
             })
 
@@ -187,6 +222,7 @@ function addRow() {
     select.value = "";
 
     updateRowColumnOptions();
+    updateColumnAccess();
 
 }
 
@@ -226,9 +262,19 @@ function renderColumns() {
 
 function addColumn() {
 
-    const select = document.getElementById("columnField");
+    // Columns require at least one Row
+    if (pivotConfig.rows.length === 0) {
 
-    const field = select.value;
+        alert("Please select at least one Row before adding Columns.");
+
+        return;
+    }
+
+    const select =
+        document.getElementById("columnField");
+
+    const field =
+        select.value;
 
     if (!field)
         return;
@@ -243,7 +289,6 @@ function addColumn() {
     select.value = "";
 
     updateRowColumnOptions();
-
 }
 // ================================
 // Render Values
@@ -1409,7 +1454,13 @@ function generatePivot() {
         // =======================================
         // HANDLE EXPORT CSV
         // =======================================
+        // Show Save Report button
+        const saveReportBtn =
+            document.getElementById("saveReportBtn");
 
+        if (saveReportBtn) {
+            saveReportBtn.style.display = "block";
+        }
         const exportCsvBtn = document.getElementById("exportCsvBtn");
 
         const exportExcelBtn = document.getElementById("exportExcelBtn");
@@ -1532,6 +1583,191 @@ document.addEventListener("click", function(e){
     });
 
 });
+
+// =======================================
+// RESET REPORT BUILDER
+// =======================================
+
+function resetReportBuilder() {
+
+    // -----------------------------------
+    // Clear configuration
+    // -----------------------------------
+
+    pivotConfig.rows = [];
+    pivotConfig.columns = [];
+    pivotConfig.values = [];
+    pivotConfig.period = null;
+    pivotConfig.filters = [];
+    pivotConfig.layout = null;
+
+
+    // -----------------------------------
+    // Clear Rows
+    // -----------------------------------
+
+    renderRows();
+
+
+    // -----------------------------------
+    // Clear Columns
+    // -----------------------------------
+
+    renderColumns();
+
+
+    // -----------------------------------
+    // Clear Values
+    // -----------------------------------
+
+    renderValues();
+
+
+    // -----------------------------------
+    // Clear Filters
+    // -----------------------------------
+
+    renderFilters();
+
+
+    // -----------------------------------
+    // Clear Period
+    // -----------------------------------
+
+    renderPeriod();
+
+
+    // -----------------------------------
+    // Reset dropdowns
+    // -----------------------------------
+
+    const rowSelect =
+        document.getElementById("rowField");
+
+    const columnSelect =
+        document.getElementById("columnField");
+
+    const valueSelect =
+        document.getElementById("valueField");
+
+    const aggregateSelect =
+        document.getElementById("aggregate");
+
+    const periodSelect =
+        document.getElementById("periodField");
+
+    const filterSelect =
+        document.getElementById("filterField");
+
+    const layoutSelect =
+        document.getElementById("layoutType");
+
+    // -----------------------------------
+    // Hide Save Report button
+    // -----------------------------------
+
+    const saveReportBtn =
+        document.getElementById("saveReportBtn");
+
+    if (saveReportBtn) {
+        saveReportBtn.style.display = "none";
+    }
+
+
+    if (rowSelect)
+        rowSelect.value = "";
+
+    if (columnSelect)
+        columnSelect.value = "";
+
+    if (valueSelect)
+        valueSelect.value = "";
+
+    if (aggregateSelect)
+        aggregateSelect.value = "SUM";
+
+    if (periodSelect)
+        periodSelect.value = "";
+
+    if (filterSelect)
+        filterSelect.value = "";
+
+    if (layoutSelect) {
+
+        layoutSelect.value = "tabular";
+
+        pivotConfig.layout = "tabular";
+    }
+
+
+    // -----------------------------------
+    // Update Row / Column availability
+    // -----------------------------------
+
+    updateRowColumnOptions();
+
+    updateColumnAccess();
+
+
+    // -----------------------------------
+    // Clear generated report
+    // -----------------------------------
+
+    const output =
+        document.getElementById("output");
+
+    if (output)
+        output.innerHTML = "";
+
+
+    // -----------------------------------
+    // Hide export buttons
+    // -----------------------------------
+
+    const exportCsvBtn =
+        document.getElementById("exportCsvBtn");
+
+    const exportExcelBtn =
+        document.getElementById("exportExcelBtn");
+
+    if (exportCsvBtn)
+        exportCsvBtn.style.display = "none";
+
+    if (exportExcelBtn)
+        exportExcelBtn.style.display = "none";
+
+
+    // -----------------------------------
+    // Reset stored reports
+    // -----------------------------------
+
+    lastTabularReport = null;
+    lastPivotReport = null;
+
+
+    console.log(
+        "Report builder has been reset."
+    );
+}
+// =======================================
+// RESET BUTTON
+// =======================================
+
+const resetReportBtn =
+    document.getElementById("resetReportBtn");
+
+if (resetReportBtn) {
+
+    resetReportBtn.addEventListener(
+        "click",
+        function () {
+
+            resetReportBuilder();
+
+        }
+    );
+
+}
 function createDateFilter(filter, popup, summary) {
 
     popup.innerHTML = "";
@@ -1917,6 +2153,7 @@ if (generateButton) {
 document.addEventListener("DOMContentLoaded", function () {
 
     updateRowColumnOptions();
+    updateColumnAccess();
 
 });
 function updateAggregationOptions() {
