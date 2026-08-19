@@ -573,7 +573,7 @@ body {
 
     padding: 8px;
 
-    border: 1px solid #0798d4;
+    /* border: 1px solid #0798d4; */
     border-radius: 11px;
 
     color: #0798d4;
@@ -582,7 +582,7 @@ body {
 
     line-height: 1.3;
 
-    font-weight: 400;
+    font-weight: 200;
 
     box-sizing: border-box;
 }
@@ -1496,7 +1496,7 @@ body {
     min-width: 130px;
     padding: 8px 20px;
 
-    border: 1px solid #0798d4;
+    border: 1px solid #d4effc;
     border-radius: 5px;
 
     background: transparent;
@@ -1936,6 +1936,7 @@ body {
     margin: 0;
     padding: 0 0 30px;
     background: #dff3fb;
+    /* background: red; */
 }
 
 /* HEADER */
@@ -2005,14 +2006,14 @@ body {
     padding-left: 20px; 
     align-items: flex-end;
     gap: 8px;
-    background: #d9edf7;
+    background: #eef9fe;
 }
 
 .report-type {
     min-width: 100px;
     height: 39px;
     padding: 0 14px;
-    border: 2px solid #0798d4;
+    border: 2px solid #d4effc;
     border-bottom: none;
     border-radius: 12px 12px 0 0;
     background: #ffffff;
@@ -2024,8 +2025,8 @@ body {
 }
 
 .report-type.active {
-    background: #0798d4;
-    color: #fff;
+    background: #d4effc;
+    color: #008bbf;
 }
 
 .report-type:hover {
@@ -2050,7 +2051,7 @@ body {
         auto;
     column-gap: 10px;
     align-items: start;
-    background: #0798d4;
+    background: #d4effc;
     transform: none;
     box-sizing: border-box;
 }
@@ -2059,7 +2060,7 @@ body {
     display: block;
     margin-bottom: 0px;
     margin-left: 6px;
-    color: #fff;
+    color: #008bbf;
     font-size: 15px;
     font-weight: 500;
 }
@@ -2092,14 +2093,15 @@ body {
     flex: 0 0 18px;
     border: none;
     background: transparent;
-    color: #fff;
+    color: #008bbf;
     font-size: 25px;
     line-height: 20px;
     cursor: pointer;
 }
 
 .add-btn:hover {
-    color: #eaf7fc;
+    /* color: #eaf7fc; */
+    color:#000;
 }
 
 #aggregate {
@@ -2169,14 +2171,14 @@ body {
 }
 
 .info-box {
-    width: 100%;
+    width: 60%;
     min-height: 200px;
     padding: 14px 22px;
-    border: 2px solid #0798d4;
+    /* border: 2px solid #0798d4; */
     border-radius: 16px;
-    background: #fff;
-    color: #c4c6ca;
-    font-size: 26px;
+    background: #d4effc;
+    color: #008bbf;
+    font-size: 18px;
     line-height: 1.42;
 }
 
@@ -2428,8 +2430,8 @@ body::-webkit-scrollbar {
 
     margin: 0;
     padding-bottom: 30px;
-
-    background: transparent !important;
+    background: #eef9fe;
+    /* background: transparent !important; */
 }
 
 /* =========================================================

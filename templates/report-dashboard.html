@@ -80,7 +80,13 @@
 
 
             <div class="dashboard-user">
-
+                <div class="active-company">
+                    <span class="status-dot"></span>
+                        <strong>ACHP Pvt. Ltd.</strong>
+                      
+                        
+                </div>
+         
                 <span>
                     Welcome, {{ session["user"] }}
                 </span>
@@ -89,12 +95,115 @@
 
         </header>
 
+<!-- =================================================
+     KPI SUMMARY CARDS
+================================================== -->
+<div class="kpi-action-container">
+    <section class="kpi-dashboard-section">
+        <div class="kpi-grid">
 
+            <!-- Card 1: YTD Sales (Brand Blue Accent) -->
+            <div class="kpi-card card-brand">
+                <div class="kpi-card-header">
+                    <span class="kpi-card-title">YTD Sales</span>
+                    <div class="kpi-icon-wrapper">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+                </div>
+                <div class="kpi-card-body">
+                    <div class="kpi-value">₹96.20Cr</div>
+                </div>
+                <div class="kpi-card-footer">
+                    <span class="kpi-badge badge-green">
+                        <i class="fa-solid fa-chevron-up"></i> 35%
+                    </span>
+                    <span class="kpi-footer-text">vs Last Year</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Gross Profit (Emerald Accent) -->
+            <div class="kpi-card card-emerald">
+                <div class="kpi-card-header">
+                    <span class="kpi-card-title">Gross Profit</span>
+                    <div class="kpi-icon-wrapper">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                </div>
+                <div class="kpi-card-body">
+                    <div class="kpi-value">₹35.67Cr</div>
+                </div>
+                <div class="kpi-card-footer">
+                    <span class="kpi-badge badge-green">
+                        <i class="fa-solid fa-chevron-up"></i> 19%
+                    </span>
+                    <span class="kpi-footer-text">vs Last Year</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Net Profit (Indigo Accent) -->
+            <div class="kpi-card card-indigo">
+                <div class="kpi-card-header">
+                    <span class="kpi-card-title">Net Profit</span>
+                    <div class="kpi-icon-wrapper">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="kpi-card-body">
+                    <div class="kpi-value">₹12.23Cr</div>
+                </div>
+                <div class="kpi-card-footer">
+                    <span class="kpi-badge badge-red">
+                        <i class="fa-solid fa-chevron-down"></i> 2.4%
+                    </span>
+                    <span class="kpi-footer-text">vs Last Year</span>
+                </div>
+            </div>
+
+            <!-- Card 4: Receivables (Rose Accent) -->
+            <div class="kpi-card card-rose">
+                <div class="kpi-card-header">
+                    <span class="kpi-card-title">Receivables</span>
+                    <div class="kpi-icon-wrapper">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                </div>
+                <div class="kpi-card-body">
+                    <div class="kpi-value">₹23.20Cr</div>
+                </div>
+                <div class="kpi-card-footer">
+                    <span class="kpi-badge badge-red">
+                        <i class="fa-solid fa-chevron-up"></i> 8.5%
+                    </span>
+                    <span class="kpi-footer-text">vs Last Year</span>
+                </div>
+            </div>
+
+            <!-- Card 5: Cash & Bank (Teal Accent) -->
+            <div class="kpi-card card-teal">
+                <div class="kpi-card-header">
+                    <span class="kpi-card-title">Cash & Bank</span>
+                    <div class="kpi-icon-wrapper">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                </div>
+                <div class="kpi-card-body">
+                    <div class="kpi-value">₹63.5L</div>
+                </div>
+                <div class="kpi-card-footer">
+                    <span class="kpi-badge badge-green">
+                        <i class="fa-solid fa-circle-check"></i> Healthy
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
         <!-- =================================================
              CREATE YOUR OWN REPORT
         ================================================== -->
 
-        <section class="create-report-section">
+        <!--<section class="create-report-section">
 
             <button
                 type="button"
@@ -110,7 +219,7 @@
 
             </button>
 
-        </section>
+        </section> -->
 
 
         <!-- =================================================
@@ -119,211 +228,123 @@
 
         <section class="report-section">
 
-            <h1>
-                Reports
-            </h1>
-
+            <!-- HEADER ROW: Title + Button inline -->
+            <div class="report-header-row">
+        <div class="report-title-group">
+            <h1>Reports</h1>
             <p class="report-subtitle">
                 Select a report to get started
             </p>
-
-
-            <div class="report-grid">
-
-
-                <!-- SALES -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('sales')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-chart-line"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Sales
-                        </h2>
-
-                        <p>
-                            Analyse sales data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
-                <!-- PURCHASE -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('purchase')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-cart-shopping"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Purchase
-                        </h2>
-
-                        <p>
-                            Analyse purchase data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
-                <!-- DEBIT NOTE -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('debit-note')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-file-invoice"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Debit Note
-                        </h2>
-
-                        <p>
-                            Analyse debit note data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
-                <!-- CREDIT NOTE -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('credit-note')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-file-circle-minus"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Credit Note
-                        </h2>
-
-                        <p>
-                            Analyse credit note data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
-                <!-- STOCK -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('stock')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-boxes-stacked"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Stock
-                        </h2>
-
-                        <p>
-                            Analyse stock data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
-                <!-- LEDGER -->
-
-                <button
-                    class="report-card"
-                    onclick="openReport('ledger')"
-                >
-
-                    <div class="report-icon">
-
-                        <i class="fa-solid fa-book"></i>
-
-                    </div>
-
-                    <div class="report-info">
-
-                        <h2>
-                            Ledger
-                        </h2>
-
-                        <p>
-                            Analyse ledger data
-                        </p>
-
-                    </div>
-
-                    <i
-                        class="fa-solid fa-arrow-right card-arrow"
-                    ></i>
-
-                </button>
-
-
+        </div>
+
+        <button
+            type="button"
+            class="create-report-btn"
+            onclick="createOwnReport()"
+        >
+            <i class="fa-solid fa-plus"></i>
+            <span>Create Your Own Report</span>
+        </button>
+    </div>
+
+
+            <!-- =================================================
+     REPORT TYPES GRID
+================================================== -->
+
+
+    <div class="report-grid">
+        <!-- SALES -->
+        <button class="report-card" onclick="openReportModal('sales')">
+            <div class="report-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="report-info">
+                <h2>Sales</h2>
+                <p>Analyse sales data</p>
             </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+
+        <!-- PURCHASE -->
+        <button class="report-card" onclick="openReportModal('purchase')">
+            <div class="report-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="report-info">
+                <h2>Purchase</h2>
+                <p>Analyse purchase data</p>
+            </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+
+        <!-- DEBTORS -->
+        <button class="report-card" onclick="openReportModal('debtors')">
+            <div class="report-icon"><i class="fa-solid fa-file-invoice"></i></div>
+            <div class="report-info">
+                <h2>Debtors</h2>
+                <p>Analyse Debtors Outstanding</p>
+            </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+
+        <!-- CREDITORS -->
+        <button class="report-card" onclick="openReportModal('creditors')">
+            <div class="report-icon"><i class="fa-solid fa-file-circle-minus"></i></div>
+            <div class="report-info">
+                <h2>Creditors</h2>
+                <p>Analyse Creditors Outstanding</p>
+            </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+
+        <!-- INVENTORY -->
+        <button class="report-card" onclick="openReportModal('inventory')">
+            <div class="report-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="report-info">
+                <h2>Inventory</h2>
+                <p>Analyse Inventory Data</p>
+            </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+
+        <!-- CASH / BANK -->
+        <button class="report-card" onclick="openReportModal('cash')">
+            <div class="report-icon"><i class="fa-solid fa-book"></i></div>
+            <div class="report-info">
+                <h2>Cash & Bank</h2>
+                <p>Analyse Cash & Financial Data</p>
+            </div>
+            <i class="fa-solid fa-arrow-right card-arrow"></i>
+        </button>
+    </div>
+
+
+<!-- =================================================
+     SUB-REPORT MODAL POPUP (PLACE BEFORE BODY END)
+================================================== -->
+<div id="reportModalOverlay" class="modal-overlay" onclick="closeReportModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <div id="modalCategoryIcon" class="modal-category-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div>
+                    <h2 id="modalCategoryTitle">Sales Reports</h2>
+                    <p class="modal-subtitle">Choose a report module to view</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeReportModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Modal Sub-report Links Grid -->
+        <div id="modalReportList" class="modal-report-grid">
+            <!-- Dynamic Content Injected via JS -->
+        </div>
+
+    </div>
+</div>
 
         </section>
 

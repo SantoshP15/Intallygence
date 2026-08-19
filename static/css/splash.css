@@ -520,135 +520,163 @@ body::-webkit-scrollbar {
    SAME 1920 × 1080 CANVAS AS LOGO
 ========================================================= */
 
+/* =========================================================
+   LOGIN CONTAINER & CARD
+   ========================================================= */
+
 .login-container {
     position: absolute;
-
     width: 1920px;
     height: 1080px;
-
     top: 0;
     left: 50%;
-
-    transform:
-        translateX(-50%)
-        scale(var(--canvas-scale, 1));
-
+    transform: translateX(-50%) scale(var(--canvas-scale, 1));
     transform-origin: top center;
+    
+    /* Flexbox to perfectly center the login card */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     opacity: 0;
     visibility: hidden;
-
-    transition: opacity 0.8s ease;
-
+    transition: opacity 0.8s ease, visibility 0.8s ease;
     z-index: 20;
-
     pointer-events: none;
 }
-
 
 .login-container.show {
     opacity: 1;
     visibility: visible;
-
     pointer-events: auto;
 }
 
+/* Glassmorphism Card Effect */
+.login-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 10px 50px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(17, 136, 201, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    width: 480px;
+    text-align: center;
+    
+    /* Starts slightly lower for a smooth slide-up animation */
+    transform: translateY(30px);
+    margin-top: 150px;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login-container.show .login-card {
+    transform: translateY(0);
+}
+
+/* Typography inside card */
+.login-title {
+    font-family: 'Montserrat', sans-serif;
+    color: #1188c9;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    color: #0798d4;
+    font-size: 15px;
+    margin-bottom: 40px;
+    opacity: 0.8;
+}
+
+/* =========================================================
+   INPUT GROUPS
+   ========================================================= */
 
 .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input-group {
     position: relative;
-
     width: 100%;
-    height: 100%;
-    top: 10%;
 }
 
-.username-group {
+.input-icon {
     position: absolute;
-
-    left: 620px;
-    top: 500px;
-
-    width: 420px;
-}
-
-.username-group input,
-.password-group input {
-    width: 100%;
-
-    height: 55px;
-
-    padding: 0 12px;
-
-    border: none;
-    border-bottom: 2px solid #0798d4;
-
-    background: transparent;
-
-    font-family: 'Montserrat', sans-serif;
-
-    font-size: 20px;
-
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #0798d4;
-
-    outline: none;
+    font-size: 18px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
 }
 
-
-.username-group input::placeholder {
-    color: #1188c9;
-
-    opacity: .75;
-}
-
-
-.username-group input:focus {
-    border-bottom:
-        3px solid #1188c9;
-}
-
-.password-group {
-    position: absolute;
-
-    left: 1160px;
-    top: 500px;
-
-    width: 420px;
-}
-
-/* 
-.password-group input {
+.input-group input {
     width: 100%;
-
-    background: transparent;
-
-    border: none;
-
-    outline: none;
-
-    padding: 8px 0;
-
-    color: #1188c9;
-
-    font-family: "Inter", sans-serif;
-
+    height: 60px;
+    padding: 0 20px 0 50px; /* Extra left padding for the icon */
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(7, 152, 212, 0.2);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
     font-size: 17px;
-
-    font-weight: 500;
-} */
-
-
-.password-group input::placeholder {
     color: #1188c9;
-
-    opacity: .75;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-
-.password-group input:focus {
-    border-bottom:
-        3px solid #1188c9;
+.input-group input::placeholder {
+    color: #1188c9;
+    opacity: 0.5;
 }
 
+.input-group input:focus {
+    border-color: #1188c9;
+    box-shadow: 0 0 0 4px rgba(17, 136, 201, 0.1);
+    background: #ffffff;
+}
+
+.input-group input:focus + .input-icon,
+.input-group input:not(:placeholder-shown) + .input-icon {
+    opacity: 1;
+}
+
+/* =========================================================
+   LOGIN SUBMIT BUTTON
+   ========================================================= */
+
+.login-submit-btn {
+    margin-top: 10px;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(135deg, #0798d4 0%, #057eaf 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 20px rgba(7, 152, 212, 0.25);
+    transition: all 0.3s ease;
+}
+
+.login-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(7, 152, 212, 0.35);
+}
+
+.login-submit-btn:active {
+    transform: translateY(1px);
+}
 
 /* =========================================================
    LOGIN LINKS
@@ -885,8 +913,8 @@ body::-webkit-scrollbar {
 .login-arrow {
     position: absolute;
 
-    left: 1460px;
-    top: 680px;
+    left: 1600px;
+    top: 500px;
 
     width: 55px;
     height: 55px;
@@ -939,4 +967,129 @@ body::-webkit-scrollbar {
 
 .login-arrow:focus {
     outline: none;
+}
+
+/* =========================================================
+   HERO CTA BUTTON
+========================================================= */
+
+.hero-action {
+    position: absolute;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    
+    /* Add this line for a smooth fade out */
+    transition: opacity 0.4s ease; 
+}
+
+.cta-signin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, #0798d4 0%, #057eaf 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px; /* Pill shape for modern feel */
+    font-family: 'Montserrat', 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(7, 152, 212, 0.35);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle glowing pulse to capture user attention */
+.cta-signin-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+.cta-signin-btn:hover::before {
+    left: 100%;
+}
+
+.cta-signin-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 35px rgba(7, 152, 212, 0.5);
+    background: linear-gradient(135deg, #008dcc 0%, #046b96 100%);
+}
+
+.cta-signin-btn .btn-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.cta-signin-btn:hover .btn-icon {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+
+/* =========================================================
+   LOGO SHIFT ANIMATION
+   ========================================================= */
+/* Ensure your existing .logo class has a smooth transition added to it */
+.logo {
+    /* Keep all your existing .logo styles, but add this transition: */
+    transition: top 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* This class will be added via JavaScript when the user clicks Enter */
+.logo.shift-up {
+    top: 12%; /* Moves it up towards the top of the screen */
+    transform: translateX(-50%) scale(0.85); /* Slightly shrinks it to give the card focus */
+}
+
+/* =========================================================
+   CARD LINKS (Forgot Password / Sign Up)
+   ========================================================= */
+.card-links {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+}
+
+.card-links a {
+    color: #0798d4;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.card-links a:hover {
+    color: #057eaf;
+    text-decoration: underline;
+}
+
+.card-links .divider {
+    color: #1188c9;
+    opacity: 0.3;
 }
