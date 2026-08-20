@@ -223,130 +223,279 @@
 
 
         <!-- =================================================
-             REPORT TYPES
+             MAIN REPORT AREA
         ================================================== -->
 
         <section class="report-section">
 
-            <!-- HEADER ROW: Title + Button inline -->
-            <div class="report-header-row">
-        <div class="report-title-group">
-            <h1>Reports</h1>
-            <p class="report-subtitle">
-                Select a report to get started
-            </p>
-        </div>
+            <!-- LEFT: P&L STATEMENT -->
+            <div class="pnl-panel">
 
-        <button
-            type="button"
-            class="create-report-btn"
-            onclick="createOwnReport()"
-        >
-            <i class="fa-solid fa-plus"></i>
-            <span>Create Your Own Report</span>
-        </button>
-    </div>
+                <div class="pnl-header">
+                    <div>
+                        <h1>P&amp;L Statement</h1>
+                        <p>Profit &amp; Loss overview</p>
+                    </div>
 
-
-            <!-- =================================================
-     REPORT TYPES GRID
-================================================== -->
-
-
-    <div class="report-grid">
-        <!-- SALES -->
-        <button class="report-card" onclick="openReportModal('sales')">
-            <div class="report-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="report-info">
-                <h2>Sales</h2>
-                <p>Analyse sales data</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-
-        <!-- PURCHASE -->
-        <button class="report-card" onclick="openReportModal('purchase')">
-            <div class="report-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-            <div class="report-info">
-                <h2>Purchase</h2>
-                <p>Analyse purchase data</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-
-        <!-- DEBTORS -->
-        <button class="report-card" onclick="openReportModal('debtors')">
-            <div class="report-icon"><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="report-info">
-                <h2>Debtors</h2>
-                <p>Analyse Debtors Outstanding</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-
-        <!-- CREDITORS -->
-        <button class="report-card" onclick="openReportModal('creditors')">
-            <div class="report-icon"><i class="fa-solid fa-file-circle-minus"></i></div>
-            <div class="report-info">
-                <h2>Creditors</h2>
-                <p>Analyse Creditors Outstanding</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-
-        <!-- INVENTORY -->
-        <button class="report-card" onclick="openReportModal('inventory')">
-            <div class="report-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-            <div class="report-info">
-                <h2>Inventory</h2>
-                <p>Analyse Inventory Data</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-
-        <!-- CASH / BANK -->
-        <button class="report-card" onclick="openReportModal('cash')">
-            <div class="report-icon"><i class="fa-solid fa-book"></i></div>
-            <div class="report-info">
-                <h2>Cash & Bank</h2>
-                <p>Analyse Cash & Financial Data</p>
-            </div>
-            <i class="fa-solid fa-arrow-right card-arrow"></i>
-        </button>
-    </div>
-
-
-<!-- =================================================
-     SUB-REPORT MODAL POPUP (PLACE BEFORE BODY END)
-================================================== -->
-<div id="reportModalOverlay" class="modal-overlay" onclick="closeReportModal(event)">
-    <div class="modal-box" onclick="event.stopPropagation()">
-        
-        <!-- Modal Header -->
-        <div class="modal-header">
-            <div class="modal-title-group">
-                <div id="modalCategoryIcon" class="modal-category-icon">
-                    <i class="fa-solid fa-chart-line"></i>
+                    <button type="button" class="period-select">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>Apr 2025 - Mar 2026</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
                 </div>
-                <div>
-                    <h2 id="modalCategoryTitle">Sales Reports</h2>
-                    <p class="modal-subtitle">Choose a report module to view</p>
+
+                <div class="pnl-table-wrapper">
+                    <table class="pnl-table">
+                        <thead>
+                            <tr>
+                                <th>Particulars</th>
+                                <th>Apr - Jun 2025<small>(Q1)</small></th>
+                                <th>Jul - Sep 2025<small>(Q2)</small></th>
+                                <th>Oct - Dec 2025<small>(Q3)</small></th>
+                                <th>Jan - Mar 2026<small>(Q4)</small></th>
+                                <th>YTD Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Sales</td>
+                                <td>24.50 Cr</td>
+                                <td>26.80 Cr</td>
+                                <td>22.40 Cr</td>
+                                <td>22.50 Cr</td>
+                                <td>96.20 Cr</td>
+                            </tr>
+
+                            <tr>
+                                <td>Less: Cost of Goods Sold</td>
+                                <td>15.20 Cr</td>
+                                <td>16.40 Cr</td>
+                                <td>13.90 Cr</td>
+                                <td>14.30 Cr</td>
+                                <td>59.80 Cr</td>
+                            </tr>
+
+                            <tr class="highlight">
+                                <td>Gross Profit</td>
+                                <td>9.30 Cr</td>
+                                <td>10.40 Cr</td>
+                                <td>8.50 Cr</td>
+                                <td>8.20 Cr</td>
+                                <td>36.40 Cr</td>
+                            </tr>
+
+                            <tr class="percent">
+                                <td>Gross Profit %</td>
+                                <td>38.0%</td>
+                                <td>38.8%</td>
+                                <td>37.9%</td>
+                                <td>36.4%</td>
+                                <td>37.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td>Less: Operating Expenses</td>
+                                <td>6.10 Cr</td>
+                                <td>6.30 Cr</td>
+                                <td>5.90 Cr</td>
+                                <td>6.20 Cr</td>
+                                <td>24.50 Cr</td>
+                            </tr>
+
+                            <tr class="highlight">
+                                <td>Operating Profit</td>
+                                <td>3.20 Cr</td>
+                                <td>4.10 Cr</td>
+                                <td>2.60 Cr</td>
+                                <td>2.00 Cr</td>
+                                <td>11.90 Cr</td>
+                            </tr>
+
+                            <tr class="percent">
+                                <td>Operating Profit %</td>
+                                <td>13.1%</td>
+                                <td>15.3%</td>
+                                <td>11.6%</td>
+                                <td>8.9%</td>
+                                <td>12.4%</td>
+                            </tr>
+
+                            <tr>
+                                <td>Other Income</td>
+                                <td>0.40 Cr</td>
+                                <td>0.50 Cr</td>
+                                <td>0.30 Cr</td>
+                                <td>0.40 Cr</td>
+                                <td>1.60 Cr</td>
+                            </tr>
+
+                            <tr class="highlight">
+                                <td>Net Profit</td>
+                                <td>2.60 Cr</td>
+                                <td>3.60 Cr</td>
+                                <td>2.30 Cr</td>
+                                <td>1.60 Cr</td>
+                                <td>10.10 Cr</td>
+                            </tr>
+
+                            <tr class="percent">
+                                <td>Net Profit %</td>
+                                <td>10.6%</td>
+                                <td>13.4%</td>
+                                <td>10.3%</td>
+                                <td>7.1%</td>
+                                <td>10.5%</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                <div class="pnl-footer">
+                    All values are in INR
+                    <span class="info-icon">i</span>
+                </div>
+
             </div>
-            <button type="button" class="modal-close-btn" onclick="closeReportModal()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
 
-        <!-- Modal Sub-report Links Grid -->
-        <div id="modalReportList" class="modal-report-grid">
-            <!-- Dynamic Content Injected via JS -->
-        </div>
 
-    </div>
-</div>
+            <!-- RIGHT: REPORTS -->
+            <div class="reports-panel">
+
+                <div class="report-header-row">
+
+                    <div class="report-title-group">
+                        <h1>Reports</h1>
+                        <p class="report-subtitle">
+                            Select a report to get started
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="create-report-btn"
+                        onclick="createOwnReport()"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Create Your Own Report</span>
+                    </button>
+
+                </div>
+
+
+                <div class="report-grid">
+
+                    <button class="report-card" onclick="openReportModal('sales')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Sales</h2>
+                            <p>Analyse sales data</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                    <button class="report-card" onclick="openReportModal('purchase')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Purchase</h2>
+                            <p>Analyse purchase data</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                    <button class="report-card" onclick="openReportModal('debtors')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Debtors</h2>
+                            <p>Analyse Debtors Outstanding</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                    <button class="report-card" onclick="openReportModal('creditors')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-file-circle-minus"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Creditors</h2>
+                            <p>Analyse Creditors Outstanding</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                    <button class="report-card" onclick="openReportModal('inventory')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Inventory</h2>
+                            <p>Analyse Inventory Data</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                    <button class="report-card" onclick="openReportModal('cash')">
+                        <div class="report-icon">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="report-info">
+                            <h2>Cash &amp; Bank</h2>
+                            <p>Analyse Cash &amp; Financial Data</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right card-arrow"></i>
+                    </button>
+
+                </div>
+
+            </div>
 
         </section>
+
+
+        <!-- =================================================
+             SUB-REPORT MODAL
+        ================================================== -->
+
+        <div id="reportModalOverlay" class="modal-overlay" onclick="closeReportModal(event)">
+            <div class="modal-box" onclick="event.stopPropagation()">
+
+                <div class="modal-header">
+
+                    <div class="modal-title-group">
+
+                        <div id="modalCategoryIcon" class="modal-category-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+
+                        <div>
+                            <h2 id="modalCategoryTitle">Sales Reports</h2>
+                            <p class="modal-subtitle">Choose a report module to view</p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-close-btn"
+                        onclick="closeReportModal()"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                </div>
+
+                <div id="modalReportList" class="modal-report-grid">
+                    <!-- Dynamic Content Injected via JS -->
+                </div>
+
+            </div>
+        </div>
 
 
     </main>

@@ -795,41 +795,44 @@ function addPeriod() {
     const field =
         select.value;
 
-
     if (!field)
         return;
 
-
     // Only one Period allowed
-
     if (pivotConfig.period)
         return;
 
-
-    // Make sure it is actually
-    // a date column
-
+    // Make sure it is a date column
     if (!DATE_COLUMNS.includes(field))
         return;
 
-
     pivotConfig.period = {
-
         field: field,
-
         selectedDates: [],
-
         from: "",
-
         to: ""
-
     };
 
-
+    // Render the period chip
     renderPeriod();
 
-
+    // Reset dropdown
     select.value = "";
+
+    // =====================================
+    // OPEN DATE POPUP AUTOMATICALLY
+    // =====================================
+
+    setTimeout(() => {
+
+        const periodSummary =
+            document.querySelector("#period .filter-summary");
+
+        if (periodSummary) {
+            periodSummary.click();
+        }
+
+    }, 50);
 }
 // ================================
 // Add Filter
@@ -1570,16 +1573,24 @@ function generatePivot() {
     });
 
 }
-document.addEventListener("click", function(e){
+document.addEventListener("click", function(e) {
 
-    document.querySelectorAll(".filter-popup").forEach(p=>{
+    // If click is inside a filter popup, do nothing
+    if (e.target.closest(".filter-popup")) {
+        return;
+    }
 
-        if(!p.contains(e.target)){
+    // IMPORTANT:
+    // Flatpickr calendar is appended directly to <body>,
+    // so it is technically outside .filter-popup.
+    // Do NOT close the popup when interacting with Flatpickr.
+    if (e.target.closest(".flatpickr-calendar")) {
+        return;
+    }
 
-            p.style.display = "none";
-
-        }
-
+    // Otherwise close all filter popups
+    document.querySelectorAll(".filter-popup").forEach(p => {
+        p.style.display = "none";
     });
 
 });
@@ -1860,21 +1871,53 @@ function createDateFilter(filter, popup, summary) {
         filter
     );
 
+
     // --------------------------
-    // Flatpickr
+    // Flatpickr Date Range
     // --------------------------
 
-    flatpickr(fromInput, {
+    let fromPicker;
+    let toPicker;
 
-        dateFormat: "Y-m-d"
 
+    // FROM DATE
+    fromPicker = flatpickr(fromInput, {
+        dateFormat: "Y-m-d",
+
+        onChange: function(selectedDates) {
+
+            if (selectedDates.length === 0)
+                return;
+
+            const fromDate = selectedDates[0];
+
+            // To date cannot be before From date
+            toPicker.set("minDate", fromDate);
+
+            // If existing To date is invalid, clear it
+            if (toInput.value && toInput.value < fromInput.value) {
+                toPicker.clear();
+            }
+        }
     });
 
-    flatpickr(toInput, {
 
-        dateFormat: "Y-m-d"
+    // TO DATE
+    toPicker = flatpickr(toInput, {
+        dateFormat: "Y-m-d",
 
-    });
+        onChange: function(selectedDates) {
+
+            if (
+                selectedDates.length > 0 &&
+                fromInput.value &&
+                toInput.value < fromInput.value
+            ) {
+                alert("To date cannot be earlier than From date.");
+            toPicker.clear();
+            }
+    }
+});
 
     // --------------------------
     // Apply
@@ -1882,40 +1925,57 @@ function createDateFilter(filter, popup, summary) {
 
     apply.onclick = function () {
 
-    // If user entered a custom range, use it
-        if (fromInput.value && toInput.value) {
+    // =====================================
+    // DATE RANGE VALIDATION
+    // =====================================
 
-            filter.selectedDates = [];
+    if (fromInput.value && toInput.value) {
 
-            filter.from = fromInput.value;
-            filter.to = toInput.value;
+        if (toInput.value < fromInput.value) {
+
+            alert("To date cannot be earlier than From date.");
+
+            return;
+        }
+
+        filter.selectedDates = [];
+
+        filter.from = fromInput.value;
+        filter.to = toInput.value;
+
+        summary.innerHTML =
+            filter.field +
+            "  " +
+            filter.from +
+            " → " +
+            filter.to;
+    }
+
+    // =====================================
+    // HIERARCHY SELECTION
+    // =====================================
+    else {
+
+        filter.from = "";
+        filter.to = "";
+
+        if (filter.selectedDates.length > 0) {
 
             summary.innerHTML =
-                filter.field + "  " + filter.from + " → " + filter.to;
+                filter.field +
+                "  " +
+                filter.selectedDates.length +
+                " date(s) selected";
 
+        } else {
+
+            summary.innerHTML =
+                "Select Date Range ▼";
         }
-    // Otherwise keep hierarchy selection
-        else {
+    }
 
-            filter.from = "";
-            filter.to = "";
-
-            if (filter.selectedDates.length > 0) {
-
-                summary.innerHTML =
-                    filter.field + "  " +filter.selectedDates.length + " date(s) selected";
-
-            } else {
-
-                summary.innerHTML = "Select Date Range ▼";
-
-            }
-
-        }
-
-        popup.style.display = "none";
-
-    };
+    popup.style.display = "none";
+};
 
 }
 function loadDateHierarchy(field, container, filter)
