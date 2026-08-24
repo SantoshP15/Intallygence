@@ -1147,3 +1147,21 @@ body {
         flex-direction: column;
     }
 }
+.last-refreshed {
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    padding: 8px 16px;
+    
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7280;
+
+    background: transparent;
+
+    white-space: nowrap;
+}
