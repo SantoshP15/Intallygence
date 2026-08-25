@@ -362,7 +362,7 @@ function addValue() {
 
     fieldSelect.value = "";
 
-    aggSelect.value = "SUM";
+    aggSelect.value = "";
 
 }
 
@@ -2218,21 +2218,53 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function updateAggregationOptions() {
 
-    const valueField = document.getElementById("valueField");
-    const aggregate = document.getElementById("aggregate");
+    const valueField =
+        document.getElementById("valueField");
+
+    const aggregate =
+        document.getElementById("aggregate");
+
 
     if (!valueField || !aggregate)
         return;
 
-    const field = valueField.value;
 
+    const field =
+        valueField.value;
+
+
+    // Clear existing options
     aggregate.innerHTML = "";
 
-    if (!field) {
-        return;
-    }
 
-    const type = (COLUMN_TYPES[field] || "").toLowerCase();
+    // -------------------------------
+    // Placeholder
+    // -------------------------------
+
+    const placeholder =
+        document.createElement("option");
+
+    placeholder.value = "";
+    placeholder.textContent =
+        "Select Aggregation";
+
+    placeholder.selected = true;
+
+    aggregate.appendChild(placeholder);
+
+
+    // No Value selected
+    if (!field)
+        return;
+
+
+    // -------------------------------
+    // Get column type
+    // -------------------------------
+
+    const type =
+        (COLUMN_TYPES[field] || "").toLowerCase();
+
 
     const numericTypes = [
         "int",
@@ -2247,26 +2279,44 @@ function updateAggregationOptions() {
         "real"
     ];
 
-    const isNumeric = numericTypes.some(
-        t => type.startsWith(t)
-    );
+
+    const isNumeric =
+        numericTypes.some(
+            t => type.startsWith(t)
+        );
+
+
+    // -------------------------------
+    // Numeric field
+    // -------------------------------
 
     if (isNumeric) {
 
-        ["SUM", "COUNT", "AVG", "MIN", "MAX"]
-            .forEach(agg => {
+        [
+            "SUM",
+            "COUNT",
+            "AVG",
+            "MIN",
+            "MAX"
+        ].forEach(agg => {
 
-                const option =
-                    document.createElement("option");
+            const option =
+                document.createElement("option");
 
-                option.value = agg;
-                option.textContent = agg;
+            option.value = agg;
+            option.textContent = agg;
 
-                aggregate.appendChild(option);
+            aggregate.appendChild(option);
 
-            });
+        });
 
-    } else {
+    }
+
+    // -------------------------------
+    // Text / non-numeric field
+    // -------------------------------
+
+    else {
 
         const option =
             document.createElement("option");
@@ -2277,6 +2327,7 @@ function updateAggregationOptions() {
         aggregate.appendChild(option);
 
     }
+
 }
 document
     .getElementById("valueField")
@@ -2284,6 +2335,40 @@ document
         "change",
         updateAggregationOptions
     );
+// =======================================
+// ADD VALUE AFTER AGGREGATION SELECTION
+// =======================================
+
+const valueField =
+    document.getElementById("valueField");
+
+const aggregateSelect =
+    document.getElementById("aggregate");
+
+
+if (aggregateSelect) {
+
+    aggregateSelect.addEventListener(
+        "change",
+        function () {
+
+            // No Value selected
+            if (!valueField.value)
+                return;
+
+
+            // No Aggregation selected
+            if (!this.value)
+                return;
+
+
+            // Add Value
+            addValue();
+
+        }
+    );
+
+}
 // =======================================
 // SAVE REPORT
 // =======================================
@@ -5446,3 +5531,107 @@ function renameSavedReport(report) {
     });
 
 }
+document.addEventListener("DOMContentLoaded", function () {
+
+    const rowField = document.getElementById("rowField");
+    const columnField = document.getElementById("columnField");
+    const valueField = document.getElementById("valueField");
+    const periodField = document.getElementById("periodField");
+    const filterField = document.getElementById("filterField");
+    const aggregateSelect = document.getElementById("aggregate");
+
+    // ==========================
+    // ROW
+    // ==========================
+
+    if (rowField) {
+
+        rowField.addEventListener("change", function () {
+
+            if (!this.value)
+                return;
+
+            addRow();
+
+        });
+
+    }
+
+
+    // ==========================
+    // COLUMN
+    // ==========================
+
+    if (columnField) {
+
+        columnField.addEventListener("change", function () {
+
+            if (!this.value)
+                return;
+
+            addColumn();
+
+        });
+
+    }
+
+
+    // ==========================
+    // VALUE
+    // ==========================
+
+// ==========================
+// VALUE + AGGREGATION
+// ==========================
+
+    if (valueField && aggregateSelect) {
+
+    aggregateSelect.addEventListener("change", function () {
+
+        // Do nothing until a Value is selected
+        if (!valueField.value)
+            return;
+
+        addValue();
+
+    });
+
+    }
+
+
+    // ==========================
+    // PERIOD
+    // ==========================
+
+    if (periodField) {
+
+        periodField.addEventListener("change", function () {
+
+            if (!this.value)
+                return;
+
+            addPeriod();
+
+        });
+
+    }
+
+
+    // ==========================
+    // FILTER
+    // ==========================
+
+    if (filterField) {
+
+        filterField.addEventListener("change", function () {
+
+            if (!this.value)
+                return;
+
+            addFilter();
+
+        });
+
+    }
+
+});
