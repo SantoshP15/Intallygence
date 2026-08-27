@@ -14,7 +14,7 @@ body {
 
     width: 100%;
     min-height: 100%;
-    background:#dff3fb;
+    background:#ffffff;
 
 }
 
@@ -22,7 +22,7 @@ body {
 body {
     margin: 0;
     padding: 0;
-    background:#dbedf7;
+    background:#ffffff;
     width: 100%;
     min-height: 100vh;
 
@@ -68,7 +68,7 @@ body {
 
     margin: 0;
 
-    background:#dbedf7;
+    background:#ffffff;
 
     padding-bottom: 20px;
 
@@ -98,7 +98,7 @@ body {
 
     border-bottom: 2px solid #1196d2;
 
-    background: #d9edf7;
+    background: #ffffff;
 
     z-index: 5000;
 }
@@ -115,7 +115,7 @@ body {
 
 .report-title {
 
-    color: #008dcc;
+    color: #000;
     font-family: "Oswald", sans-serif;
     font-size: 13px;
 
@@ -187,10 +187,16 @@ body {
 ========================================================= */
 
 .builder {
-    width: calc(100% - 80px);
+    width: 91%;
     max-width: 1400px;
 
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* Keep the vertical position */
+    margin-top: clamp(20px, 3vh, 45px);
+
+    padding: 20px 0 24px;
 
     display: grid;
 
@@ -200,22 +206,23 @@ body {
         minmax(0, 1.15fr)
         minmax(0, 1fr)
         minmax(0, 1fr)
-        30px;
+        auto
+        auto;
 
-    column-gap: clamp(12px, 2vw, 28px);
-
+    column-gap: clamp(10px, 1.2vw, 20px);
+    border-radius: 5px;
     align-items: start;
-
+    border-radius: 0 16px 16px 16px;
     box-sizing: border-box;
 
     position: relative;
 
-    /* Responsive vertical positioning */
-    margin-top: clamp(120px, 30vh, 260px);
+    background: #f3f3f3;
 
     transform: translateY(0);
 
     transition: transform 0.7s ease;
+
     z-index: 1000;
 }
 
@@ -287,8 +294,8 @@ body {
 
     background: #fff;
 
-    color: #0798d4;
-    font-family: "Inter", sans-serif;
+    color: #000 !important;
+    font-family: ui-sans-serif, system-ui, sans-serif;
 
     font-size: 11px;
 
@@ -308,47 +315,6 @@ body {
         rgba(2, 34, 48, 0.2);
 
 }
-
-
-/* =========================================================
-   PLUS BUTTON
-========================================================= */
-
-.add-btn {
-
-    flex: 0 0 auto;
-
-    width: 15px;
-
-    height: 15px;
-
-    padding: 0;
-
-    border: none;
-
-    background: transparent;
-
-    color: #008dcc;
-
-    font-size: 17px;
-
-    line-height: 15px;
-
-    font-weight: 500;
-
-    cursor: pointer;
-
-}
-
-
-.add-btn:hover {
-
-    color: #005f91;
-
-    transform: scale(1.15);
-
-}
-
 
 /* =========================================================
    VALUE AGGREGATION
@@ -421,7 +387,7 @@ body {
 
     background: #ffffff;
 
-    color: #008dcc;
+    color: #000;
 
     font-size: 12px;
 
@@ -480,7 +446,7 @@ body {
 .go-button {
     width: 28px;
     height: 19px;
-
+    
     padding: 0;
 
     border: none;
@@ -503,7 +469,7 @@ body {
 
 .go-button:hover {
 
-    background: #72c0df;
+    background: #f3f3f3;
 
 }
 
@@ -772,7 +738,7 @@ body {
 
     border-radius: 0;
 
-    color: #087fae;
+    color: #000;
 
     cursor: pointer;
 
@@ -1500,7 +1466,7 @@ body {
     border-radius: 5px;
 
     background: transparent;
-    color: #0798d4;
+    color: #000;
 
     font-family: "Inter", sans-serif;
     font-size: 12px;
@@ -1514,13 +1480,13 @@ body {
 }
 
 .report-type:hover {
-    background: #087fae;
+    background: #f3f3f3;
     color: white;
 }
 
 .report-type.active {
-    background: #0798d4;
-    color: white;
+    background: #f3f3f3;
+    color: #000;
 }
 .layout-select {
     align-self: start !important;
@@ -1921,7 +1887,7 @@ html, body {
     width: 100%;
     min-height: 100%;
     margin: 0;
-    background: #dff3fb;
+    background: #ffffff;
 }
 
 body {
@@ -1935,7 +1901,7 @@ body {
     height: auto;
     margin: 0;
     padding: 0 0 30px;
-    background: #dff3fb;
+    background: #ffffff;
     /* background: red; */
 }
 
@@ -1967,8 +1933,8 @@ body {
 .report-title {
     margin-left: 25px;
     padding-left: 24px;
-    border-left: 2px solid #0798d4;
-    color: #008dcc;
+    border-left: 2px solid #000;
+    color: #000;
     font-size: 21px;
     font-weight: 400;
 }
@@ -1988,11 +1954,11 @@ body {
 #savedReportsBtn {
     border: none;
     background: transparent;
-    color: #008dcc;
+    color: #000;
     padding: 5px 0;
     font-family: "Oswald", sans-serif;
     font-size: 17px;
-    font-weight: 100;
+    font-weight: 400;
 }
 
 /* REPORT TYPE TABS */
@@ -2006,7 +1972,7 @@ body {
     padding-left: 20px; 
     align-items: flex-end;
     gap: 8px;
-    background: #eef9fe;
+    background: #ffffff;
 }
 
 .report-type {
@@ -2017,28 +1983,24 @@ body {
     border-bottom: none;
     border-radius: 12px 12px 0 0;
     background: #ffffff;
-    color: #008dcc;
+    color: #000;
     font-family: "Inter", sans-serif;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
 }
 
-.report-type.active {
-    background: #d4effc;
-    color: #008bbf;
-}
 
 .report-type:hover {
-    background: #eaf7fc;
-    color: #087fae;
+    background: #f3f3f3;
+    color: #000;
 }
 
 /* BLUE BUILDER BAR */
-.builder {
-    width: 100%;
+/* .builder {
+    width: 91% !important;
     max-width: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 8px 4.5% 10px;
     display: grid;
     grid-template-columns:
@@ -2051,23 +2013,23 @@ body {
         auto;
     column-gap: 10px;
     align-items: start;
-    background: #d4effc;
+    background: #ffffff;
     transform: none;
     box-sizing: border-box;
-}
+} */
 
 .builder-section > label {
     display: block;
     margin-bottom: 0px;
     margin-left: 6px;
-    color: #008bbf;
+    color: #000;
     font-size: 15px;
-    font-weight: 500;
+    /* font-weight: 500; */
 }
 
 .control-row {
     width: 100%;
-    height: 32px;
+    height: 42px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -2075,15 +2037,15 @@ body {
 
 .control-row select {
     width: 100%;
-    height: 28px;
+    height: 48px ;
     min-width: 0;
     flex: 1 1 auto;
     padding: 0 5px;
     border: none;
     border-radius: 7px;
     background: #fff;
-    color: #008dcc;
-    font-family: "Inter", sans-serif;
+    color: #000 !important;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
 }
 
@@ -2311,7 +2273,7 @@ body::-webkit-scrollbar {
     z-index: 0 !important;
     pointer-events: none;
 
-    background: #dff3fb !important;
+    background: #ffffff !important;
 }
 
 /* Remove the old empty background layer */
@@ -2366,7 +2328,7 @@ body::-webkit-scrollbar {
     z-index: 0 !important;
     pointer-events: none;
 
-    background: #dff3fb !important;
+    background: #ffffff !important;
 }
 
 .background-content {
@@ -2430,7 +2392,7 @@ body::-webkit-scrollbar {
 
     margin: 0;
     padding-bottom: 30px;
-    background: #eef9fe;
+    background: #ffffff;
     /* background: transparent !important; */
 }
 
@@ -2448,11 +2410,12 @@ body::-webkit-scrollbar {
 }
 
 .pivot-canvas .builder {
-    width: 1920px;
-    margin-left: 0;
-    margin-right: 0;
-}
+    width: 91% ;
+    max-width: none ;
 
+    margin-left: auto ;
+    margin-right: auto;
+}
 .pivot-canvas .info-area {
     width: 1650px;
 }
@@ -2615,7 +2578,7 @@ body::-webkit-scrollbar {
     font-family: "Inter", sans-serif;
     font-size: 16px !important;
     font-weight: 500 !important;
-    color: #008dcc !important;
+    color: #000 !important;
 }
 
 /* Dropdown options */
@@ -2627,7 +2590,7 @@ body::-webkit-scrollbar {
     font-family: "Inter", sans-serif;
     font-size: 12px !important;
     font-weight: 500 !important;
-    color: #008dcc !important;
+    color: #000 !important;
     background: #ffffff !important;
     padding: 8px 10px !important;
 }
@@ -2638,7 +2601,7 @@ body::-webkit-scrollbar {
 #valueField option:first-child,
 #periodField option:first-child,
 #filterField option:first-child {
-    font-weight: 600 !important;
+    font-weight: 200 !important;
 }
 /* =========================================================
    VALUES DROPDOWN FIX
@@ -3487,4 +3450,224 @@ body::-webkit-scrollbar {
 
 #resetReportBtn:active {
     transform: scale(0.97);
+}
+
+
+/* =========================================================
+   FINAL REFERENCE DESIGN OVERRIDES
+   ========================================================= */
+
+html, body, .report-panel, .background-page {
+    background: #ffffff !important;
+}
+
+/* Header */
+.report-header {
+    position: relative;
+    width: 100%;
+    height: 88px;
+    top: auto;
+    left: auto;
+    padding: 0 22px 0 18px;
+    background: #ffffff;
+    border-bottom: 3px solid #000;
+}
+
+/* Tabs */
+.report-types {
+    width: 75%;
+    max-width: 1440px;
+
+    margin: 0 auto;
+
+    padding-left: 20px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    gap: 8px;
+
+    background: transparent;
+    box-sizing: border-box;
+}
+.report-type {
+    height: 40px;
+
+    padding: 0 16px;
+
+    border: 1px solid #cfd9de;
+    border-bottom: none;
+
+    border-radius: 10px 10px 0 0;
+
+    background: #ffffff;
+
+    color: #000;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* Centered white builder */
+.pivot-canvas .builder,
+.builder {
+    width: 75% !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    padding: 18px 26px 26px !important;
+
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1.15fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        auto
+        auto;
+
+    column-gap: 12px;
+    row-gap: 4px;
+    align-items: start;
+
+    background: #f3f3f3 !important;
+    border: 1px solid #d2d2d2;
+    border-radius: 16px;
+    box-sizing: border-box;
+    position: relative;
+    transform: none !important;
+}
+
+/* Labels */
+.builder-section > label {
+    margin-left: 10px;
+    margin-bottom: 5px;
+    color: #000;
+    font-family: "Oswald", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Dropdowns */
+.control-row {
+    height: 48px;
+    gap: 8px;
+}
+
+.control-row select {
+    height: 48px;
+    padding: 0 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #000 !important;
+    font-family: "Oswald", sans-serif !important;
+    letter-spacing: 0.05em !important;
+    font-size: 16px;
+}
+
+/* Plus */
+.add-btn {
+    width: 20px;
+    height: 24px;
+    color: #222222;
+    font-size: 22px;
+}
+/* Aggregation */
+#aggregate {
+    width: 100px;
+    min-width: 100px;
+    height: 48px;
+    flex: 0 0 100px;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #222222;
+}
+
+/* Layout */
+.layout-select {
+    width: 120px;
+    min-width: 120px;
+    height: 48px;
+    margin-top:30px !important;
+    margin-bottom: 0 !important;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #000;
+    font-family: "Oswald", sans-serif;
+    font-size: 16px;
+}
+
+/* Go */
+.go-button {
+    width: 48px;
+    height: 48px;
+    margin-top: 28px !important;
+    margin-bottom: 0 !important;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #222222;
+    font-family: "Oswald", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    transform: none !important;
+}
+
+.go-button:hover {
+    background: #f3f3f3;
+    color: #000;
+}
+
+/* Reset */
+#resetReportBtn {
+    position: absolute;
+    right: 22px;
+    top: 110px;
+    width: 55px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #222222;
+    font-family: "Oswald", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+#resetReportBtn:hover {
+    color: #000;
+    font-weight: 500;
+    background: transparent;
+}
+
+/* Info area */
+.info-area {
+    width: 75% !important;
+    max-width: 1440px !important;
+    margin: 330px auto 0 !important;
+}
+
+.info-box {
+    width: 60%;
+    min-height: 200px;
+    padding: 14px 22px;
+    border: 1px solid #d2d2d2;
+    border-radius: 16px;
+    background: #f3f3f3 !important;
+    color: #222222;
+    font-family: "Oswald", sans-serif;
+    font-size: 18px;
+    line-height: 1.42;
+}
+
+.info-icon {
+    background: #ffffff;
+    color: #222222;
+    border: 1px solid #d2d2d2;
 }
