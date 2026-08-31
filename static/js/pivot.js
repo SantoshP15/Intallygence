@@ -1261,7 +1261,8 @@ function renderTable(response) {
 
         paging: true,
 
-        pageLength: 10
+        pageLength: 10,
+        autoWidth: false
 
     });
 

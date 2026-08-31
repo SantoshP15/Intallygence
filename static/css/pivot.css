@@ -1,3854 +1,2279 @@
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-
-html,
-body {
-
-    width: 100%;
-    min-height: 100%;
-    background:#ffffff;
-
-}
-
-
-body {
-    margin: 0;
-    padding: 0;
-    background:#ffffff;
-    width: 100%;
-    min-height: 100vh;
-
-    /* background: #000; */
-    font-family: "Inter", sans-serif;
-}
-
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-.background-page {
-
-    position: fixed;
-
-    inset: 0;
-
-    /* background:
-
-        linear-gradient(
-            rgba(0,0,0,.72),
-            rgba(0,0,0,.72)
-        ); */
-
-    z-index: 0;
-
-    pointer-events: none;
-
-}
-
-
-/* =========================================================
-   MAIN WHITE PANEL
-========================================================= */
-
-.report-panel {
-    position: relative;
-
-    width: 100%;
-    height: 100vh;
-    min-height: 100vh;
-
-    margin: 0;
-
-    background:#ffffff;
-
-    padding-bottom: 20px;
-
-    box-sizing: border-box;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-.report-header {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 18px;
-
-    box-sizing: border-box;
-
-    border-bottom: 2px solid #1196d2;
-
-    background: #ffffff;
-
-    z-index: 5000;
-}
-.brand img {
-
-    width: 90px;
-
-    height: auto;
-
-    display: block;
-
-}
-
-
-.report-title {
-
-    color: #000;
-    font-family: "Oswald", sans-serif;
-    font-size: 13px;
-
-    font-weight: 600;
-
-}
-
-
-/* =========================================================
-   SAVED REPORTS
-========================================================= */
-
-.saved-reports {
-
-    display: flex;
-
-    justify-content: flex-end;
-
-    padding:
-
-        14px
-
-        19px
-
-        0;
-    position: fixed;
-
-    top: 48px;
-    right: 18px;
-
-    z-index: 4000;
-    
-}
-
-
-#savedReportsBtn {
-
-    border: none;
-
-    background: #0798d4;
-    /* border: 1px solid #0798d4;
-    border-radius: 5px; */
-    color: #fff;
-
-    border-radius: 5px;
-
-    padding: 5px 10px;
-
-    font-family: "Oswald", sans-serif;
-
-    font-size: 11px;
-
-    cursor: pointer;
-
-    transition: .2s ease;
-
-}
-
 
 #savedReportsBtn:hover {
-
-    font-size: 18px;
-
+  font-size: 18px;
 }
-
-
-/* =========================================================
-   BUILDER
-========================================================= */
-
-.builder {
-    width: 91%;
-    max-width: 1400px;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    /* Keep the vertical position */
-    margin-top: clamp(20px, 3vh, 45px);
-
-    padding: 20px 0 24px;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        minmax(0, 1.15fr)
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        auto
-        auto;
-
-    column-gap: clamp(10px, 1.2vw, 20px);
-    border-radius: 5px;
-    align-items: start;
-    border-radius: 0 16px 16px 16px;
-    box-sizing: border-box;
-
-    position: relative;
-
-    background: #f3f3f3;
-
-    transform: translateY(0);
-
-    transition: transform 0.7s ease;
-
-    z-index: 1000;
-}
-
-/* =========================================================
-   BUILDER SECTION
-========================================================= */
-
-.builder-section {
-    position: relative;
-    
-    width: 100%;
-    min-width: 0;
-}
-
-
-.builder-section > label {
-
-    display: block;
-
-    margin-bottom: 3px;
-
-    color: #008dcc;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-}
-
-
-/* =========================================================
-   SELECT + PLUS
-========================================================= */
-
-.control-row {
-    display: flex;
-
-    flex-direction: row;
-
-    flex-wrap: nowrap;
-
-    align-items: center;
-
-    gap: 5px;
-
-    width: 100%;
-
-    height: 24px;
-
-    white-space: nowrap;
-}
-
-
-.control-row select {
-
-    width: 100%;
-
-    height: 25px;
-
-    min-width: 0;
-
-    padding: 0 5px;
-
-    border:
-
-        1px solid #0798d4;
-
-    border-radius: 3px;
-
-    background: #fff;
-
-    color: #000 !important;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-
-    font-size: 11px;
-
-    outline: none;
-
-    cursor: pointer;
-    flex: 1 1 auto;
-
-}
-
 
 .control-row select:focus {
-
-    box-shadow:
-
-        0 0 0 1px
+  box-shadow: 0 0 0 1px
         rgba(2, 34, 48, 0.2);
-
 }
-
-/* =========================================================
-   VALUE AGGREGATION
-========================================================= */
 
 .value-options {
-
-    position: absolute;
-
-    left: 0;
-
-    top: 38px;
-
-    display: none;
-
+  position: absolute;
+  left: 0;
+  top: 38px;
+  display: none;
 }
-
-
-#aggregate {
-
-    height: 22px;
-
-}
-
-
-/* =========================================================
-   SELECTED FIELDS
-========================================================= */
 
 .selected-fields {
-    display: flex;
-
-    flex-direction: row;
-
-    flex-wrap: wrap;
-
-    align-items: center;
-
-    gap: 4px;
-
-    width: 100%;
-
-    margin-top: 5px;
-
-    min-height: 21px;
-
-    height: auto;
-
-    overflow: visible;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 5px;
+  min-height: 21px;
+  height: auto;
+  overflow: visible;
 }
 
 .field-item {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 4px;
-
-    width: auto;
-
-    min-width: max-content;
-
-    height: 21px;
-
-    padding: 2px 6px;
-
-    border: 1px solid #000000;
-
-    border-radius: 3px;
-
-    background: #ffffff;
-
-    color: #000;
-
-    font-size: 12px;
-
-    white-space: nowrap;
-
-    flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  min-width: max-content;
+  height: 21px;
+  padding: 2px 6px;
+  border: 1px solid #000000;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #000;
+  font-size: 12px;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .badge {
-
-    margin-left: 4px;
-
-    padding: 1px 4px;
-
-    background: #0798d4;
-
-    color: white;
-
-    border-radius: 3px;
-
-    font-size: 8px;
-
+  margin-left: 4px;
+  padding: 1px 4px;
+  background: #0798d4;
+  color: white;
+  border-radius: 3px;
+  font-size: 8px;
 }
 
-
 .remove-btn {
-    margin-left: 5px;
-    color: #000000;
-    font-size: 13px;
-    cursor: pointer;
-
-    position: relative;
-    z-index: 10000;
-    pointer-events: auto;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    line-height: 1;
-    height: 14px;
-    width: 14px;
-
-    transform: translateY(0px);
+  margin-left: 5px;
+  color: #000000;
+  font-size: 13px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10000;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 14px;
+  width: 14px;
+  transform: translateY(0px);
 }
 
 .remove-btn:hover {
-    color: #d22;
+  color: #d22;
 }
-
-
-/* =========================================================
-   GO BUTTON
-========================================================= */
-
-.go-button {
-    width: 28px;
-    height: 19px;
-    
-    padding: 0;
-
-    border: none;
-    border-radius: 4px;
-
-    background: #0798d4;
-    color: white;
-
-    font-family: "Oswald", sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    align-self: center;
-
-    transform: translateY(-5px);
-}
-
-
-.go-button:hover {
-
-    background: #f3f3f3;
-
-}
-
-
-/* =========================================================
-   INFORMATION AREA
-========================================================= */
-
-.info-area {
-    display: flex;
-
-    align-items: flex-start;
-
-    gap: 5px;
-
-    width: calc(100% - 80px);
-    max-width: 1400px;
-
-    margin: 35px auto 0;
-
-    position: relative;
-
-    transition:
-        opacity 0.5s ease,
-        transform 0.5s ease;
-}
-
-
-/* =========================================================
-   INFO ICON
-========================================================= */
-
-.info-icon {
-
-    flex: 0 0 auto;
-
-    width: 15px;
-
-    height: 15px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #0798d4;
-
-    color: white;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-}
-
-
-/* =========================================================
-   INFO BOX
-========================================================= */
-
-.info-box {
-    width: 100%;
-    min-height: clamp(120px, 15vh, 150px);
-
-    padding: 8px;
-
-    /* border: 1px solid #0798d4; */
-    border-radius: 11px;
-
-    color: #0798d4;
-
-    font-size: clamp(13px, 1.2vw, 18px);
-
-    line-height: 1.3;
-
-    font-weight: 200;
-
-    box-sizing: border-box;
-}
-
-/* =========================================================
-   OUTPUT
-========================================================= */
-
-.output-area {
-
-    margin:
-
-        5px
-
-        52px
-
-        0;
-
-}
-
 
 #output {
-
-    min-height: 40px;
-
+  min-height: 40px;
 }
-
 
 .empty-message {
-
-    text-align: center;
-
-    color: #61705e;
-
-    font-size: 10px;
-
-}
-
-
-/* =========================================================
-   SAVE REPORT
-========================================================= */
-
-.save-area {
-
-    display: flex;
-
-    justify-content: flex-end;
-    left:auto;
-    padding:
-
-        18px
-
-        19px
-
-        0;
-    transition: transform 0.6s ease;
-}
-
-
-.save-button {
-    border: none;
-    border-radius: 5px;
-    background: #0798d4;
-    color: #fff;
-    padding: 5px 10px;
-    font-family: "Inter", sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    
-    transform: translateY(-70px);
+  text-align: center;
+  color: #61705e;
+  font-size: 10px;
 }
 
 .save-button:hover {
-
-    background: #087fae;
-
+  background: #087fae;
 }
-.save-area.report-generated {
-    transform: translateY(clamp(-900px, -80vh, -600px));
-}
-
-/* =========================================================
-   PIVOT TABLE
-========================================================= */
-
-.table-container {
-
-    width: auto;
-
-    margin:
-
-        25px
-
-        52px
-
-        0;
-
-    overflow: auto;
-
-}
-
 
 .pivot-table {
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-    font-size: 12px;
-
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
 }
-
 
 .pivot-table th {
-
-    background: #0798d4;
-
-    color: white;
-
-    padding: 8px;
-
-    border: 1px solid #ddd;
-
-    position: sticky;
-
-    top: 0;
-
+  background: #0798d4;
+  color: white;
+  padding: 8px;
+  border: 1px solid #ddd;
+  position: sticky;
+  top: 0;
 }
-
 
 .pivot-table td {
-
-    padding: 7px;
-
-    border: 1px solid #ddd;
-
+  padding: 7px;
+  border: 1px solid #ddd;
 }
-
 
 .pivot-table tr:nth-child(even) {
-
-    background: #f8fcfe;
-
+  background: #f8fcfe;
 }
-
 
 .pivot-table tr:hover {
-
-    background: #eaf7fc;
-
+  background: #eaf7fc;
 }
-
 
 .grand-total {
-
-    background: #dff3fb !important;
-
-    font-weight: bold;
-
+  background: #dff3fb;
+  font-weight: bold;
 }
-
 
 .grand-total td {
-
-    border-top:
-
-        2px solid #0798d4;
-
+  border-top: 2px solid #0798d4;
 }
-
-
-/* =========================================================
-   FILTER POPUP
-========================================================= */
 
 .filter-summary {
-
-    margin-top: 0;
-
-    padding: 0;
-
-    background: transparent;
-
-    border: none;
-
-    border-radius: 0;
-
-    color: #000;
-
-    cursor: pointer;
-
-    font-size: 10px;
-
-    white-space: nowrap;
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #000;
+  cursor: pointer;
+  font-size: 10px;
+  white-space: nowrap;
 }
-
-
-.filter-popup {
-
-    position: absolute;
-
-    width: 260px;
-
-    background: white;
-
-    border: 1px solid #0798d4;
-
-    border-radius: 7px;
-
-    padding: 10px;
-
-    box-shadow:
-
-        0 10px 30px rgba(0,0,0,.2);
-
-    z-index: 99999;
-
-}
-
 
 .filter-search {
-
-    width: 100%;
-
-    padding: 6px;
-
-    margin-bottom: 8px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 4px;
-
-    outline: none;
-
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
 }
-
 
 .checkbox-container {
-
-    max-height: 200px;
-
-    overflow-y: auto;
-
-    margin-bottom: 8px;
-
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 8px;
 }
-
 
 .checkbox-item {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    padding: 5px;
-
-    cursor: pointer;
-
-    border-radius: 4px;
-
-    font-size: 11px;
-
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 11px;
 }
-
 
 .checkbox-item:hover {
-
-    background: #eaf7fc;
-
+  background: #eaf7fc;
 }
-
 
 .apply-filter,
 .apply-date {
-
-    width: 100%;
-
-    height: 32px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background: #0798d4;
-
-    color: white;
-
-    cursor: pointer;
-
-    font-weight: 600;
-
+  width: 100%;
+  height: 32px;
+  border: none;
+  border-radius: 5px;
+  background: #0798d4;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
 }
-
 
 .apply-filter:hover,
 .apply-date:hover {
-
-    background: #087fae;
-
+  background: #087fae;
 }
-
-
-/* =========================================================
-   DATE FILTER
-========================================================= */
 
 .date-filter-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding-bottom: 8px;
-
-    border-bottom: 1px solid #ddd;
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
 }
-
 
 .date-tabs {
-
-    display: flex;
-
-    gap: 5px;
-
-    margin-bottom: 10px;
-
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
 }
-
 
 .date-tabs button {
-
-    flex: 1;
-
-    height: 30px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background: #eee;
-
-    cursor: pointer;
-
+  flex: 1;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  background: #eee;
+  cursor: pointer;
 }
-
 
 .active-tab {
-
-    background: #0798d4 !important;
-
-    color: white;
-
+  background: #0798d4;
+  color: white;
 }
-
 
 .date-filter-body {
-
-    min-height: 180px;
-
+  min-height: 180px;
 }
-
 
 .date-filter-body input {
-
-    width: 100%;
-
-    height: 34px;
-
-    margin: 6px 0 10px;
-
-    padding: 6px;
-
+  width: 100%;
+  height: 34px;
+  margin: 6px 0 10px;
+  padding: 6px;
 }
-
 
 .date-picker {
-
-    width: 100%;
-
-    height: 34px;
-
-    border: 1px solid #ccc;
-
-    border-radius: 5px;
-
-    padding: 0 8px;
-
-    font-size: 12px;
-
-    margin-bottom: 8px;
-
+  width: 100%;
+  height: 34px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
-
 
 .flatpickr-calendar {
-
-    font-family: "Inter", sans-serif;
-
-    z-index: 999999 !important;
-
+  font-family: "Inter", sans-serif;
+  z-index: 999999;
 }
-
-
-/* =========================================================
-   DATE TREE
-========================================================= */
-
-.date-tree {
-
-    max-height: 220px;
-
-    overflow: auto;
-
-    margin-top: 8px;
-
-    border: 1px solid #ddd;
-
-    padding: 7px;
-
-    border-radius: 5px;
-
-}
-
 
 .date-tree details {
-
-    margin-left: 8px;
-
+  margin-left: 8px;
 }
-
 
 .date-tree summary {
-
-    cursor: pointer;
-
-    font-weight: 600;
-
-    padding: 3px 0;
-
+  cursor: pointer;
+  font-weight: 600;
+  padding: 3px 0;
 }
-
-
-.date-heading {
-
-    margin-top: 8px;
-
-    margin-bottom: 6px;
-
-}
-
 
 .tree-header {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    cursor: pointer;
-
-    padding: 3px;
-
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 3px;
 }
-
 
 .tree-body {
-
-    margin-left: 25px;
-
+  margin-left: 25px;
 }
-
 
 .tree-year {
-
-    margin-bottom: 4px;
-
+  margin-bottom: 4px;
 }
-
 
 .tree-month {
-
-    margin-top: 4px;
-
+  margin-top: 4px;
 }
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
 
 @media (max-width: 900px) {
-
-    .report-panel {
-
-        width: 95vw;
-
-        margin: 25px auto;
-
-    }
-
-
-    .builder {
-
-        grid-template-columns:
-
-            repeat(2, 1fr);
-
-        padding-top: 60px;
-
-    }
-
-
-    .go-button {
-
-        grid-column: 1 / -1;
-
-        justify-self: end;
-
-    }
-
-
-    .info-box {
-
-        font-size: 15px;
-
-    }
-
+.report-panel {
+  width: 95vw;
+  margin: 25px auto;
 }
-
-
-@media (max-width: 600px) {
-
-    .builder {
-
-        grid-template-columns: 1fr;
-
-        padding-left: 25px;
-
-        padding-right: 25px;
-
-    }
-
-
-    .info-area {
-
-        margin-left: 25px;
-
-        margin-right: 25px;
-
-    }
-
-
-    .output-area {
-
-        margin-left: 25px;
-
-        margin-right: 25px;
-
-    }
-
-
-    .info-box {
-
-        font-size: 13px;
-
-    }
-
-}
-/* =================================
-   DATE / FILTER POPUP
-================================= */
-
-.filter-popup {
-    position: fixed !important;
-
-    width: 260px;
-    max-height: 400px;
-
-    padding: 10px;
-
-    background: #ffffff;
-
-    border: 1px solid #0b9bd7;
-    border-radius: 8px;
-
-    box-shadow: 0 8px 25px rgba(0,0,0,0.18);
-
-    z-index: 999999;
-
-    box-sizing: border-box;
-}
-
-
-/* Labels */
-
-.filter-popup label {
-    display: block;
-
-    margin: 5px 0 4px;
-
-    font-size: 14px;
-    color: #333;
-}
-
-
-/* Date inputs */
-
-.filter-popup .date-picker,
-.filter-popup .filter-search {
-    width: 100%;
-
-    height: 34px;
-
-    padding: 6px 9px;
-
-    box-sizing: border-box;
-
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-    font-family: "Inter", sans-serif;
-}
-
-
-/* Apply button */
-
-.filter-popup .apply-date {
-    width: 100%;
-
-    height: 34px;
-
-    margin-top: 8px;
-
-    border: none;
-    border-radius: 5px;
-
-    background: #079bd3;
-    color: white;
-
-    font-weight: 600;
-
-    cursor: pointer;
-}
-
-.filter-popup .apply-date:hover {
-    background: #0788ba;
-}
-
-
-/* Browse Dates */
-
-.date-heading {
-    margin: 8px 0;
-
-    font-size: 14px;
-    color: #222;
-}
-
-
-/* Date tree */
-
-.date-tree {
-    max-height: 180px;
-
-    overflow-y: auto;
-
-    margin-top: 6px;
-}
-
-
-/* Horizontal line */
-
-.filter-popup hr {
-    border: none;
-    border-top: 1px solid #ddd;
-
-    margin: 8px 0;
-}
-/* =========================================
-   REPORT GENERATION
-========================================= */
 
 .builder {
-    transition: transform 0.7s ease;
-}
-
-.builder.report-generated {
-    transform: translateY(clamp(-300px, -25vh, -150px));
-}
-
-
-/* =========================================
-   INFO BOX
-========================================= */
-
-.info-area {
-    transition:
-        opacity 0.5s ease,
-        transform 0.5s ease;
-}
-
-.info-area.report-generated {
-    opacity: 0;
-    visibility: hidden;
-
-    height: 0;
-    min-height: 0;
-
-    margin: 0;
-    padding: 0;
-
-    overflow: hidden;
-}
-
-
-/* =========================================
-   OUTPUT
-========================================= */
-
-.output-area {
-    margin: 5px 52px 0;
-
-    opacity: 0;
-    visibility: hidden;
-
-    position: relative;
-    z-index: 1;
-
-    transition:
-        opacity 0.6s ease,
-        transform 0.7s ease;
-}
-
-.output-area.report-generated {
-    opacity: 1;
-    visibility: visible;
-
-    /*
-       Move output up together with builder
-    */
-    transform: translateY(
-        clamp(-100px, -25vh, -150px)
-    );
-
-    margin-top: 5px;
-}
-
-
-/* =========================================
-   RESULT TABLE
-========================================= */
-
-.table-container {
-    margin-top: 10px;
-}
-/* =========================================
-   FILTER CHIP FIX
-========================================= */
-
-#filters .field-item {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    width: auto;
-
-    min-width: max-content;
-
-    height: 21px;
-
-    padding: 2px 6px;
-
-    white-space: nowrap;
-}
-
-
-#filters .field-item > div:first-child {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    flex: 0 0 auto;
-}
-
-
-#filters .filter-summary {
-
-    margin-top: 0;
-
-    padding: 0;
-
-    border: none;
-
-    background: transparent;
-
-    white-space: nowrap;
-}
-
-
-#filters .remove-btn {
-
-    margin-left: 2px;
-
-    flex: 0 0 auto;
-}
-/* =========================================
-   PERIOD
-========================================= */
-
-#period {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    align-items: center;
-
-    gap: 4px;
-
-    margin-top: 5px;
-
-    width: 100%;
-
-    min-height: 21px;
-
-    overflow: visible;
-}
-
-
-#period .field-item {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    width: auto;
-
-    min-width: max-content;
-
-    height: 21px;
-
-    padding: 2px 6px;
-
-    white-space: nowrap;
-}
-.saved-reports {
-    width: 100%;
-
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    box-sizing: border-box;
-
-    padding: 8px 18px 0;
-
-    position: relative;
-
-    z-index: 10;
-}
-
-#savedReportsBtn {
-    border: none;
-
-    background: #0798d4;
-    color: white;
-
-    border-radius: 5px;
-
-    padding: 5px 10px;
-
-    font-family: "Oswald", sans-serif;
-    font-size: 11px;
-
-    cursor: pointer;
-
-    white-space: nowrap;
-}
-/* =========================================
-   REPORT TYPE BUILDERS
-========================================= */
-
-.report-types {
-    width: calc(100% - 80px);
-    max-width: 1400px;
-
-    margin: 25px auto 0;
-
-    display: flex;
-    justify-content: center;
-
-    gap: 12px;
-}
-
-.report-type {
-    min-width: 130px;
-    padding: 8px 20px;
-
-    border: 1px solid #d4effc;
-    border-radius: 5px;
-
-    background: transparent;
-    color: #000;
-
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-.report-type:hover {
-    background: #f3f3f3;
-    color: white;
-}
-
-.report-type.active {
-    background: #f3f3f3;
-    color: #000;
-}
-.layout-select {
-    align-self: start !important;
-
-    width: 165px;
-    min-width: 165px;
-
-    height: 28px;
-
-    margin-top: 18px !important;
-    margin-bottom: 0 !important;
-
-    padding: 0 9px;
-
-    border: none;
-    border-radius: 7px;
-
-    background: #fff;
-    color: #008dcc;
-
-    font-family: ui-sans-serif, system-ui, sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    color: #0a0a0a !important;
-
-    cursor: pointer;
-}
-/* =========================================
-   EXCEL PIVOT TABLE
-========================================= */
-
-.excel-pivot-table {
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-
-    background: white;
-
-}
-
-
-/* =========================================
-   HEADER
-========================================= */
-
-.excel-pivot-table thead th {
-
-    background: #0798d4;
-
-    color: white;
-
-    border: 1px solid #d0d0d0;
-
-    padding: 7px 10px;
-
-    font-weight: 600;
-
-    text-align: left;
-
-    white-space: nowrap;
-
-}
-
-
-/* =========================================
-   BODY
-========================================= */
-
-.excel-pivot-table tbody td {
-
-    padding: 9px 12px;
-
-    border: 1px solid #d5d5d5;
-
-    white-space: nowrap;
-
-}
-
-
-/* =========================================
-   ROW FIELD
-========================================= */
-
-.excel-pivot-table
-.pivot-row-cell {
-
-    text-align: left;
-
-}
-
-/* =========================================================
-   GRAND TOTAL - PIVOT
-========================================================= */
-
-.excel-pivot-table .pivot-grand-total-row {
-
-    background: #0798d4 !important;
-
-    color: #ffffff !important;
-
-    font-weight: 700;
-
-    border-top: 3px solid #057eaf;
-
-    border-bottom: none;
-
-    height: 42px;
-
-}
-
-
-/* =========================================================
-   GRAND TOTAL CELLS
-========================================================= */
-
-.excel-pivot-table .pivot-grand-total-row td {
-
-    background: #0798d4 !important;
-
-    color: #ffffff !important;
-
-    font-size: 16px;
-
-    font-weight: 700;
-
-    padding: 10px 14px;
-
-    border-top: none;
-
-    border-bottom: none;
-
-    vertical-align: middle;
-
-}
-
-
-/* =========================================================
-   GRAND TOTAL LABEL
-========================================================= */
-
-.excel-pivot-table
-.pivot-grand-total-row td:first-child {
-
-    text-align: left;
-
-    font-size: 17px;
-
-    letter-spacing: 0.2px;
-
-}
-
-
-/* =========================================================
-   GRAND TOTAL NUMBERS
-========================================================= */
-
-.excel-pivot-table
-.pivot-grand-total-row td:not(:first-child) {
-
-    text-align: right;
-
-    font-size: 17px;
-
-    font-weight: 700;
-
-}
-
-
-/* =========================================================
-   GRAND TOTAL HOVER
-========================================================= */
-
-.excel-pivot-table
-.pivot-grand-total-row:hover td {
-
-    background: #0798d4 !important;
-
-}
-
-
-/* =========================================
-   HOVER
-========================================= */
-
-.excel-pivot-table
-tbody tr:hover {
-
-    background: #f5fafc;
-
-}
-.excel-pivot-table .pivot-column-group {
-
-    text-align: center;
-
-    font-weight: 700;
-
-}
-
-
-.excel-pivot-table thead th {
-
-    white-space: nowrap;
-
-}
-
-
-.excel-pivot-table
-.pivot-grand-header {
-
-    text-align: center;
-
-}
-
-
-.excel-pivot-table
-.pivot-grand-total-row td {
-
-    font-weight: 700;
-
-    background: #eaf6fb;
-
-    border-top: 2px solid #0798d4;
-
-}
-/* =========================================
-   MULTI ROW PIVOT
-========================================= */
-
-.excel-pivot-table
-.pivot-subtotal-row td {
-
-    font-weight: bold;
-
-    background: #eaf6fb;
-
-    border-top: 1px solid #0798d4;
-
-}
-
-
-/* =========================================
-   HIERARCHY INDENT
-========================================= */
-
-.excel-pivot-table
-tbody td {
-
-    vertical-align: middle;
-
-}
-
-
-/* =========================================
-   GRAND TOTAL
-========================================= */
-
-.excel-pivot-table
-.pivot-grand-total-row td {
-
-    font-weight: 700;
-
-    background: #dff2fa;
-
-    border-top: 2px solid #0798d4;
-
-}
-.excel-pivot-table .pivot-parent-cell {
-    vertical-align: top;
-    font-weight: 600;
-    padding-top: 8px;
-}
-
-
-.excel-pivot-table .pivot-subtotal-row td {
-    font-weight: 700;
-    background: #eaf6fb;
-    border-top: 1px solid #0798d4;
-}
-
-
-.excel-pivot-table .pivot-subtotal-row {
-    border-bottom: 1px solid #0798d4;
-}
-/* =========================================
-   PIVOT EXPAND / COLLAPSE
-========================================= */
-
-.pivot-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 16px;
-    height: 16px;
-
-    margin-right: 6px;
-
-    padding: 0;
-
-    border: 1px solid #0798d4;
-    border-radius: 2px;
-
-    background: white;
-    color: #0798d4;
-
-    font-size: 11px;
-    font-weight: 700;
-
-    line-height: 1;
-
-    cursor: pointer;
-}
-
-.pivot-toggle:hover {
-    background: #0798d4;
-    color: white;
-}
-
-
-.pivot-group-row td {
-    font-weight: 600;
-}
-
-
-.pivot-group-label {
-    padding-left: 6px;
-}
-
-
-.pivot-hidden {
-    display: none;
-}
-.pivot-parent-row td {
-    font-weight: 600;
-    background: #f5fbfd;
-}
-
-
-.pivot-parent-label {
-    color: #111;
-}
-
-
-.pivot-leaf-row td {
-    background: white;
-}
-
-
-.pivot-hidden {
-    display: none !important;
-}
-
-
-.pivot-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 16px;
-    height: 16px;
-
-    margin-right: 6px;
-
-    padding: 0;
-
-    border: 1px solid #0798d4;
-    border-radius: 2px;
-
-    background: white;
-    color: #0798d4;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    cursor: pointer;
-}
-
-
-.pivot-toggle:hover {
-    background: #0798d4;
-    color: white;
-}
-/* ================================
-   PIVOT SUBTOTAL ROW
-================================ */
-
-.pivot-subtotal td {
-    font-weight: 700;
-}
-
-/* =========================================================
-   REFERENCE DESIGN OVERRIDES
-   ========================================================= */
-
-html, body {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    background: #ffffff;
-}
-
-body {
-    font-family: "Inter", sans-serif;
-    overflow-x: hidden;
-}
-
-.report-panel {
-    width: 100%;
-    min-height: 100vh;
-    height: auto;
-    margin: 0;
-    padding: 0 0 30px;
-    background: #ffffff;
-    /* background: red; */
-}
-
-/* HEADER */
-.report-header {
-    position: relative;
-    top: auto;
-    left: auto;
-    width: 100%;
-    height: 88px;
-    padding: 0 22px 0 18px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    background: #fff;
-    border-bottom: 3px solid #0798d4;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-}
-
-.brand img {
-    width: 205px;
-    height: auto;
-}
-
-.report-title {
-    margin-left: 25px;
-    padding-left: 24px;
-    border-left: 2px solid #000;
-    color: #000;
-    font-size: 21px;
-    font-weight: 400;
-}
-
-.saved-reports {
-    position: absolute;
-    top: 0;
-    right: 22px;
-    width: auto;
-    height: 88px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    z-index: 6000;
-}
-
-#savedReportsBtn {
-    border: none;
-    background: transparent;
-    color: #000;
-    padding: 5px 0;
-    font-family: "Oswald", sans-serif;
-    font-size: 17px;
-    font-weight: 400;
-}
-
-/* REPORT TYPE TABS */
-.report-types {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding-top: 75px;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 20px; 
-    align-items: flex-end;
-    gap: 8px;
-    background: #ffffff;
-}
-
-.report-type {
-    min-width: 100px;
-    height: 39px;
-    padding: 0 14px;
-    border: 2px solid #d4effc;
-    border-bottom: none;
-    border-radius: 12px 12px 0 0;
-    background: #ffffff;
-    color: #000;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-
-.report-type:hover {
-    background: #f3f3f3;
-    color: #000;
-}
-
-/* BLUE BUILDER BAR */
-/* .builder {
-    width: 91% !important;
-    max-width: none;
-    margin: 0 auto;
-    padding: 8px 4.5% 10px;
-    display: grid;
-    grid-template-columns:
-        minmax(0,1fr)
-        minmax(0,1fr)
-        minmax(0,1.15fr)
-        minmax(0,1fr)
-        minmax(0,1fr)
-        auto
-        auto;
-    column-gap: 10px;
-    align-items: start;
-    background: #ffffff;
-    transform: none;
-    box-sizing: border-box;
-} */
-
-.builder-section > label {
-    display: block;
-    margin-bottom: 0px;
-    margin-left: 6px;
-    color: #000;
-    font-size: 15px;
-    /* font-weight: 500; */
-}
-
-.control-row {
-    width: 100%;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.control-row select {
-    width: 100%;
-    height: 48px ;
-    min-width: 0;
-    flex: 1 1 auto;
-    padding: 0 5px;
-    border: none;
-    border-radius: 7px;
-    background: #fff;
-    color: #000 !important;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    font-size: 16px;
-}
-
-.add-btn {
-    width: 18px;
-    height: 22px;
-    flex: 0 0 18px;
-    border: none;
-    background: transparent;
-    color: #008bbf;
-    font-size: 25px;
-    line-height: 20px;
-    cursor: pointer;
-}
-
-.add-btn:hover {
-    /* color: #eaf7fc; */
-    color:#000;
-}
-
-#aggregate {
-    height: 28px;
-    flex: 0 0 165px;
-}
-
-.layout-select {
-    align-self: end;
-    width: 165px;
-    min-width: 165px;
-    height: 28px;
-    margin-bottom: 28px;
-    padding: 0 9px;
-    border: none;
-    border-radius: 7px;
-    background: #fff;
-    color: #008dcc;
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
+  grid-template-columns: repeat(2, 1fr);
+  padding-top: 60px;
 }
 
 .go-button {
-    align-self: start !important;
-
-    width: 43px;
-    height: 28px;
-
-    margin-top: 18px !important;
-    margin-bottom: 0 !important;
-
-    padding: 0;
-
-    border: none;
-    border-radius: 7px;
-
-    background: #fff;
-    color: #0798d4;
-
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transform: none !important;
-}
-
-/* INFO BOX */
-.info-area {
-    width: calc(100% - 14%);
-    max-width: none;
-    margin: 20px auto 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.info-icon {
-    flex: 0 0 28px;
-    width: 28px;
-    height: 28px;
-    background: #0798d4;
-    color: #fff;
-    font-size: 19px;
+  grid-column: 1 / -1;
+  justify-self: end;
 }
 
 .info-box {
-    width: 60%;
-    min-height: 200px;
-    padding: 14px 22px;
-    /* border: 2px solid #0798d4; */
-    border-radius: 16px;
-    background: #d4effc;
-    color: #008bbf;
-    font-size: 18px;
-    line-height: 1.42;
+  font-size: 15px;
+}
 }
 
-/* OUTPUT */
+@media (max-width: 600px) {
+.builder {
+  grid-template-columns: 1fr;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.info-area {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
 .output-area {
-    width: calc(100% - 6%);
-    margin: 28px auto 0;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.info-box {
+  font-size: 13px;
+}
+}
+
+.filter-popup {
+  position: fixed;
+  width: 260px;
+  max-height: 400px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #0b9bd7;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+  z-index: 999999;
+  box-sizing: border-box;
+}
+
+.filter-popup label {
+  display: block;
+  margin: 5px 0 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-popup .date-picker,
+.filter-popup .filter-search {
+  width: 100%;
+  height: 34px;
+  padding: 6px 9px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: "Inter", sans-serif;
+}
+
+.filter-popup .apply-date {
+  width: 100%;
+  height: 34px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 5px;
+  background: #079bd3;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-popup .apply-date:hover {
+  background: #0788ba;
+}
+
+.date-heading {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #222;
+}
+
+.date-tree {
+  overflow: auto;
+  border: 1px solid #ddd;
+  padding: 7px;
+  border-radius: 5px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 6px;
+}
+
+.filter-popup hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 8px 0;
+}
+
+
+#filters .field-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  min-width: max-content;
+  height: 21px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+#filters .field-item > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+#filters .filter-summary {
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  white-space: nowrap;
+}
+
+#filters .remove-btn {
+  margin-left: 2px;
+  flex: 0 0 auto;
+}
+
+#period {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  width: 100%;
+  min-height: 21px;
+  overflow: visible;
+}
+
+#period .field-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  min-width: max-content;
+  height: 21px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.report-type.active {
+  background: #f3f3f3;
+  color: #000;
+}
+
+.excel-pivot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  background: white;
+}
+
+.excel-pivot-table
+.pivot-row-cell {
+  text-align: left;
+}
+
+.excel-pivot-table .pivot-grand-total-row {
+  background: #0798d4;
+  color: #ffffff;
+  font-weight: 700;
+  border-top: 3px solid #057eaf;
+  border-bottom: none;
+  height: 42px;
+}
+
+.excel-pivot-table
+.pivot-grand-total-row td:first-child {
+  text-align: left;
+  font-size: 17px;
+  letter-spacing: 0.2px;
+}
+
+.excel-pivot-table
+.pivot-grand-total-row td:not(:first-child) {
+  text-align: right;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.excel-pivot-table
+.pivot-grand-total-row:hover td {
+  background: #0798d4;
+}
+
+.excel-pivot-table
+tbody tr:hover {
+  background: #f5fafc;
+}
+
+.excel-pivot-table .pivot-column-group {
+  text-align: center;
+  font-weight: 700;
+}
+
+.excel-pivot-table thead th {
+  background: #0798d4;
+  color: white;
+  border: 1px solid #d0d0d0;
+  padding: 7px 10px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.excel-pivot-table
+.pivot-grand-header {
+  text-align: center;
+}
+
+.excel-pivot-table
+tbody td {
+  padding: 9px 12px;
+  border: 1px solid #d5d5d5;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.excel-pivot-table
+.pivot-grand-total-row td {
+  background: #0798d4;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 10px 14px;
+  border-bottom: none;
+  vertical-align: middle;
+  font-weight: 700;
+  border-top: 2px solid #0798d4;
+}
+
+.excel-pivot-table .pivot-parent-cell {
+  vertical-align: top;
+  font-weight: 600;
+  padding-top: 8px;
+}
+
+.excel-pivot-table .pivot-subtotal-row td {
+  font-weight: 700;
+  background: #eaf6fb;
+  border-top: 1px solid #0798d4;
+}
+
+.excel-pivot-table .pivot-subtotal-row {
+  border-bottom: 1px solid #0798d4;
+}
+
+.pivot-group-row td {
+  font-weight: 600;
+}
+
+.pivot-group-label {
+  padding-left: 6px;
+}
+
+.pivot-parent-row td {
+  font-weight: 600;
+  background: #f5fbfd;
+}
+
+.pivot-parent-label {
+  color: #111;
+}
+
+.pivot-leaf-row td {
+  background: white;
+}
+
+.pivot-hidden {
+  display: none;
+}
+
+.pivot-toggle {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  padding: 0;
+  border: 1px solid #0798d4;
+  border-radius: 2px;
+  background: white;
+  color: #0798d4;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pivot-toggle:hover {
+  background: #0798d4;
+  color: white;
+}
+
+.pivot-subtotal td {
+  font-weight: 700;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+.report-panel {
+  position: relative;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  margin: 0;
+  padding: 0 0 30px;
+  background: #ffffff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand img {
+  display: block;
+  width: 205px;
+  height: auto;
+}
+
+.report-title {
+  font-family: "Oswald", sans-serif;
+  margin-left: 25px;
+  padding-left: 24px;
+  border-left: 2px solid #000;
+  color: #000;
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.saved-reports {
+  justify-content: flex-end;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 22px;
+  width: auto;
+  height: 88px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  z-index: 6000;
+}
+
+#savedReportsBtn {
+  transition: .2s ease;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+  color: #000;
+  padding: 5px 0;
+  font-family: "Oswald", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.report-type:hover {
+  background: #f3f3f3;
+  color: #000;
+}
+
+.add-btn:hover {
+  color: #000;
+}
+
+.output-area {
+  opacity: 0;
+  visibility: hidden;
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.6s ease, transform 0.7s ease;
+  width: 75%;
+  max-width: 1440px;
+  margin: 28px auto 0;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #d2d2d2;
+  border-radius: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .table-container {
-      width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 0;
+  overflow: auto;
+  margin-top: 10px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* SAVE */
 .save-area {
-    position: relative;
-    width: calc(100% - 6%);
-    margin: 15px auto 0;
-    padding: 0;
-
-    display: flex;
-    justify-content: flex-end;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transition:
-        opacity 0.4s ease,
+  left: auto;
+  position: relative;
+  width: calc(100% - 6%);
+  margin: 15px auto 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease,
         visibility 0.4s ease;
 }
 
 .save-button {
-    transform: none;
+  border: none;
+  border-radius: 5px;
+  background: #0798d4;
+  color: #fff;
+  padding: 5px 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transform: none;
 }
 
-/* AFTER GENERATION */
 .builder.report-generated {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .info-area.report-generated {
-    opacity: 0;
-    visibility: hidden;
-    height: 0;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .output-area.report-generated {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+  margin-top: 5px;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }
 
-/* RESPONSIVE */
 @media (max-width: 1200px) {
-    .brand img { width: 175px; }
-    .report-title { font-size: 18px; }
-    .report-types { padding-top: 110px; gap: 5px; }
-    .report-type { min-width: 88px; padding: 0 9px; font-size: 12px; }
-    .builder { padding-left: 3%; padding-right: 3%; }
-    .builder-section > label { font-size: 12px; }
-    .control-row select, .layout-select { font-size: 11px; }
-    .info-box { font-size: 22px; }
+.brand img {
+  width: 175px;
+}
+
+.report-title {
+  font-size: 18px;
+}
+
+.report-types {
+  padding-top: 110px;
+  gap: 5px;
+}
+
+.report-type {
+  min-width: 88px;
+  padding: 0 9px;
+  font-size: 12px;
+}
+
+.builder {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.builder-section > label {
+  font-size: 12px;
+}
+
+.control-row select, .layout-select {
+  font-size: 11px;
+}
+
+.info-box {
+  font-size: 22px;
+}
 }
 
 @media (max-width: 900px) {
-    .report-header { height: 70px; }
-    .brand img { width: 145px; }
-    .report-title { font-size: 16px; margin-left: 14px; padding-left: 14px; }
-    .saved-reports { height: 70px; }
-    .report-types { padding-top: 90px; overflow-x: auto; justify-content: flex-start; }
-    .builder { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 8px; }
-    .info-box { font-size: 18px; min-height: 180px; }
+.report-header {
+  height: 70px;
+}
+
+.brand img {
+  width: 145px;
+}
+
+.report-title {
+  font-size: 16px;
+  margin-left: 14px;
+  padding-left: 14px;
+}
+
+.saved-reports {
+  height: 70px;
+}
+
+.report-types {
+  padding-top: 90px;
+  overflow-x: auto;
+  justify-content: flex-start;
+}
+
+.builder {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  row-gap: 8px;
+}
+
+.info-box {
+  font-size: 18px;
+  min-height: 180px;
+}
 }
 
 @media (max-width: 600px) {
-    .report-header { height: 62px; padding: 0 10px; }
-    .brand img { width: 120px; }
-    .report-title { font-size: 13px; margin-left: 8px; padding-left: 8px; }
-    .saved-reports { display: none; }
-    .report-types { padding-top: 80px; }
-    .builder { grid-template-columns: 1fr; padding: 10px 18px 14px; }
-    .layout-select, .go-button { width: 100%; margin-bottom: 0; }
-    .info-area { width: calc(100% - 30px); }
-    .info-box { font-size: 14px; min-height: 150px; }
+.report-header {
+  height: 62px;
+  padding: 0 10px;
 }
 
-
-/* =========================================================
-   SPLASH BACKGROUND + CANVAS SCROLL LOGIC
-   ========================================================= */
-
-/*
-   The Splash page uses the 1920 × 1080 home-screen image as
-   one complete canvas. The pivot page now uses the same image.
-*/
-html,
-body {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-    background: #000;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+.brand img {
+  width: 120px;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    display: none;
+.report-title {
+  font-size: 13px;
+  margin-left: 8px;
+  padding-left: 8px;
 }
 
-/* Splash background */
-.background-page {
-    position: fixed !important;
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    z-index: 0 !important;
-    pointer-events: none;
-
-    background: #ffffff !important;
+.saved-reports {
+  display: none;
 }
 
-/* Remove the old empty background layer */
-.background-content {
-    display: none !important;
+.report-types {
+  padding-top: 80px;
 }
 
-/* =========================================
-   PIVOT RESPONSIVE CANVAS
-   ========================================= */
+.builder {
+  grid-template-columns: 1fr;
+  padding: 10px 18px 14px;
+}
+
+.layout-select, .go-button {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.info-area {
+  width: calc(100% - 30px);
+}
+
+.info-box {
+  font-size: 14px;
+  min-height: 150px;
+}
+}
 
 :root {
-    --canvas-scale: 1;
+  --canvas-scale: 1;
 }
-
-/* =========================================================
-   PAGE / VIEWPORT
-   ========================================================= */
 
 html,
 body {
-    width: 100%;
-    min-width: 0;
-    min-height: 100%;
-
-    margin: 0;
-    padding: 0;
-
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  background: #000;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
-/* =========================================================
-   SPLASH-STYLE BACKGROUND
-   ========================================================= */
-
 .background-page {
-    position: fixed !important;
-    inset: 0 !important;
-
-    width: 100vw !important;
-    height: 100vh !important;
-
-    z-index: 0 !important;
-    pointer-events: none;
-
-    background: #ffffff !important;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: #ffffff;
 }
 
 .background-content {
-    display: none !important;
+  display: none;
 }
-
-/* =========================================================
-   OUTER PIVOT VIEWPORT
-   ========================================================= */
 
 .pivot-wrapper {
-    position: relative;
-
-    width: 100%;
-    min-width: 0;
-
-    min-height: calc(1080px * var(--canvas-scale, 1));
-
-    margin: 0;
-    padding: 0;
-
-    z-index: 10;
-
-    overflow-x: hidden;
-    overflow-y: visible;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(1080px * var(--canvas-scale, 1));
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
-
-/* =========================================================
-   FIXED 1920 × 1080 DESIGN CANVAS
-   ========================================================= */
 
 .pivot-canvas {
-    position: relative;
-    
-    width: 1920px;
-    min-width: 1920px;
-
-    height: 1080px;
-    min-height: 1080px;
-
-    margin: 0;
-    padding: 0;
-
-    left: 50%;
-    transform: translateX(-50%) scale(var(--canvas-scale, 1));
-    transform-origin: top center;
-
-    overflow: visible;
+  position: relative;
+  width: 1920px;
+  min-width: 1920px;
+  height: 1080px;
+  min-height: 1080px;
+  margin: 0;
+  padding: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(var(--canvas-scale, 1));
+  transform-origin: top center;
+  overflow: visible;
 }
-
-/* =========================================================
-   REPORT PANEL
-   ========================================================= */
 
 .pivot-canvas .report-panel {
-    position: relative;
-
-    width: 1920px;
-    min-height: 1080px;
-    height: auto;
-
-    margin: 0;
-    padding-bottom: 30px;
-    background: #ffffff;
-    /* background: transparent !important; */
+  position: relative;
+  width: 1920px;
+  min-height: 1080px;
+  height: auto;
+  margin: 0;
+  padding-bottom: 30px;
+  background: #ffffff;
 }
 
-/* =========================================================
-   FIXED DESIGN WIDTHS
-   ========================================================= */
-
 .pivot-canvas .report-header {
-    width: 1920px;
+  width: 1920px;
 }
 
 .pivot-canvas .report-types {
-    width: 1920px;
-    padding-top: 75px;
+  width: 1920px;
+  padding-top: 75px;
 }
 
-.pivot-canvas .builder {
-    width: 91% ;
-    max-width: none ;
 
-    margin-left: auto ;
-    margin-right: auto;
-}
 .pivot-canvas .info-area {
-    width: 1650px;
-}
-
-.pivot-canvas .output-area {
-    width: 1800px;
+  width: 1650px;
 }
 
 .pivot-canvas .save-area {
-    width: 1800px;
+  width: 1800px;
 }
-
-/* =========================================================
-   TABLE
-   ========================================================= */
 
 .pivot-canvas .table-container {
-    background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.92);
 }
-/* =========================================
-   SAVE REPORT - SHOW AFTER GO
-========================================= */
 
 .save-area.report-generated {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-
-    transform: none;
-}
-/* =========================================================
-   TABULAR RESULT - FULL SCREEN WIDTH
-   ========================================================= */
-
-/* =========================================================
-   TABULAR RESULT - LARGER & EASIER TO READ
-   ========================================================= */
-
-.pivot-canvas .output-area {
-    width: 1820px !important;
-    max-width: 1820px !important;
-
-    margin: 20px auto 0 !important;
-
-    padding: 0 !important;
-
-    box-sizing: border-box;
-    transform: none !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
 }
 
-/* Table container */
-.pivot-canvas .output-area .table-container {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-
-    padding: 0 !important;
-
-    overflow-x: hidden !important;
-
-    box-sizing: border-box;
-}
-
-/* DataTables wrapper */
 .pivot-canvas .output-area .dataTables_wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    min-width: 0 !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    box-sizing: border-box;
-
-    font-size: 14px !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 
-/* TABLE */
 .pivot-canvas .output-area table.dataTable {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    min-width: 0 !important;
-
-    margin: 0 !important;
-
-    table-layout: fixed !important;
-
-    font-size: 14px !important;
-
-    box-sizing: border-box;
-}
-/* =========================================
-   OUTPUT TABLE POSITION
-   ========================================= */
-
-.pivot-canvas .output-area {
-    width: 1820px !important;
-    max-width: 1820px !important;
-
-    margin: 20px auto 0 !important;
-    padding: 0 !important;
-
-    transform: none !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  table-layout: fixed;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.pivot-canvas .output-area.report-generated {
-    margin-top: 20px !important;
-    transform: none !important;
-}
-
-/* HEADER */
 .pivot-canvas .output-area table.dataTable thead th {
-    font-size: 16px !important;
-    padding: 15px 14px !important;
-    line-height: 1.4 !important;
-
-    font-weight: 600;
-    white-space: nowrap;
+  font-size: 16px;
+  padding: 15px 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-/* BODY */
-/* BODY */
 .pivot-canvas .output-area table.dataTable tbody td {
-    font-size: 16px !important;
-    padding: 15px 14px !important;
-    line-height: 1.4 !important;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-size: 16px;
+  padding: 15px 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* GRAND TOTAL */
 .pivot-canvas .output-area table.dataTable tbody tr:last-child td {
-    font-size: 16px !important;
-    font-weight: 700;
-
-    padding-top: 15px !important;
-    padding-bottom: 15px !important;
+  font-size: 16px;
+  font-weight: 700;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
-/* DataTables controls */
+
 .pivot-canvas .output-area .dataTables_length,
 .pivot-canvas .output-area .dataTables_filter,
 .pivot-canvas .output-area .dataTables_info,
 .pivot-canvas .output-area .dataTables_paginate {
-    font-size: 13px !important;
+  font-size: 13px;
 }
 
-/* Search box */
 .pivot-canvas .output-area .dataTables_filter input {
-    height: 28px !important;
-    font-size: 13px !important;
+  height: 28px;
+  font-size: 13px;
 }
 
-/* Entries dropdown */
 .pivot-canvas .output-area .dataTables_length select {
-    height: 28px !important;
-    font-size: 13px !important;
+  height: 28px;
+  font-size: 13px;
 }
-/* =========================================================
-   DROPDOWN LIST - ROWS / COLUMNS / VALUES / PERIOD / FILTERS
-   ========================================================= */
 
-/* Closed dropdown */
 #rowField,
 #columnField,
 #valueField,
 #periodField,
 #filterField,
 #aggregate {
-font-family: ui-sans-serif, system-ui, sans-serif !important;
-font-size: 16px !important;
-font-weight: 500 !important;
-color: #0a0a0a !important;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0a0a0a;
 }
 
-/* Dropdown options */
 #rowField option,
 #columnField option,
 #valueField option,
 #periodField option,
 #filterField option {
-    font-family: "Inter", sans-serif;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    color: #000 !important;
-    background: #ffffff !important;
-    padding: 8px 10px !important;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+  background: #ffffff;
+  padding: 8px 10px;
 }
 
-/* First placeholder option */
 #rowField option:first-child,
 #columnField option:first-child,
 #valueField option:first-child,
 #periodField option:first-child,
 #filterField option:first-child {
-    font-weight: 200 !important;
+  font-weight: 200;
 }
-/* =========================================================
-   VALUES DROPDOWN FIX
-   ========================================================= */
 
 .builder-section {
-    min-width: 0;
+  position: relative;
+  width: 100%;
+  min-width: 0;
 }
 
-.control-row {
-    min-width: 0;
-}
-
-.control-row select {
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-#valueField {
-    min-width: 0;
-    flex: 1 1 auto;
-}
-
-#aggregate {
-    width: 165px;
-    min-width: 165px;
-    flex: 0 0 165px;
-}
-/* =========================================================
-   SAVED REPORTS MODAL
-========================================================= */
 
 .saved-reports-modal {
-    position: fixed;
-    inset: 0;
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 45, 65, 0.42);
-
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-
-    opacity: 0;
-    visibility: hidden;
-
-    pointer-events: none;
-
-    z-index: 99999;
-
-    transition:
-        opacity 0.2s ease,
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 45, 65, 0.42);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 99999;
+  transition: opacity 0.2s ease,
         visibility 0.2s ease;
 }
 
-
-/* =========================================================
-   MODAL OPEN
-========================================================= */
-
 .saved-reports-modal.show,
 #savedReportsModal.show {
-
-    display: flex !important;
-
-    opacity: 1 !important;
-    visibility: visible !important;
-
-    pointer-events: auto !important;
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
-
-
-/* =========================================================
-   OVERLAY
-========================================================= */
-
-.saved-reports-overlay {
-
-    position: absolute;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 50, 70, 0.38);
-
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-
-    pointer-events: auto;
-}
-
-
-/* =========================================================
-   DIALOG
-========================================================= */
 
 .saved-reports-dialog {
-
-    position: relative;
-
-    width: 620px;
-    max-width: calc(100vw - 40px);
-
-    max-height: 80vh;
-
-    display: flex;
-    flex-direction: column;
-
-    background: #ffffff;
-
-    border:
-        1px solid #bde4f2;
-
-    border-radius: 14px;
-
-    box-shadow:
-        0 20px 60px rgba(0, 70, 100, 0.28);
-
-    overflow: visible;
-
-    z-index: 2;
-
-    pointer-events: auto;
-
-    animation:
-        savedReportsOpen
+  position: relative;
+  width: 620px;
+  max-width: calc(100vw - 40px);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #bde4f2;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 70, 100, 0.28);
+  overflow: visible;
+  z-index: 2;
+  pointer-events: auto;
+  animation: savedReportsOpen
         0.22s
         ease
         forwards;
 }
 
-
 @keyframes savedReportsOpen {
-
-    from {
-        opacity: 0;
-        transform:
-            translateY(15px)
+from {
+  opacity: 0;
+  transform: translateY(15px)
             scale(0.97);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateY(0)
-            scale(1);
-    }
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
+to {
+  opacity: 1;
+  transform: translateY(0)
+            scale(1);
+}
+}
 
 .saved-reports-header {
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 18px 22px;
-
-    background: #0798d4;
-
-    color: #ffffff;
-
-    border-radius:
-        14px
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: #0798d4;
+  color: #ffffff;
+  border-radius: 14px
         14px
         0
         0;
 }
 
-
 .saved-reports-header h2 {
-
-    margin: 0;
-
-    font-family:
-        "Inter",
+  margin: 0;
+  font-family: "Inter",
         sans-serif;
-
-    font-size: 20px;
-
-    font-weight: 600;
+  font-size: 20px;
+  font-weight: 600;
 }
-
 
 .saved-reports-header p {
-
-    margin:
-        4px 0 0;
-
-    font-family:
-        "Inter",
+  margin: 4px 0 0;
+  font-family: "Inter",
         sans-serif;
-
-    font-size: 12px;
-
-    opacity: 0.9;
+  font-size: 12px;
+  opacity: 0.9;
 }
 
-
-/* =========================================================
-   CLOSE BUTTON
-========================================================= */
-
 .saved-reports-close {
-
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,0.16);
-
-    color: #ffffff;
-
-    font-size: 20px;
-
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.16);
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease,
         transform 0.2s ease;
 }
 
-
 .saved-reports-close:hover {
-
-    background:
-        rgba(255,255,255,0.30);
-
-    transform: rotate(90deg);
+  background: rgba(255,255,255,0.30);
+  transform: rotate(90deg);
 }
-
-
-/* =========================================================
-   REPORT LIST
-========================================================= */
 
 .saved-reports-list {
-
-    position: relative;
-
-    padding: 18px;
-
-    max-height: 50vh;
-
-    overflow-y: auto;
-    overflow-x: visible;
-
-    background: #ffffff;
+  position: relative;
+  padding: 18px;
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: visible;
+  background: #ffffff;
 }
 
-
-/* =========================================================
-   REPORT ITEM
-========================================================= */
-
 .saved-report-item {
-
-    position: relative;
-
-    width: 100%;
-
-    min-height: 62px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    box-sizing: border-box;
-
-    padding: 12px 14px;
-
-    margin-bottom: 9px;
-
-    border:
-        1px solid #d8eaf1;
-
-    border-radius: 9px;
-
-    background: #f8fcfe;
-
-    font-family:
-        "Inter",
+  position: relative;
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  margin-bottom: 9px;
+  border: 1px solid #d8eaf1;
+  border-radius: 9px;
+  background: #f8fcfe;
+  font-family: "Inter",
         sans-serif;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease,
         border-color 0.2s ease,
         box-shadow 0.2s ease,
         transform 0.2s ease;
 }
 
-
 .saved-report-item:last-child {
-
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
-
 
 .saved-report-item:hover {
-
-    background: #eefaff;
-
-    border-color: #0798d4;
-
-    box-shadow:
-        0 4px 12px
+  background: #eefaff;
+  border-color: #0798d4;
+  box-shadow: 0 4px 12px
         rgba(0, 140, 190, 0.10);
-
-    transform:
-        translateX(2px);
+  transform: translateX(2px);
 }
-
-
-/* =========================================================
-   NUMBER
-========================================================= */
 
 .saved-report-number {
-
-    width: 30px;
-    height: 30px;
-
-    flex-shrink: 0;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 7px;
-
-    background: #0798d4;
-
-    color: #ffffff;
-
-    font-size: 13px;
-
-    font-weight: 600;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: #0798d4;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
 }
-
-
-/* =========================================================
-   REPORT DETAILS
-========================================================= */
 
 .saved-report-details {
-
-    min-width: 0;
-
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-
 
 .saved-report-name {
-
-    display: block;
-
-    color: #123;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    line-height: 20px;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+  display: block;
+  color: #123;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 
 .saved-report-date {
-
-    display: block;
-
-    margin-top: 3px;
-
-    color: #82939a;
-
-    font-size: 11px;
-
-    line-height: 16px;
+  display: block;
+  margin-top: 3px;
+  color: #82939a;
+  font-size: 11px;
+  line-height: 16px;
 }
-
-
-/* =========================================================
-   ARROW
-========================================================= */
 
 .saved-report-arrow {
-
-    flex-shrink: 0;
-
-    color: #0798d4;
-
-    font-size: 14px;
-
-    transition:
-        transform 0.2s ease;
+  flex-shrink: 0;
+  color: #0798d4;
+  font-size: 14px;
+  transition: transform 0.2s ease;
 }
-
 
 .saved-report-item:hover
 .saved-report-arrow {
-
-    transform:
-        translateX(4px);
+  transform: translateX(4px);
 }
-
-
-/* =========================================================
-   THREE DOT BUTTON
-========================================================= */
 
 .saved-report-menu-btn {
-
-    width: 32px;
-    height: 32px;
-
-    flex-shrink: 0;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    margin-left: auto;
-
-    padding: 0;
-
-    border: none;
-
-    border-radius: 6px;
-
-    background: transparent;
-
-    color: #70858d;
-
-    font-size: 15px;
-
-    cursor: pointer;
-
-    position: relative;
-
-    z-index: 10;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #70858d;
+  font-size: 15px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
 }
-
 
 .saved-report-menu-btn:hover {
-
-    background: #e5f4f9;
-
-    color: #0798d4;
+  background: #e5f4f9;
+  color: #0798d4;
 }
-
-
-/* =========================================================
-   THREE DOT MENU
-========================================================= */
 
 .saved-report-menu {
-
-    position: absolute;
-
-    top: 42px;
-    right: 10px;
-
-    width: 150px;
-
-    padding: 6px;
-
-    display: none;
-
-    flex-direction: column;
-
-    gap: 2px;
-
-    box-sizing: border-box;
-
-    background: #ffffff;
-
-    border:
-        1px solid #d7e9ef;
-
-    border-radius: 8px;
-
-    box-shadow:
-        0 8px 25px
+  position: absolute;
+  top: 42px;
+  right: 10px;
+  width: 150px;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #d7e9ef;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px
         rgba(0, 70, 100, 0.18);
-
-    z-index: 999999;
-
-    overflow: visible;
+  z-index: 999999;
+  overflow: visible;
 }
-
 
 .saved-report-menu.show {
-
-    display: flex !important;
+  display: flex;
 }
-
-
-/* =========================================================
-   MENU OPENING UPWARD
-========================================================= */
 
 .saved-report-menu.open-up {
-
-    top: auto;
-
-    bottom: 42px;
+  top: auto;
+  bottom: 42px;
 }
 
-
-/* =========================================================
-   MENU BUTTONS
-========================================================= */
-
 .saved-report-menu button {
-
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 9px 10px;
-
-    border: none;
-
-    border-radius: 5px;
-
-    background: transparent;
-
-    color: #263b42;
-
-    font-family:
-        "Inter",
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #263b42;
+  font-family: "Inter",
         sans-serif;
-
-    font-size: 13px;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    transition:
-        background 0.15s ease,
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease,
         color 0.15s ease;
 }
 
-
 .saved-report-menu button:hover {
-
-    background: #edf8fb;
-
-    color: #0798d4;
+  background: #edf8fb;
+  color: #0798d4;
 }
-
 
 .saved-report-menu button i {
-
-    width: 16px;
-
-    flex-shrink: 0;
-
-    text-align: center;
-
-    font-size: 12px;
+  width: 16px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 12px;
 }
-
-
-/* =========================================================
-   DELETE
-========================================================= */
 
 .saved-report-menu
 .saved-menu-delete {
-
-    color: #d64545;
+  color: #d64545;
 }
-
 
 .saved-report-menu
 .saved-menu-delete:hover {
-
-    background: #fff0f0;
-
-    color: #c62828;
+  background: #fff0f0;
+  color: #c62828;
 }
-
-
-/* =========================================================
-   EMPTY STATE
-========================================================= */
 
 .saved-reports-empty {
-
-    padding: 40px 20px;
-
-    text-align: center;
-
-    color: #82939a;
-
-    font-family:
-        "Inter",
+  padding: 40px 20px;
+  text-align: center;
+  color: #82939a;
+  font-family: "Inter",
         sans-serif;
-
-    font-size: 14px;
+  font-size: 14px;
 }
 
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
 .saved-reports-footer {
-
-    display: flex;
-
-    justify-content: flex-end;
-
-    padding: 14px 18px;
-
-    border-top:
-        1px solid #e2edf1;
-
-    background: #fafcfd;
-
-    border-radius:
-        0
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 18px;
+  border-top: 1px solid #e2edf1;
+  background: #fafcfd;
+  border-radius: 0
         0
         14px
         14px;
 }
 
-
 .saved-reports-cancel {
-
-    padding:
-        8px 18px;
-
-    border:
-        1px solid #0798d4;
-
-    border-radius: 6px;
-
-    background: #ffffff;
-
-    color: #0798d4;
-
-    font-family:
-        "Inter",
+  padding: 8px 18px;
+  border: 1px solid #0798d4;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0798d4;
+  font-family: "Inter",
         sans-serif;
-
-    font-size: 13px;
-
-    font-weight: 500;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease,
         color 0.2s ease;
 }
 
-
 .saved-reports-cancel:hover {
-
-    background: #0798d4;
-
-    color: #ffffff;
+  background: #0798d4;
+  color: #ffffff;
 }
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
 
 .saved-reports-list::-webkit-scrollbar {
-
-    width: 6px;
+  width: 6px;
 }
-
 
 .saved-reports-list::-webkit-scrollbar-track {
-
-    background: transparent;
+  background: transparent;
 }
-
 
 .saved-reports-list::-webkit-scrollbar-thumb {
-
-    background: #9ed7e8;
-
-    border-radius: 10px;
+  background: #9ed7e8;
+  border-radius: 10px;
 }
-
 
 .saved-reports-list::-webkit-scrollbar-thumb:hover {
-
-    background: #0798d4;
+  background: #0798d4;
 }
-
-
-/* =========================================================
-   IMPORTANT CLICK / LAYER FIX
-========================================================= */
 
 .saved-reports-dialog,
 .saved-reports-dialog * {
-
-    pointer-events: auto;
+  pointer-events: auto;
 }
-
 
 .saved-reports-overlay {
-
-    pointer-events: auto;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 50, 70, 0.38);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: auto;
 }
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
 
 @media (max-width: 700px) {
-
-    .saved-reports-dialog {
-
-        width:
-            calc(100vw - 24px);
-
-        max-width:
-            calc(100vw - 24px);
-    }
-
-    .saved-reports-header {
-
-        padding:
-            16px 18px;
-    }
-
-    .saved-reports-list {
-
-        padding:
-            14px;
-    }
-
-    .saved-report-item {
-
-        min-height: 58px;
-
-        padding:
-            10px 12px;
-    }
-
-    .saved-report-name {
-
-        font-size: 13px;
-    }
-
+.saved-reports-dialog {
+  width: calc(100vw - 24px);
+  max-width: calc(100vw - 24px);
 }
-/* Columns disabled until a Row is selected */
+
+.saved-reports-header {
+  padding: 16px 18px;
+}
+
+.saved-reports-list {
+  padding: 14px;
+}
+
+.saved-report-item {
+  min-height: 58px;
+  padding: 10px 12px;
+}
+
+.saved-report-name {
+  font-size: 13px;
+}
+}
+
 #columnSelect:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-    background: #e9eef1;
-}
-/* =========================================================
-   RESET BUTTON
-   ========================================================= */
-
-#resetReportBtn {
-    position: absolute;
-    right: 82px;
-    top: 65px;
-
-    width: 45px;
-    height: 20px;
-
-    padding: 0;
-
-    border: 1px solid #0798d4;
-    border-radius: 5px;
-
-    background: transparent;
-    color: #0798d4;
-
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-#resetReportBtn:hover {
-    background: #0798d4;
-    color: #ffffff;
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #e9eef1;
 }
 
 #resetReportBtn:active {
-    transform: scale(0.97);
+  transform: scale(0.97);
 }
-
-
-/* =========================================================
-   FINAL REFERENCE DESIGN OVERRIDES
-   ========================================================= */
 
 html, body, .report-panel, .background-page {
-    background: #ffffff !important;
+  background: #ffffff;
 }
 
-/* Header */
 .report-header {
-    position: relative;
-    width: 100%;
-    height: 88px;
-    top: auto;
-    left: auto;
-    padding: 0 22px 0 18px;
-    background: #ffffff;
-    border-bottom: 3px solid #000;
+  box-sizing: border-box;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 88px;
+  top: auto;
+  left: auto;
+  padding: 0 22px 0 18px;
+  background: #ffffff;
+  border-bottom: 3px solid #000;
 }
 
-/* Tabs */
 .report-types {
-    width: 75%;
-    max-width: 1440px;
-
-    margin: 0 auto;
-
-    padding-left: 20px;
-
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-
-    gap: 8px;
-
-    background: transparent;
-    box-sizing: border-box;
+  padding-top: 75px;
+  width: 75%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 8px;
+  background: transparent;
+  box-sizing: border-box;
 }
+
 .report-type {
-    height: 40px;
-
-    padding: 0 16px;
-
-    border: 1px solid #cfd9de;
-    border-bottom: none;
-
-    border-radius: 10px 10px 0 0;
-
-    background: #ffffff;
-
-    color: #000;
-
-    font-size: 15px;
-    font-weight: 600;
+  transition: background 0.2s ease,
+        color 0.2s ease;
+  min-width: 100px;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #cfd9de;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  background: #ffffff;
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 
-/* Centered white builder */
-.pivot-canvas .builder,
-.builder {
-    width: 75% !important;
-    max-width: 1440px !important;
-    margin: 0 auto !important;
-    padding: 18px 26px 26px !important;
-
-    display: grid;
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        minmax(0, 1.15fr)
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        auto
-        auto;
-
-    column-gap: 12px;
-    row-gap: 4px;
-    align-items: start;
-
-    background: #f3f3f3 !important;
-    border: 1px solid #d2d2d2;
-    border-radius: 16px;
-    box-sizing: border-box;
-    position: relative;
-    transform: none !important;
-}
-
-/* Labels */
 .builder-section > label {
-    margin-left: 10px;
-    margin-bottom: 5px;
-    color: #000;
-    font-family: "Oswald", sans-serif;
-    font-size: 16px;
-    font-weight: 400;
+  display: block;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  color: #000;
+  font-family: "Oswald", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-/* Dropdowns */
 .control-row {
-    height: 48px;
-    gap: 8px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 48px;
+  gap: 8px;
 }
 
 .control-row select {
+    width: 100%;
     height: 48px;
-    padding: 0 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+
+    padding: 0 35px 0 10px;
+
     border: 1px solid #d0d0d0;
     border-radius: 10px;
-    background: #ffffff;
-    color: #000 !important;
-    font-family: "Oswald", sans-serif !important;
-    letter-spacing: 0.05em !important;
+    background-color: #ffffff;
+
+    color: #000;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 0.05em;
     font-size: 16px;
+
+    cursor: pointer;
+
+    /* Remove browser arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Custom dropdown arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+
+    /* Move arrow left/right here */
+    background-position: calc(100% - 12px) center;
+
+    background-size: 14px 14px;
 }
 
-/* Plus */
 .add-btn {
-    width: 20px;
-    height: 24px;
-    color: #222222;
-    font-size: 22px;
+  flex: 0 0 18px;
+  border: none;
+  background: transparent;
+  line-height: 20px;
+  cursor: pointer;
+  width: 20px;
+  height: 24px;
+  color: #222222;
+  font-size: 22px;
 }
+
+#aggregate {
+  width: 100px;
+  min-width: 100px;
+  height: 48px;
+  flex: 0 0 100px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #222222;
+}
+
+.layout-select {
+  align-self: start;
+  cursor: pointer;
+  padding: 0 9px;
+  width: 120px;
+  min-width: 120px;
+  height: 48px;
+  margin-top: 30px;
+  margin-bottom: 0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background: #ffffff;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0a0a0a;
+}
+
+
+.go-button:hover {
+  background: #f3f3f3;
+  color: #000;
+}
+
+
+#resetReportBtn:hover {
+  color: #000;
+  font-weight: 500;
+  background: transparent;
+}
+
+.info-area {
+  position:static;
+  transition: opacity 0.5s ease,
+        transform 0.5s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 75%;
+  max-width: 1440px;
+  margin: 130px auto 0;
+}
+
+.info-box {
+  font-weight: 200;
+  box-sizing: border-box;
+  width: 60%;
+  min-height: 200px;
+  padding: 14px 22px;
+  border: 1px solid #d2d2d2;
+  border-radius: 16px;
+  background: #f3f3f3;
+  color: #222222;
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  line-height: 1.42;
+}
+
+.info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  font-size: 19px;
+  background: #ffffff;
+  color: #222222;
+  border: 1px solid #d2d2d2;
+}
+
+.pivot-canvas .builder.report-generated {
+  transform: none;
+}
+
+.pivot-canvas .output-area.report-generated {
+  margin-top: 20px;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+}
+
+.pivot-canvas .info-area.report-generated {
+  height: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.pivot-canvas .output-area .table-container {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pivot-canvas .output-area th,
+.pivot-canvas .output-area td {
+  padding: 14px 14px;
+  border-right: 1px solid #e1e5e9;
+  border-bottom: 1px solid #e1e5e9;
+  font-size: 14px;
+  color: #111827;
+  vertical-align: middle;
+}
+
+.pivot-canvas .output-area th:last-child,
+.pivot-canvas .output-area td:last-child {
+  border-right: none;
+}
+
+.pivot-canvas .output-area thead th {
+  background: #ffffff;
+  font-weight: 600;
+  text-align: center;
+  color: #111827;
+}
+
+.pivot-canvas .output-area thead th:first-child {
+  text-align: left;
+}
+
+.pivot-canvas .output-area tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.pivot-canvas .output-area tbody td:not(:first-child) {
+  text-align: right;
+}
+
+.pivot-canvas .output-area tr.subtotal td,
+.pivot-canvas .output-area .subtotal {
+  font-weight: 600;
+  background: #fafbfc;
+}
+
+.pivot-canvas .output-area tr.grand-total td,
+.pivot-canvas .output-area .grand-total {
+  background: #eaf3ff;
+  color: #123b72;
+  font-weight: 700;
+  border-top: 1px solid #9ec5ff;
+}
+
+.pivot-canvas .output-area tr.grand-total td:last-child {
+  background: #dceaff;
+}
+
+.pivot-canvas .output-area .report-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+}
+
+.pivot-canvas .output-area table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.pivot-canvas .output-area table th {
+  padding: 15px 16px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.pivot-canvas .output-area table td {
+  padding: 15px 16px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   FINAL BUILDER LAYOUT
+   ========================================================= */
+
+.pivot-canvas .builder,
+.builder {
+  width: 75%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 18px 26px 26px;
+  display: grid;
+  grid-template-columns:
+    190px
+    200px
+    390px
+    190px
+    190px
+    100px
+    48px;
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: start;
+  background: #f3f3f3;
+  border: 1px solid #d2d2d2;
+  border-radius: 16px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1000;
+  transform: none;
+  transition: transform 0.7s ease;
+}
+
+.builder-section {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.builder-section > label {
+  display: block;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  color: #000;
+  font-family: "Oswald", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.control-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.control-row select {
+  height: 48px;
+  min-width: 0;
+  padding: 0 35px 0 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center;
+  background-size: 14px 14px;
+  color: #000;
+  font-family: "Oswald", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-sizing: border-box;
+}
+
+/* Keep the dropdown arrow slightly away from the right edge. */
+#rowField,
+#columnField,
+#valueField,
+#periodField,
+#filterField,
+#aggregate,
+.layout-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center;
+  background-size: 14px 14px;
+}
+
+/* Rows */
+#rowField {
+  width: 190px;
+  min-width: 190px;
+  max-width: 190px;
+  flex: 0 0 190px;
+}
+
+/* Columns */
+#columnField {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  flex: 0 0 200px;
+}
+
+/* =========================================================
+   VALUES + AGGREGATION
+   ========================================================= */
+
+/* Values */
+#valueField {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
+  flex: 0 0 160px;
+  box-sizing: border-box;
+}
+
 /* Aggregation */
 #aggregate {
-    width: 100px;
-    min-width: 100px;
-    height: 48px;
-    flex: 0 0 100px;
-    border: 1px solid #d0d0d0;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #222222;
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  flex: 0 0 220px;
+  height: 48px;
+  padding: 0 35px 0 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #000;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-sizing: border-box;
+}
+
+.builder-section:has(#valueField) .control-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+/* Period */
+#periodField {
+  width: 190px;
+  min-width: 190px;
+  max-width: 190px;
+  flex: 0 0 190px;
+}
+
+/* Filters */
+#filterField {
+  width: 190px;
+  min-width: 190px;
+  max-width: 190px;
+  flex: 0 0 190px;
 }
 
 /* Layout */
 .layout-select {
-    width: 120px;
-    min-width: 120px;
-    height: 48px;
-    margin-top:30px !important;
-    margin-bottom: 0 !important;
-    border: 1px solid #d0d0d0;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #000;
-    font-family: ui-sans-serif, system-ui, sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    color: #0a0a0a !important;
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+  height: 48px;
+  margin-top: 30px;
+  margin-bottom: 0;
+  padding: 0 30px 0 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #0a0a0a;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* Go */
 .go-button {
-    width: 48px;
-    height: 48px;
-    margin-top: 28px !important;
-    margin-bottom: 0 !important;
-    border: 1px solid #d0d0d0;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #222222;
-    font-family: "Oswald", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    transform: none !important;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  height: 48px;
+  margin-top: 28px;
+  margin-bottom: 0;
+  padding: 0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #222222;
+  font-family: "Oswald", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transform: none;
 }
 
 .go-button:hover {
-    background: #f3f3f3;
-    color: #000;
+  background: #f3f3f3;
+  color: #000;
 }
 
 /* Reset */
 #resetReportBtn {
-    position: absolute;
-    right: 22px;
-    top: 110px;
-    width: 55px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #222222;
-    font-family: "Oswald", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
+  position: absolute;
+  right: 22px;
+  top: 110px;
+  width: 55px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #222222;
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
 }
 
 #resetReportBtn:hover {
-    color: #000;
-    font-weight: 500;
-    background: transparent;
+  color: #000;
+  font-weight: 500;
+  background: transparent;
 }
 
-/* Info area */
-.info-area {
-    width: 75% !important;
-    max-width: 1440px !important;
-    margin: 330px auto 0 !important;
-}
-
-.info-box {
-    width: 60%;
-    min-height: 200px;
-    padding: 14px 22px;
-    border: 1px solid #d2d2d2;
-    border-radius: 16px;
-    background: #f3f3f3 !important;
-    color: #222222;
-    font-family: "Oswald", sans-serif;
-    font-size: 18px;
-    line-height: 1.42;
-}
-
-.info-icon {
-    background: #ffffff;
-    color: #222222;
-    border: 1px solid #d2d2d2;
-}
 /* =========================================================
-   FINAL REPORT GENERATED POSITION FIX
+   DESKTOP RESPONSIVE
    ========================================================= */
 
-/* Move builder upward after GO */
-.pivot-canvas .builder.report-generated {
-    transform: none !important;
+@media (max-width: 1600px) and (min-width: 901px) {
+  .pivot-canvas .builder,
+  .builder {
+    width: 82%;
+    max-width: 1440px;
+    padding-left: 20px;
+    padding-right: 20px;
+    grid-template-columns:
+      170px
+      180px
+      400px
+      170px
+      180px
+      105px
+      55px;
+    column-gap: 10px;
+  }
 
+  .pivot-canvas .output-area,
+  .output-area {
+    width: 82%;
+    max-width: 1440px;
+  }
+
+  #rowField {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+    flex-basis: 170px;
+  }
+
+  #columnField {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
+    flex-basis: 180px;
+  }
+
+  #valueField {
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+    flex-basis: 160px;
+  }
+
+  #aggregate {
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+    flex-basis: 220px;
+  }
+
+  #periodField,
+  #filterField {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+    flex-basis: 170px;
+  }
+
+  .layout-select {
+    width: 105px;
+    min-width: 105px;
+    max-width: 105px;
+  }
+
+  .go-button {
+    width: 55px;
+    min-width: 55px;
+    max-width: 55px;
+  }
 }
 
-/* Pull result table up with it */
-.pivot-canvas .output-area.report-generated {
-    margin-top: 20px !important;
-    transform: none !important;
+/* =========================================================
+   TABLET
+   ========================================================= */
 
-    opacity: 1 !important;
-    visibility: visible !important;
+@media (max-width: 900px) and (min-width: 601px) {
+  .pivot-canvas .builder,
+  .builder {
+    width: 92%;
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 12px;
+  }
+
+  .pivot-canvas .output-area,
+  .output-area {
+    width: 92%;
+    max-width: none;
+  }
+
+  #rowField,
+  #columnField,
+  #valueField,
+  #periodField,
+  #filterField,
+  #aggregate,
+  .layout-select,
+  .go-button {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 auto;
+  }
+
+  .builder-section:has(#valueField) {
+    grid-column: 1 / -1;
+  }
 }
 
-/* Make sure the hidden info box takes ZERO space */
-.pivot-canvas .info-area.report-generated {
-    height: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: none !important;
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .pivot-canvas .builder,
+  .builder {
+    width: 94%;
+    max-width: none;
+    grid-template-columns: 1fr;
+    padding: 12px 18px 18px;
+    row-gap: 10px;
+  }
+
+  .pivot-canvas .output-area,
+  .output-area {
+    width: 94%;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .control-row {
+    width: 100%;
+  }
+
+  #rowField,
+  #columnField,
+  #valueField,
+  #periodField,
+  #filterField,
+  #aggregate,
+  .layout-select,
+  .go-button {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 auto;
+  }
+
+  .builder-section:has(#valueField) .control-row {
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .layout-select,
+  .go-button {
+    margin-top: 0;
+  }
 }
 /* =========================================
-   REPORT OUTPUT - CLEAN TABLE STYLE
+   GO BUTTON ABOVE RESET
    ========================================= */
 
-.pivot-canvas .output-area {
-    width: calc(100% - 44px) !important;
-    max-width: none !important;
-    margin: 20px auto 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box;
+.builder {
+    position: relative;
 }
 
-/* Main table container */
-.pivot-canvas .output-area .table-container {
-    width: 100%;
+.go-button {
+    position: absolute;
+
+    right: 28px;
+    top: 50px;
+
+    width: 55px;
+    min-width: 55px;
+    max-width: 55px;
+
+    height: 48px;
+    margin: 0;
+
+    padding: 0;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+
     background: #ffffff;
-    border: 1px solid #e1e5e9;
-    border-radius: 14px;
-    overflow: hidden;
-    box-sizing: border-box;
-}
+    color: #222222;
 
-/* Report table */
-.pivot-canvas .output-area table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: #ffffff;
-    font-family: "Inter", sans-serif;
-}
-
-/* All cells */
-.pivot-canvas .output-area th,
-.pivot-canvas .output-area td {
-    padding: 14px 14px;
-    border-right: 1px solid #e1e5e9;
-    border-bottom: 1px solid #e1e5e9;
-    font-size: 14px;
-    color: #111827;
-    vertical-align: middle;
-}
-
-/* Remove last vertical border */
-.pivot-canvas .output-area th:last-child,
-.pivot-canvas .output-area td:last-child {
-    border-right: none;
-}
-
-/* Header */
-.pivot-canvas .output-area thead th {
-    background: #ffffff;
-    font-weight: 600;
-    text-align: center;
-    color: #111827;
-}
-
-/* First column header */
-.pivot-canvas .output-area thead th:first-child {
-    text-align: left;
-}
-
-/* First column */
-.pivot-canvas .output-area tbody td:first-child {
-    text-align: left;
-    font-weight: 500;
-}
-
-/* Numeric columns */
-.pivot-canvas .output-area tbody td:not(:first-child) {
-    text-align: right;
-}
-
-/* Subtotal rows */
-.pivot-canvas .output-area tr.subtotal td,
-.pivot-canvas .output-area .subtotal {
-    font-weight: 600;
-    background: #fafbfc;
-}
-
-/* Grand total row */
-.pivot-canvas .output-area tr.grand-total td,
-.pivot-canvas .output-area .grand-total {
-    background: #eaf3ff;
-    color: #123b72;
-    font-weight: 700;
-    border-top: 1px solid #9ec5ff;
-}
-
-/* Grand total last cell */
-.pivot-canvas .output-area tr.grand-total td:last-child {
-    background: #dceaff;
-}
-
-/* Bottom action area */
-.pivot-canvas .output-area .report-actions {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    background: #ffffff;
-}
-/* Make report output slightly larger */
-.pivot-canvas .output-area table {
-    font-size: 14px !important;
+    justify-content: center;
+
+    font-family: "Oswald", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    transform: none;
+    z-index: 10;
 }
 
-/* Make report output slightly larger */
-.pivot-canvas .output-area table th {
-    padding: 12px 16px !important;
-    font-size: 15px !important;
-}
+/* Reset stays underneath Go */
+#resetReportBtn {
+    position: absolute;
 
-.pivot-canvas .output-area table td {
-    padding: 12px 16px !important;
-    font-size: 15px !important;
-}
-.pivot-canvas .output-area {
-    width: calc(100% - 30px) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-/* Increase output table cell height and font size */
-.pivot-canvas .output-area table th {
-    padding: 15px 16px !important;
-    font-size: 16px !important;
-    line-height: 1.4 !important;
-}
+    right: 22px;
+    bottom: 12px;
+    top: auto;
 
-.pivot-canvas .output-area table td {
-    padding: 15px 16px !important;
-    font-size: 16px !important;
-    line-height: 1.4 !important;
+    width: 55px;
+    height: 24px;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #222222;
+
+    font-family: "Oswald", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+
+    text-align: center;
 }
