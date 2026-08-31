@@ -1253,18 +1253,22 @@ function renderTable(response) {
     output.appendChild(table);
 
 
-    new DataTable('#pivotTable', {
+    const dataTable = new DataTable('#pivotTable', {
+    ordering: true,
+    searching: true,
+    paging: true,
+    pageLength: 10,
+    lengthChange: true,
 
-        ordering: true,
+    autoWidth: false,
 
-        searching: true,
+    scrollX: true,
+    scrollCollapse: false,
 
-        paging: true,
-
-        pageLength: 10,
-        autoWidth: false
-
+    dom: 'lfrtip'
     });
+
+    dataTable.columns.adjust();
 
 }
 // ================================
