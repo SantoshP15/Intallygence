@@ -1584,11 +1584,6 @@ document.addEventListener("click", function(e) {
     if (e.target.closest(".filter-popup")) {
         return;
     }
-
-    // IMPORTANT:
-    // Flatpickr calendar is appended directly to <body>,
-    // so it is technically outside .filter-popup.
-    // Do NOT close the popup when interacting with Flatpickr.
     if (e.target.closest(".flatpickr-calendar")) {
         return;
     }
