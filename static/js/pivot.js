@@ -157,7 +157,13 @@ function createChip(text, removeCallback, badge = "") {
 
     remove.innerHTML = "&times;";
 
-    remove.onclick = removeCallback;
+    remove.onclick = function (e) {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        removeCallback(e);
+    };
 
     chip.appendChild(left);
 
@@ -289,6 +295,11 @@ function addColumn() {
     select.value = "";
 
     updateRowColumnOptions();
+
+    // Pop-up message after selecting multiple columns in 'Columns' section
+    if (pivotConfig.columns.length > 1) {
+        alert("Notice: You have selected multiple fields in the 'Columns' section (" + pivotConfig.columns.join(", ") + "). Combining multiple column fields will create pivot headers for all unique value combinations.");
+    }
 }
 // ================================
 // Render Values
@@ -552,7 +563,11 @@ document.body.appendChild(popup);
 
         remove.innerHTML = "&times;";
 
-        remove.onclick = function () {
+        remove.onclick = function (e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
 
             popup.remove();
 
@@ -746,22 +761,29 @@ function renderPeriod() {
     // REMOVE PERIOD
     // =================================
 
-    const remove =
-        document.createElement("span");
+    const remove = document.createElement("span");
 
-    remove.className =
-        "remove-btn";
+    remove.className = "remove-btn";
 
-    remove.innerHTML =
-        "&times;";
+    remove.innerHTML = "&times;";
 
+    remove.style.position = "relative";
+    remove.style.zIndex = "100";
+    remove.style.cursor = "pointer";
+    remove.style.pointerEvents = "auto";
 
-    remove.onclick = function() {
+    remove.addEventListener("click", function(e) {
 
-        // Close popup
-        popup.remove();
+        if (e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        }
 
-        // Remove Period
+        // Close and remove all date popups
+        document.querySelectorAll(".filter-popup").forEach(p => p.remove());
+
+        // Clear Period config
         pivotConfig.period = null;
 
         // Reset Period dropdown
@@ -772,10 +794,18 @@ function renderPeriod() {
             periodSelect.value = "";
         }
 
+        // Directly clear container DOM
+        const periodContainer =
+            document.getElementById("period");
+
+        if (periodContainer) {
+            periodContainer.innerHTML = "";
+        }
+
         // Re-render Period
         renderPeriod();
 
-    };
+    }, true);
 
     wrapper.appendChild(summary);
 
@@ -1254,18 +1284,23 @@ function renderTable(response) {
 
 
     const dataTable = new DataTable('#pivotTable', {
-    ordering: true,
-    searching: true,
-    paging: true,
-    pageLength: 10,
-    lengthChange: true,
+        ordering: true,
+        searching: true,
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
 
-    autoWidth: false,
+        autoWidth: false,
 
-    scrollX: true,
-    scrollCollapse: false,
+        scrollX: true,
+        scrollCollapse: false,
 
-    dom: 'lfrtip'
+        layout: {
+            topStart: 'pageLength',
+            topEnd: 'search',
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+        }
     });
 
     dataTable.columns.adjust();

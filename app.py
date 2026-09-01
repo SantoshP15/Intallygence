@@ -325,6 +325,13 @@ def generate_pivot():
 
     except Exception as e:
 
+        err_msg = str(e)
+        if "1117" in err_msg or "Too many columns" in err_msg:
+            err_msg = (
+                "Too many columns generated for the pivot table. "
+                "Please apply filters to reduce your dataset or select a column field with fewer unique values (e.g., Month, Category, Status)."
+            )
+                
         print("=================================")
 
         print("GENERATE REPORT ERROR:")
@@ -336,7 +343,7 @@ def generate_pivot():
 
         return jsonify({
 
-            "error": str(e)
+            "error": err_msg
 
         }), 500
         
@@ -1358,6 +1365,22 @@ def build_pivot_query(config):
         )
 
         pivot_combinations = cursor.fetchall()
+
+        # -------------------------------------------------
+        # CHECK MAXIMUM PIVOT COLUMNS (Prevent MySQL 1117 Error)
+        # -------------------------------------------------
+
+        MAX_PIVOT_COLUMNS = 500
+        total_generated_columns = len(pivot_combinations) * len(values)
+
+        if total_generated_columns > MAX_PIVOT_COLUMNS:
+            cursor.close()
+            db.close()
+            raise ValueError(
+                f"Too many columns ({total_generated_columns} combinations). "
+                f"The selected Column field '{', '.join(columns)}' has too many unique values to build a pivot table. "
+                f"Please apply filters or select a column with fewer unique values (e.g., Month, Category, Status)."
+            )
 
         # -------------------------------------------------
         # CREATE ONE PIVOT AREA FOR EVERY COMBINATION
