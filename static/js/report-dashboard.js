@@ -282,13 +282,13 @@ const ytdPnlRows = [
     ["Sales", "88.40 Cr", "96.20 Cr", "8.8%", ""],
     ["Less: Cost of Goods Sold", "55.90 Cr", "59.80 Cr", "7.0%", ""],
     ["Gross Profit", "32.50 Cr", "36.40 Cr", "12.0%", "highlight"],
-    ["Gross Profit %", "36.8%", "37.8%", "1.0 pp", "percent"],
+    ["Gross Profit %", "36.8%", "37.8%", "1.0%", "percent"],
     ["Less: Operating Expenses", "23.30 Cr", "24.50 Cr", "5.2%", ""],
     ["Operating Profit", "9.20 Cr", "11.90 Cr", "29.3%", "highlight"],
-    ["Operating Profit %", "10.4%", "12.4%", "2.0 pp", "percent"],
+    ["Operating Profit %", "10.4%", "12.4%", "2.0%", "percent"],
     ["Other Income", "1.30 Cr", "1.60 Cr", "23.1%", ""],
     ["Net Profit", "7.90 Cr", "10.10 Cr", "27.8%", "highlight"],
-    ["Net Profit %", "8.9%", "10.5%", "1.6 pp", "percent"]
+    ["Net Profit %", "8.9%", "10.5%", "1.6%", "percent"]
 ];
 
 function showYtdPnl() {

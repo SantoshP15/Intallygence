@@ -405,7 +405,22 @@ body {
     box-shadow: 0 12px 28px rgba(0, 141, 204, 0.12);
     z-index: 10;
 }
-
+.kpi-card.card-emerald:hover {
+    border-color: #059669;
+    box-shadow: 0 12px 28px rgba(5, 150, 105, 0.12);
+}
+.kpi-card.card-indigo:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 12px 28px rgba(79, 70, 229, 0.12);
+}
+.kpi-card.card-rose:hover {
+    border-color: #e11d48;
+    box-shadow: 0 12px 28px rgba(225, 29, 72, 0.12);
+}
+.kpi-card.card-teal:hover {
+    border-color: #0d9488;
+    box-shadow: 0 12px 28px rgba(13, 148, 136, 0.12);
+}
 /* Header & Title */
 .kpi-card-header {
     display: flex;
@@ -736,14 +751,23 @@ body {
     gap: 4px;
 }
 
-/* Active Company Label */
+/* .report-dashboard {
+    position: relative;
+} */
+
 .active-company {
-    display: inline-flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 16px;
-    font-weight: 800;
+    justify-content: center;
+    gap: 10px;
+    
+    font-size: 30px;
+    font-weight: 1000;
 }
+
 
 /* Blinking Green Dot Indicator */
 .status-dot {
