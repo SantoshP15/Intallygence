@@ -1247,3 +1247,8 @@ body {
 
     box-shadow: 0 1px 4px rgba(7, 152, 212, 0.20);
 }
+
+.pnl-table .growth-positive {
+    color: #15803d;
+    font-weight: 600;
+}

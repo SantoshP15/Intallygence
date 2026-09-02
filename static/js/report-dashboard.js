@@ -268,6 +268,57 @@ function updateLastRefreshed() {
 }
 
 updateLastRefreshed();
+
+// =========================================================
+// P&L PERIOD VIEW
+// =========================================================
+
+const pnlTable = document.getElementById("pnlTable");
+const currentYearPnlMarkup = pnlTable ? pnlTable.innerHTML : "";
+
+// YTD figures are based on the current-year totals shown in the P&L statement.
+// Keep this data here until these values are supplied by the reporting API.
+const ytdPnlRows = [
+    ["Sales", "88.40 Cr", "96.20 Cr", "8.8%", ""],
+    ["Less: Cost of Goods Sold", "55.90 Cr", "59.80 Cr", "7.0%", ""],
+    ["Gross Profit", "32.50 Cr", "36.40 Cr", "12.0%", "highlight"],
+    ["Gross Profit %", "36.8%", "37.8%", "1.0 pp", "percent"],
+    ["Less: Operating Expenses", "23.30 Cr", "24.50 Cr", "5.2%", ""],
+    ["Operating Profit", "9.20 Cr", "11.90 Cr", "29.3%", "highlight"],
+    ["Operating Profit %", "10.4%", "12.4%", "2.0 pp", "percent"],
+    ["Other Income", "1.30 Cr", "1.60 Cr", "23.1%", ""],
+    ["Net Profit", "7.90 Cr", "10.10 Cr", "27.8%", "highlight"],
+    ["Net Profit %", "8.9%", "10.5%", "1.6 pp", "percent"]
+];
+
+function showYtdPnl() {
+    if (!pnlTable) return;
+
+    pnlTable.innerHTML = `
+        <thead>
+            <tr>
+                <th>Particulars</th>
+                <th>Last Year</th>
+                <th>Current Year</th>
+                <th>Growth Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${ytdPnlRows.map(([particulars, lastYear, currentYear, growth, rowClass]) => `
+                <tr class="${rowClass}">
+                    <td>${particulars}</td>
+                    <td>${lastYear}</td>
+                    <td>${currentYear}</td>
+                    <td class="growth-positive">${growth}</td>
+                </tr>
+            `).join("")}
+        </tbody>`;
+}
+
+function showCurrentYearPnl() {
+    if (pnlTable) pnlTable.innerHTML = currentYearPnlMarkup;
+}
+
 document.querySelectorAll(".period-toggle-btn").forEach(button => {
 
     button.addEventListener("click", function () {
@@ -284,14 +335,12 @@ document.querySelectorAll(".period-toggle-btn").forEach(button => {
 
         if (selectedPeriod === "current-year") {
             console.log("Showing Current Financial Year");
-            
-            // Add your Current Year data loading here
+            showCurrentYearPnl();
         }
 
         if (selectedPeriod === "ytd") {
             console.log("Showing Year To Date");
-            
-            // Add your YTD data loading here
+            showYtdPnl();
         }
     });
 
