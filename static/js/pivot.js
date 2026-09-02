@@ -9,7 +9,21 @@ let pivotConfig = {
     values: [],
     period: null,   
     filters: [],
-    layout: null
+    layout: null,
+    dataSource: "SalesInventory"
+};
+
+// =======================================
+// CURRENT REPORT DATA SOURCE
+// =======================================
+
+let currentDataSource = "SalesInventory";
+let currentDateColumns = [...DATE_COLUMNS];
+let currentColumnTypes = { ...COLUMN_TYPES };
+
+const REPORT_DATA_SOURCES = {
+    sales: "SalesInventory",
+    purchase: "PurchaseInventory"
 };
 
 
@@ -466,7 +480,7 @@ function renderFilters() {
         popup.style.zIndex = "99999";
 
         // Date Filter
-if (DATE_COLUMNS.includes(filter.field)) {
+if (currentDateColumns.includes(filter.field)) {
 
     createDateFilter(filter, popup, summary);
 
@@ -833,7 +847,7 @@ function addPeriod() {
         return;
 
     // Make sure it is a date column
-    if (!DATE_COLUMNS.includes(field))
+    if (!currentDateColumns.includes(field))
         return;
 
     pivotConfig.period = {
@@ -913,7 +927,7 @@ function loadFilterValues(field, container, filter, summary, popup) {
 
     container.innerHTML = "Loading...";
 
-    fetch("/filter-values/" + encodeURIComponent(field))
+    fetch("/filter-values/" + encodeURIComponent(field) + "?table=" + encodeURIComponent(currentDataSource))
         .then(res => res.json())
         .then(values => {
 
@@ -1452,6 +1466,7 @@ function generatePivot() {
         layoutSelect.value;
 
     const requestData = {
+        dataSource: currentDataSource,
         rows: pivotConfig.rows,
         columns: pivotConfig.columns,
         values: pivotConfig.values,
@@ -1645,7 +1660,8 @@ function resetReportBuilder() {
     pivotConfig.values = [];
     pivotConfig.period = null;
     pivotConfig.filters = [];
-    pivotConfig.layout = null;
+    pivotConfig.layout = "tabular";
+    pivotConfig.dataSource = currentDataSource;
 
 
     // -----------------------------------
@@ -2017,7 +2033,7 @@ function loadDateHierarchy(field, container, filter)
 {
     container.innerHTML = "Loading...";
 
-    fetch("/date-hierarchy/" + encodeURIComponent(field))
+    fetch("/date-hierarchy/" + encodeURIComponent(field) + "?table=" + encodeURIComponent(currentDataSource))
     .then(r => r.json())
     .then(data => {
 
@@ -2298,7 +2314,7 @@ function updateAggregationOptions() {
     // -------------------------------
 
     const type =
-        (COLUMN_TYPES[field] || "").toLowerCase();
+        (currentColumnTypes[field] || "").toLowerCase();
 
 
     const numericTypes = [
@@ -3496,7 +3512,13 @@ function openSavedReport(reportId) {
             // RESTORE SAVED CONFIGURATION
             // =================================
 
-            pivotConfig = report.report_config;
+            pivotConfig = report.report_config || {};
+
+            // Backward compatibility for older saved reports
+            currentDataSource =
+                pivotConfig.dataSource || "SalesInventory";
+
+            pivotConfig.dataSource = currentDataSource;
 
             const layoutSelect =
                 document.getElementById("layoutType");
@@ -3519,42 +3541,43 @@ function openSavedReport(reportId) {
 
 
             // =================================
-            // RENDER ALL BUILDERS
+            // LOAD CORRECT DATA SOURCE COLUMNS
             // =================================
 
-            renderRows();
+            loadReportColumns(currentDataSource)
+                .then(() => {
 
-            renderColumns();
+                    // =================================
+                    // RENDER ALL BUILDERS
+                    // =================================
 
-            renderValues();
+                    renderRows();
+                    renderColumns();
+                    renderValues();
+                    renderPeriod();
+                    renderFilters();
 
-            renderPeriod();
+                    // =================================
+                    // RESTORE PERIOD DROPDOWN
+                    // =================================
 
-            renderFilters();
+                    const periodSelect =
+                        document.getElementById("periodField");
 
+                    if (periodSelect) {
+                        periodSelect.value =
+                            pivotConfig.period
+                                ? pivotConfig.period.field
+                                : "";
+                    }
 
-            // =================================
-            // RESTORE PERIOD DROPDOWN
-            // =================================
+                    // =================================
+                    // GENERATE REPORT
+                    // =================================
 
-            const periodSelect =
-                document.getElementById("periodField");
+                    generatePivot();
+                });
 
-            if (periodSelect) {
-
-                periodSelect.value =
-                    pivotConfig.period
-                        ? pivotConfig.period.field
-                        : "";
-
-            }
-
-
-            // =================================
-            // GENERATE REPORT
-            // =================================
-
-            generatePivot();
 
         })
 
@@ -3568,27 +3591,214 @@ function openSavedReport(reportId) {
 }
 document.querySelectorAll(".report-type").forEach(button => {
 
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
+
+        const reportType = this.dataset.type;
+        const newDataSource = REPORT_DATA_SOURCES[reportType];
+
+        // Only configured report types are allowed for now
+        if (!newDataSource) {
+            alert(
+                "Data source is not configured for this report type yet."
+            );
+            return;
+        }
 
         // Remove active from all
         document
             .querySelectorAll(".report-type")
-            .forEach(btn => {
-                btn.classList.remove("active");
-            });
+            .forEach(btn => btn.classList.remove("active"));
 
-        // Activate clicked button
+        // Activate clicked report type
         this.classList.add("active");
 
-        // Get selected report type
-        const reportType =
-            this.dataset.type;
+        currentDataSource = newDataSource;
+        pivotConfig.dataSource = currentDataSource;
 
         console.log("Selected Report:", reportType);
+        console.log("Data Source:", currentDataSource);
 
+        // =====================================
+        // HIDE OLD REPORT ACTION BUTTONS
+        // =====================================
+
+        const exportCsvBtn = document.getElementById("exportCsvBtn");
+        const saveReportBtn = document.getElementById("saveReportBtn");
+
+        if (exportCsvBtn) {
+            exportCsvBtn.style.display = "none";
+        }
+
+        if (saveReportBtn) {
+            saveReportBtn.style.display = "none";
+        }
+
+        // =====================================
+        // CLEAR OLD REPORT CONFIGURATION
+        // =====================================
+
+        pivotConfig.rows = [];
+        pivotConfig.columns = [];
+        pivotConfig.values = [];
+        pivotConfig.period = null;
+        pivotConfig.filters = [];
+
+        // Clear previous output
+        const output = document.getElementById("output");
+        if (output) {
+            output.innerHTML = "";
+        }
+
+        // =====================================
+        // LOAD COLUMNS FOR SELECTED TABLE
+        // =====================================
+
+        try {
+
+            await loadReportColumns(currentDataSource);
+
+            renderRows();
+            renderColumns();
+            renderValues();
+            renderPeriod();
+            renderFilters();
+
+            resetFieldSelects();
+            updateRowColumnOptions();
+            updateColumnAccess();
+            updateAggregationOptions();
+
+        } catch (error) {
+
+            console.error(
+                "Unable to load report columns:",
+                error
+            );
+
+            alert(
+                "Unable to load columns for " +
+                currentDataSource +
+                ".\n\n" +
+                error.message
+            );
+        }
     });
 
 });
+
+
+// =======================================
+// LOAD REPORT COLUMNS
+// =======================================
+
+async function loadReportColumns(dataSource) {
+
+    const response = await fetch(
+        "/report-columns/" +
+        encodeURIComponent(dataSource)
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+        throw new Error(
+            data.error ||
+            "Unable to load report columns."
+        );
+    }
+
+    currentDateColumns = data.date_columns || [];
+    currentColumnTypes = data.column_types || {};
+
+    populateSelect(
+        "rowField",
+        data.columns || [],
+        "Select Rows"
+    );
+
+    populateSelect(
+        "columnField",
+        data.columns || [],
+        "Select Columns"
+    );
+
+    populateSelect(
+        "valueField",
+        data.columns || [],
+        "Select Values"
+    );
+
+    populateSelect(
+        "filterField",
+        data.columns || [],
+        "Select Filters"
+    );
+
+    populateSelect(
+        "periodField",
+        currentDateColumns,
+        "Select Period"
+    );
+}
+
+
+// =======================================
+// POPULATE SELECT DROPDOWN
+// =======================================
+
+function populateSelect(selectId, columns, placeholder) {
+
+    const select = document.getElementById(selectId);
+
+    if (!select) return;
+
+    select.innerHTML = "";
+
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = placeholder;
+    option.selected = true;
+    select.appendChild(option);
+
+    columns.forEach(column => {
+
+        const item = document.createElement("option");
+        item.value = column;
+        item.textContent = column;
+        select.appendChild(item);
+
+    });
+}
+
+
+// =======================================
+// RESET FIELD SELECTS
+// =======================================
+
+function resetFieldSelects() {
+
+    const ids = [
+        "rowField",
+        "columnField",
+        "valueField",
+        "periodField",
+        "filterField"
+    ];
+
+    ids.forEach(id => {
+        const select = document.getElementById(id);
+        if (select) select.value = "";
+    });
+
+    const aggregate =
+        document.getElementById("aggregate");
+
+    if (aggregate) {
+        aggregate.innerHTML =
+            '<option value="">Select Aggregation</option>';
+    }
+}
+
 function renderPivotTable(result) {
 
     const output = document.getElementById("output");

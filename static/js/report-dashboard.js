@@ -268,3 +268,31 @@ function updateLastRefreshed() {
 }
 
 updateLastRefreshed();
+document.querySelectorAll(".period-toggle-btn").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        document
+            .querySelectorAll(".period-toggle-btn")
+            .forEach(btn => btn.classList.remove("active"));
+
+        this.classList.add("active");
+
+        const selectedPeriod = this.dataset.period;
+
+        console.log("Selected Period:", selectedPeriod);
+
+        if (selectedPeriod === "current-year") {
+            console.log("Showing Current Financial Year");
+            
+            // Add your Current Year data loading here
+        }
+
+        if (selectedPeriod === "ytd") {
+            console.log("Showing Year To Date");
+            
+            // Add your YTD data loading here
+        }
+    });
+
+});

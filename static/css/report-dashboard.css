@@ -13,7 +13,7 @@ body {
 
     font-family: "Inter", sans-serif;
 
-    background: #eaf6fa;
+    background: #ffffff;
 
     color: #123;
 }
@@ -192,7 +192,7 @@ body {
 
     gap: 18px;
 
-    border: 1px solid #d7eaf1;
+    border: 1px solid #c9cdce;
 
     border-radius: 12px;
 
@@ -1042,7 +1042,7 @@ body {
 
     gap: 8px;
 
-    border: 1px solid #d7eaf1;
+    border: 1px solid #e4e4e4;
     border-radius: 12px;
 
     background: #fff;
@@ -1187,4 +1187,63 @@ body {
     background: transparent;
 
     white-space: nowrap;
+}
+/* =========================================================
+   PERIOD CONTROLS
+========================================================= */
+
+.period-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Current Yr. / YTD Toggle */
+.period-toggle {
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px;
+    gap: 2px;
+
+    background: #f1f7fa;
+    border: 1px solid #d7eaf1;
+    border-radius: 7px;
+
+    box-sizing: border-box;
+}
+
+.period-toggle-btn {
+    height: 26px;
+    padding: 0 10px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #6d7d84;
+
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        box-shadow .2s ease;
+}
+
+.period-toggle-btn:hover {
+    color: #0798d4;
+}
+
+.period-toggle-btn.active {
+    background: #0798d4;
+    color: #ffffff;
+
+    box-shadow: 0 1px 4px rgba(7, 152, 212, 0.20);
 }

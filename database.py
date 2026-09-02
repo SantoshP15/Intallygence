@@ -411,7 +411,7 @@ def translate_pagination(sql):
     # Current application:
     #
     # SELECT *
-    # FROM SalesMaster
+    # FROM SalesInventory
     # LIMIT %s OFFSET %s
     #
     # After parameter normalization:

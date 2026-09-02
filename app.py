@@ -20,6 +20,22 @@ app.secret_key = "your_secret_key_here"
 def get_db_connection():
     return connect()
 
+
+# =========================================================
+# REPORT DATA SOURCES
+# =========================================================
+
+ALLOWED_REPORT_SOURCES = {
+    "SalesInventory",
+    "PurchaseInventory"
+}
+
+
+def validate_data_source(data_source):
+    if data_source not in ALLOWED_REPORT_SOURCES:
+        raise ValueError("Invalid report data source.")
+    return data_source
+
 # =========================================================
 # REPORT DASHBOARD
 # =========================================================
@@ -94,7 +110,7 @@ def home():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT COUNT(*) AS total FROM SalesMaster")
+    cursor.execute("SELECT COUNT(*) AS total FROM SalesInventory")
     total = cursor.fetchone()["total"]
 
     if get_dbms() == "sqlserver":
@@ -102,7 +118,7 @@ def home():
         cursor.execute(
             """
             SELECT *
-            FROM SalesMaster
+            FROM SalesInventory
             ORDER BY (SELECT NULL)
             OFFSET ? ROWS
             FETCH NEXT ? ROWS ONLY
@@ -118,7 +134,7 @@ def home():
         cursor.execute(
             """
             SELECT *
-            FROM SalesMaster
+            FROM SalesInventory
             LIMIT %s OFFSET %s
             """,
             (
@@ -151,7 +167,7 @@ def pivot():
     db = get_db_connection()
     cursor = db.cursor()
 
-    cursor.execute("SHOW COLUMNS FROM SalesMaster")
+    cursor.execute("SHOW COLUMNS FROM SalesInventory")
 
     column_info = cursor.fetchall()
 
@@ -197,9 +213,18 @@ def pivot():
 @app.route("/generate-pivot", methods=["POST"])
 def generate_pivot():
 
-    config = request.get_json()
+    config = request.get_json() or {}
 
     try:
+
+        # ============================================
+        # GET DATA SOURCE
+        # ============================================
+
+        data_source = validate_data_source(
+            config.get("dataSource", "SalesInventory")
+        )
+        config["dataSource"] = data_source
 
         # ============================================
         # GET SELECTED LAYOUT
@@ -225,11 +250,11 @@ def generate_pivot():
 
         if layout == "pivot":
 
-            sql = build_pivot_query(config)
+            sql = build_pivot_query(config, data_source)
 
         else:
 
-            sql = build_query(config)
+            sql = build_query(config, data_source)
 
 
         # ============================================
@@ -564,19 +589,67 @@ def delete_saved_report(report_id):
 
 
 
+@app.route("/report-columns/<path:table_name>")
+def report_columns(table_name):
+
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    try:
+        data_source = validate_data_source(table_name)
+
+        db = get_db_connection()
+        cursor = db.cursor()
+        cursor.execute(f"SHOW COLUMNS FROM {data_source}")
+        column_info = cursor.fetchall()
+
+        columns = []
+        date_columns = []
+        column_types = {}
+
+        for col in column_info:
+            column_name = col[0]
+            column_type = str(col[1]).lower()
+            columns.append(column_name)
+            column_types[column_name] = column_type
+
+            if "date" in column_type or "time" in column_type:
+                date_columns.append(column_name)
+
+        cursor.close()
+        db.close()
+
+        return jsonify({
+            "dataSource": data_source,
+            "columns": columns,
+            "date_columns": date_columns,
+            "column_types": column_types
+        })
+
+    except Exception as e:
+        print("REPORT COLUMNS ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/filter-values/<path:column>")
 def filter_values(column):
 
     if "user" not in session:
         return jsonify([])
 
+    try:
+        data_source = validate_data_source(
+            request.args.get("table", "SalesInventory")
+        )
+    except ValueError:
+        return jsonify([])
 
     db = get_db_connection()
     cursor = db.cursor()
 
 
     cursor.execute(
-        "SHOW COLUMNS FROM SalesMaster"
+        f"SHOW COLUMNS FROM {data_source}"
     )
 
     valid_columns = {
@@ -612,7 +685,7 @@ def filter_values(column):
     query = f"""
         SELECT DISTINCT
             {quoted}
-        FROM SalesMaster
+        FROM {data_source}
         WHERE {quoted} IS NOT NULL
         ORDER BY {quoted}
     """
@@ -641,6 +714,12 @@ def date_hierarchy(column):
     if "user" not in session:
         return jsonify({})
 
+    try:
+        data_source = validate_data_source(
+            request.args.get("table", "SalesInventory")
+        )
+    except ValueError:
+        return jsonify({})
 
     db = get_db_connection()
     cursor = db.cursor()
@@ -653,7 +732,7 @@ def date_hierarchy(column):
         # =================================================
 
         cursor.execute(
-            "SHOW COLUMNS FROM SalesMaster"
+            f"SHOW COLUMNS FROM {data_source}"
         )
 
         column_info = cursor.fetchall()
@@ -722,7 +801,7 @@ def date_hierarchy(column):
         query = f"""
             SELECT DISTINCT
                 {quoted_column}
-            FROM SalesMaster
+            FROM {data_source}
             WHERE {quoted_column} IS NOT NULL
             ORDER BY {quoted_column}
         """
@@ -849,7 +928,7 @@ def date_hierarchy(column):
         cursor.close()
         db.close()
 
-def build_query(config):
+def build_query(config, data_source):
 
     rows = config.get("rows", [])
     columns = config.get("columns", [])
@@ -863,7 +942,7 @@ def build_query(config):
     db = get_db_connection()
     cursor = db.cursor()
 
-    cursor.execute("SHOW COLUMNS FROM SalesMaster")
+    cursor.execute(f"SHOW COLUMNS FROM {data_source}")
     valid_columns = {row[0] for row in cursor.fetchall()}
 
     # -------------------------
@@ -935,7 +1014,7 @@ def build_query(config):
 
         cursor.execute(f"""
             SELECT DISTINCT `{pivot_column}`
-            FROM SalesMaster
+            FROM {data_source}
             WHERE `{pivot_column}` IS NOT NULL
             ORDER BY `{pivot_column}`
         """)
@@ -1059,7 +1138,7 @@ END
     sql = f"""
     SELECT
         {",".join(select_clause)}
-    FROM SalesMaster
+    FROM {data_source}
     {where_sql}
     GROUP BY
         {",".join(group_clause)}
@@ -1069,7 +1148,7 @@ END
     db.close()
 
     return sql
-def build_pivot_query(config):
+def build_pivot_query(config, data_source):
 
     rows = config.get("rows", [])
     columns = config.get("columns", [])
@@ -1087,7 +1166,7 @@ def build_pivot_query(config):
     cursor = db.cursor()
 
     cursor.execute(
-        "SHOW COLUMNS FROM SalesMaster"
+        f"SHOW COLUMNS FROM {data_source}"
     )
 
     valid_columns = {
@@ -1352,7 +1431,7 @@ def build_pivot_query(config):
                     for col in columns
                 )}
 
-            FROM SalesMaster
+            FROM {data_source}
 
             {where_sql}
 
@@ -1548,7 +1627,7 @@ def build_pivot_query(config):
 
             {",".join(select_clause)}
 
-        FROM SalesMaster
+        FROM {data_source}
 
         {where_sql}
 

@@ -26,32 +26,19 @@
 
         /* Current browser viewport in CSS pixels. */
         const viewportWidth = document.documentElement.clientWidth;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-        /*
-         * Current DPR changes when Chrome zoom changes.
-         * Example:
-         * 100%  -> base DPR
-         * 125%  -> DPR approximately 1.25 × base
-         *  80%  -> DPR approximately 0.80 × base
-         */
         const currentDevicePixelRatio = window.devicePixelRatio || 1;
-
-        /* Estimate browser zoom. */
         const browserZoom = currentDevicePixelRatio / baseDevicePixelRatio;
 
-        /*
-         * Calculate the width available at NORMAL 100% zoom.
-         * This is the key calculation.
-         * viewportWidth changes with Ctrl +/- but browserZoom compensates for it.
-         */
-        const normalZoomWidth = viewportWidth * browserZoom;
+        /* Calculate available height at normal zoom */
+        const normalZoomHeight = viewportHeight * browserZoom;
 
         /*
-         * Calculate how much the original 1920px design should be scaled.
-         * Example laptop: normal width = 1366
-         * scale = 1366 / 1920 = 0.711
+         * Calculate scale based on viewport height so the background image
+         * and hero canvas height always match 100% of the viewport height.
          */
-        let canvasScale = normalZoomWidth / DESIGN_WIDTH;
+        let canvasScale = normalZoomHeight / DESIGN_HEIGHT;
 
         /* Never enlarge the design beyond its original 1920 × 1080 size */
         canvasScale = Math.min(canvasScale, 1);
@@ -62,9 +49,8 @@
         /* Send scale to CSS. */
         document.documentElement.style.setProperty("--canvas-scale", canvasScale);
 
-        /* The wrapper must have exactly the scaled height of the canvas. */
-        const scaledHeight = DESIGN_HEIGHT * canvasScale;
-        wrapper.style.height = scaledHeight + "px";
+        /* The wrapper height matches the full viewport height. */
+        wrapper.style.height = viewportHeight + "px";
     }
 
     /* First calculation. */

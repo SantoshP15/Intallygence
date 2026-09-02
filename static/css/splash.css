@@ -53,14 +53,9 @@ body::-webkit-scrollbar {
     position: relative;
 
     width: 100%;
-    /*
-       JavaScript changes this height.
-    */
-    height: calc(
-        1080px * var(--canvas-scale, 1)
-    );
+    height: 100vh;
 
-    min-height: 0;
+    min-height: 100vh;
 
     background: #eaf6fa;
     display: flex;
@@ -69,7 +64,7 @@ body::-webkit-scrollbar {
 
     align-items: flex-start;
 
-    overflow: visible;
+    overflow: hidden;
 }
 
 
@@ -123,9 +118,6 @@ body::-webkit-scrollbar {
 
     display: block;
 
-    /*
-       Original image = 1920 × 1080.
-    */
     object-fit: fill;
 
     z-index: 0;
