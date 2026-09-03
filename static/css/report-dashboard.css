@@ -2,6 +2,25 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Dashboard design system: change these tokens to retune the whole page. */
+    --dashboard-font-family: "Inter", Arial, sans-serif;
+    --dashboard-page-padding-x: 3.5%;
+    --dashboard-page-padding-y: 16px;
+    --dashboard-section-gap: 14px;
+    --dashboard-panel-gap: 20px;
+    --dashboard-card-gap: 12px;
+    --dashboard-radius: 12px;
+    --dashboard-control-height: 34px;
+    --dashboard-kpi-title-size: 14px;
+    --dashboard-kpi-value-size: 26px;
+    --dashboard-heading-size: 20px;
+    --dashboard-table-size: 10.5px;
+    --dashboard-table-row-padding: 6.5px;
+    --dashboard-report-title-size: 14px;
+    --dashboard-report-copy-size: 10px;
+}
+
 html,
 body {
     margin: 0;
@@ -11,7 +30,11 @@ body {
     height: 100%;
     overflow: hidden;
 
-    font-family: "Inter", sans-serif;
+    font-family: var(--dashboard-font-family);
+    font-size: 16px;
+    line-height: 1.2;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 
     background: #ffffff;
 
@@ -21,6 +44,13 @@ body {
 
 body {
     height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
 
@@ -430,7 +460,7 @@ body {
 }
 
 .kpi-card-title {
-    font-size: 13.5px;
+    font-size: var(--dashboard-kpi-title-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -466,8 +496,8 @@ body {
 }
 
 .kpi-value {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-size: 24px; /* High visibility balanced size */
+    font-family: var(--dashboard-font-family);
+    font-size: var(--dashboard-kpi-value-size);
     font-weight: 700; /* Sleek yet defined weight */
     color: #123;     /* Matches primary website dark color */
     letter-spacing: -0.02em;
@@ -1210,7 +1240,7 @@ body {
 .report-dashboard {
     width: 100%;
     height: 100vh;
-    padding: 16px 3.5%;
+    padding: var(--dashboard-page-padding-y) var(--dashboard-page-padding-x);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1241,14 +1271,14 @@ body {
 .kpi-action-container {
     width: 100%;
     max-width: none;
-    margin: 0 0 14px 0;
+    margin: 0 0 var(--dashboard-section-gap) 0;
 }
 
 .kpi-grid {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 12px;
+    gap: var(--dashboard-card-gap);
 }
 
 /* Main two-column area */
@@ -1256,25 +1286,25 @@ body {
     width: 100%;
     max-width: none;
     margin: 0;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0;
 
     display: grid;
     grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
-    gap: 20px;
+    gap: var(--dashboard-panel-gap);
 
-    align-items: start;
+    align-items: stretch;
 }
 
 /* P&L */
 .pnl-panel {
     background: #fff;
     border: 1px solid #d7eaf1;
-    border-radius: 12px;
+    border-radius: var(--dashboard-radius);
     overflow: visible;
     box-shadow: 0 4px 15px rgba(0, 141, 204, 0.04);
     min-width: 0;
-    height: fit-content;
+    height: 100%;
 }
 
 .pnl-header {
@@ -1291,7 +1321,7 @@ body {
 
 .pnl-header h1 {
     margin: 0;
-    font-size: 20px;
+    font-size: var(--dashboard-heading-size);
     font-weight: 700;
     color: #123;
 }
@@ -1378,11 +1408,11 @@ body {
 }
 
 .pnl-table td {
-    padding: 6.5px 4px;
+    padding: var(--dashboard-table-row-padding) 4px;
 
     border-top: 1px solid #eef3f5;
 
-    font-size: 10.5px;
+    font-size: var(--dashboard-table-size);
     color: #5d7180;
 
     text-align: right;
@@ -1470,7 +1500,7 @@ body {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    height: auto;
+    height: 100%;
 }
 
 .reports-panel .report-header-row {
@@ -1482,7 +1512,7 @@ body {
 
 .report-title-group h1 {
     margin: 0;
-    font-size: 20px;
+    font-size: var(--dashboard-heading-size);
     font-weight: 700;
     color: #123;
 }
@@ -1497,13 +1527,13 @@ body {
 .reports-panel .report-grid {
     width: 100%;
     margin-top: 0;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0;
 
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, 160px);
-    gap: 12px;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: var(--dashboard-card-gap);
 }
 
 .reports-panel .report-card {
@@ -1521,7 +1551,7 @@ body {
     gap: 8px;
 
     border: 1px solid #e4e4e4;
-    border-radius: 12px;
+    border-radius: var(--dashboard-radius);
 
     background: #fff;
 
@@ -1556,14 +1586,14 @@ body {
 
 .reports-panel .report-info h2 {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--dashboard-report-title-size);
     font-weight: 700;
     color: #123;
 }
 
 .reports-panel .report-info p {
     margin: 3px 0 0;
-    font-size: 10px;
+    font-size: var(--dashboard-report-copy-size);
     line-height: 1.3;
     color: #7b8a90;
 }
