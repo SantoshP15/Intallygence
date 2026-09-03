@@ -82,7 +82,7 @@
             <div class="dashboard-user">
 
                 <div class="active-company">
-                    <strong>ACHP Pvt. Ltd.</strong>
+                    <strong id="activeCompanyName">ACHP Pvt. Ltd.</strong>
                 </div>
 
                 <div class="user-info">
@@ -213,9 +213,38 @@
     <!-- Switch Company -->
     <div class="settings-divider"></div>
 
-    <button type="button" class="settings-option">
-        Switch Company
+    <button type="button"
+            class="settings-option switch-company-btn"
+            id="switchCompanyBtn"
+            aria-expanded="false"
+            aria-controls="companySelector">
+        <span>Switch Company</span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
     </button>
+
+    <fieldset class="company-selector" id="companySelector" aria-label="Choose company">
+        <legend>Choose company</legend>
+
+        <label class="company-option company-option-all">
+            <input type="checkbox" id="selectAllCompanies">
+            <span>Select All</span>
+        </label>
+
+        <label class="company-option">
+            <input type="checkbox" name="active-company" value="ACHP Pvt. Ltd." checked>
+            <span>ACHP Pvt. Ltd.</span>
+        </label>
+
+        <label class="company-option">
+            <input type="checkbox" name="active-company" value="InTallygence Pvt. Ltd.">
+            <span>InTallygence Pvt. Ltd.</span>
+        </label>
+
+        <label class="company-option">
+            <input type="checkbox" name="active-company" value="Demo Company Pvt. Ltd.">
+            <span>Demo Company Pvt. Ltd.</span>
+        </label>
+    </fieldset>
 
     <form action="{{ url_for('logout') }}" method="POST" class="signout-form">
         <button type="submit" class="settings-option signout-option">
@@ -382,11 +411,11 @@
 
                     <div class="period-controls">
 
-                        <button type="button" class="period-select">
+                        <!-- <button type="button" class="period-select">
                             <i class="fa-regular fa-calendar"></i>
                             <span>Apr 2025 - Mar 2026</span>
                             <i class="fa-solid fa-chevron-down"></i>
-                        </button>
+                        </button> -->
 
                         <div class="period-toggle" role="group" aria-label="Period type">
 
@@ -394,14 +423,14 @@
                                 type="button"
                                 class="period-toggle-btn active"
                                 data-period="current-year">
-                                Current Yr.
+                                CURRENT YEAR
                             </button>
 
                             <button
                                 type="button"
                                 class="period-toggle-btn"
                                 data-period="ytd">
-                                YTD
+                                CYTD Vs PYTD
                             </button>
 
                         </div>
@@ -517,8 +546,14 @@
                 </div>
 
                 <div class="pnl-footer">
-                    All values are in INR
-                    <span class="info-icon">i</span>
+                    <span class="amount-format-tooltip" tabindex="0">
+                        <span class="pnl-footer-text">All values are in INR</span>
+                        <span class="info-icon" aria-hidden="true">i</span>
+                        <span class="amount-format-tooltip-message" role="tooltip">
+                            To view figures in Crores/Lakhs, go to
+                            <strong>Settings → Amount Selector</strong> and select your preferred format.
+                        </span>
+                    </span>
                 </div>
 
             </div>

@@ -532,15 +532,11 @@ body {
    ========================================================= */
 
 .layout-select {
-    align-self: start;
-
     width: 100px;
     min-width: 100px;
     max-width: 100px;
 
     height: 48px;
-
-    margin-top: 25px;
 
     padding: 0 30px 0 10px;
 

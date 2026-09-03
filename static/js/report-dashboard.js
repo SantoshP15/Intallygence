@@ -340,7 +340,10 @@ function updateDashboardAmounts(format = selectedAmountFormat) {
     const footer = document.querySelector(".pnl-footer");
     if (footer) {
         const unit = format === "crores" ? "Crores" : "Lakhs";
-        footer.childNodes[0].nodeValue = `All values are in ${unit} `;
+        const footerText = footer.querySelector(".pnl-footer-text");
+        if (footerText) {
+            footerText.textContent = `All values are in ${unit}`;
+        }
     }
 }
 
@@ -420,6 +423,20 @@ document.querySelectorAll(".period-toggle-btn").forEach(button => {
 });
 const settingsBtn = document.getElementById("settingsBtn");
 const settingsPopup = document.getElementById("settingsPopup");
+const switchCompanyBtn = document.getElementById("switchCompanyBtn");
+const companySelector = document.getElementById("companySelector");
+const activeCompanyName = document.getElementById("activeCompanyName");
+const selectAllCompanies = document.getElementById("selectAllCompanies");
+const companyInputs = [
+    ...document.querySelectorAll('input[name="active-company"]')
+];
+
+function closeCompanySelector() {
+    if (!switchCompanyBtn || !companySelector) return;
+
+    companySelector.classList.remove("show");
+    switchCompanyBtn.setAttribute("aria-expanded", "false");
+}
 
 settingsBtn.addEventListener("click", function (event) {
 
@@ -427,7 +444,60 @@ settingsBtn.addEventListener("click", function (event) {
 
     settingsPopup.classList.toggle("show");
 
+    if (!settingsPopup.classList.contains("show")) {
+        closeCompanySelector();
+    }
+
 });
+
+switchCompanyBtn.addEventListener("click", function () {
+    const isOpen = companySelector.classList.toggle("show");
+    switchCompanyBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+function updateActiveCompanyName() {
+    let selectedCompanies = companyInputs.filter(input => input.checked);
+
+    // The dashboard must always have an active company.
+    if (selectedCompanies.length === 0 && companyInputs.length > 0) {
+        companyInputs[0].checked = true;
+        selectedCompanies = [companyInputs[0]];
+    }
+
+    if (activeCompanyName) {
+        if (selectedCompanies.length === 1) {
+            activeCompanyName.textContent = selectedCompanies[0].value;
+        } else if (selectedCompanies.length > 1) {
+            const primaryCompany = selectedCompanies[0].value
+                .replace(/\s+Pvt\.\s*Ltd\.$/i, "");
+            activeCompanyName.textContent =
+                `${primaryCompany}+${selectedCompanies.length - 1}`;
+        }
+    }
+
+    if (selectAllCompanies) {
+        selectAllCompanies.checked = selectedCompanies.length === companyInputs.length;
+        selectAllCompanies.indeterminate = selectedCompanies.length > 0 &&
+            selectedCompanies.length < companyInputs.length;
+    }
+}
+
+selectAllCompanies.addEventListener("change", function () {
+    companyInputs.forEach((input, index) => {
+        // Clearing Select All retains the first company as the active one.
+        input.checked = this.checked || index === 0;
+    });
+
+    updateActiveCompanyName();
+});
+
+companyInputs.forEach(input => {
+    input.addEventListener("change", function () {
+        updateActiveCompanyName();
+    });
+});
+
+updateActiveCompanyName();
 
 
 // Close popup when clicking outside
@@ -439,6 +509,7 @@ document.addEventListener("click", function (event) {
         !settingsBtn.contains(event.target)
     ) {
         settingsPopup.classList.remove("show");
+        closeCompanySelector();
     }
 
 });
