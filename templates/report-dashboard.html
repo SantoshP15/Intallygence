@@ -90,7 +90,7 @@
                     <span>
                         Anand Paurana
                         <br>
-                        <small class="user-role">CFO</small>
+                        <small class="user-role">CEO</small>
                     </span>
 
                     <button type="button"
@@ -216,6 +216,15 @@
     <button type="button" class="settings-option">
         Switch Company
     </button>
+
+    <form action="{{ url_for('logout') }}" method="POST" class="signout-form">
+        <button type="submit" class="settings-option signout-option">
+            <img src="{{ url_for('static', filename='images/signout.svg') }}"
+                alt=""
+                class="signout-icon">
+            <span>Sign Out</span>
+        </button>
+    </form>
 
 </div>  
                 </div>

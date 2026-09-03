@@ -1044,6 +1044,10 @@ body {
 .settings-option {
     width: 100%;
 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
     background: transparent;
     border: none;
 
@@ -1063,6 +1067,20 @@ body {
 
 .settings-option:hover {
     background: #f3f4f6;
+}
+
+.signout-option {
+    color: #dc2626;
+}
+
+.signout-form {
+    margin: 0;
+}
+
+.signout-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
 }
 /* .report-dashboard {
     position: relative;

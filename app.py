@@ -99,6 +99,12 @@ def login():
     #     error="Invalid username or password."
     # )
 
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("splash"))
+
 @app.route("/dashboard")
 def home():
 
