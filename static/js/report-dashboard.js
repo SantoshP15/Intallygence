@@ -230,9 +230,18 @@ function closeReportModal(event) {
         .classList.remove("active");
 
 
-    document.body.style.overflow =
-        "auto";
+    document.body.style.overflow = "";
 }
+
+function openAiModeModal() {
+    document.getElementById("aiModeModal").classList.add("active");
+}
+
+function closeAiModeModal() {
+    document.getElementById("aiModeModal").classList.remove("active");
+}
+
+document.querySelector(".ai-mode-btn").addEventListener("click", openAiModeModal);
 
 
 // =========================================================
@@ -246,6 +255,7 @@ document.addEventListener(
         if (e.key === "Escape") {
 
             closeReportModal();
+            closeAiModeModal();
 
         }
 

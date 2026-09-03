@@ -633,6 +633,48 @@ body {
     transform: scale(1) translateY(0);
 }
 
+.ai-mode-modal-box {
+    position: relative;
+    width: min(360px, calc(100% - 32px));
+    min-height: 230px;
+    padding: 34px 28px 28px;
+    text-align: center;
+}
+
+.ai-mode-modal-box .modal-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+}
+
+.ai-mode-modal-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 16px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: #eaf6fa;
+}
+
+.ai-mode-modal-icon img {
+    width: 32px;
+    height: 32px;
+    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg) brightness(90%) contrast(94%);
+}
+
+.ai-mode-modal-box h2 {
+    margin: 0;
+    color: #123;
+    font-size: 22px;
+}
+
+.ai-mode-modal-box p {
+    margin: 8px 0 0;
+    color: #6d7d84;
+    font-size: 15px;
+}
+
 /* Modal Header */
 .modal-header {
     display: flex;
@@ -755,7 +797,7 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
 }
 
 .user-info > span {
@@ -770,6 +812,39 @@ body {
     text-align: right;
     font-size: 12px;
     font-weight: 500;
+}
+
+/* AI mode button */
+
+.ai-mode-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.ai-mode-icon {
+    width: 26px;
+    height: 26px;
+    display: block;
+    object-fit: contain;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.ai-mode-btn:hover .ai-mode-icon,
+.ai-mode-btn:focus-visible .ai-mode-icon {
+    transform: scale(1.15);
+    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg) brightness(90%) contrast(94%);
+}
+
+.ai-mode-btn:focus-visible {
+    outline: 2px solid #0798d4;
+    outline-offset: 3px;
+    border-radius: 4px;
 }
 
 /* Settings button */
@@ -790,6 +865,19 @@ body {
     width: 26px;
     height: 26px;
     object-fit: contain;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.settings-btn:hover .settings-icon,
+.settings-btn:focus-visible .settings-icon {
+    transform: scale(1.15);
+    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg) brightness(90%) contrast(94%);
+}
+
+.settings-btn:focus-visible {
+    outline: 2px solid #0798d4;
+    outline-offset: 3px;
+    border-radius: 4px;
 }
 
 /* Popup */
@@ -857,7 +945,7 @@ body {
     font-size: 13px;
     font-weight: 600;
 
-    color: #374151;
+    color: #414141 !important;
 
     white-space: nowrap;
     overflow: hidden;
@@ -878,7 +966,7 @@ body {
 }
 
 .subscription-info span {
-    color: #6b7280;
+    color: #414141 !important;
 }
 
 .subscription-info strong {
@@ -945,9 +1033,9 @@ body {
 }
 
 .selector-btn.active {
-    background: #374151;
+    background: #b9b9b9;
     color: #ffffff;
-    border-color: #374151;
+    border-color: #b9b9b9;
 }
 
 

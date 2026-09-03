@@ -94,6 +94,14 @@
                     </span>
 
                     <button type="button"
+                            class="ai-mode-btn"
+                            aria-label="AI mode">
+                        <img src="{{ url_for('static', filename='images/ai mode.svg') }}"
+                            alt=""
+                            class="ai-mode-icon">
+                    </button>
+
+                    <button type="button"
                             class="settings-btn"
                             id="settingsBtn">
                         <img src="/static/images/settings.svg"
@@ -642,6 +650,19 @@
                     <!-- Dynamic Content Injected via JS -->
                 </div>
 
+            </div>
+        </div>
+
+        <div id="aiModeModal" class="modal-overlay ai-mode-modal" onclick="closeAiModeModal(event)">
+            <div class="modal-box ai-mode-modal-box" onclick="event.stopPropagation()">
+                <button type="button" class="modal-close-btn" aria-label="Close AI mode message" onclick="closeAiModeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="ai-mode-modal-icon">
+                    <img src="{{ url_for('static', filename='images/ai mode.svg') }}" alt="">
+                </div>
+                <h2>AI Mode</h2>
+                <p>Coming soon</p>
             </div>
         </div>
 
