@@ -275,6 +275,64 @@ updateLastRefreshed();
 
 const pnlTable = document.getElementById("pnlTable");
 const currentYearPnlMarkup = pnlTable ? pnlTable.innerHTML : "";
+let selectedAmountFormat = "crores";
+
+function parseDashboardAmount(value) {
+    const text = String(value).trim();
+    const match = text.match(/^₹?\s*(-?[\d,]+(?:\.\d+)?)\s*(Cr|Lakhs?)?$/i);
+
+    if (!match) return null;
+
+    const number = Number(match[1].replace(/,/g, ""));
+    const unit = (match[2] || "").toLowerCase();
+
+    if (unit === "cr") return number * 10000000;
+    if (unit.startsWith("lakh")) return number * 100000;
+    return number;
+}
+
+function formatDashboardAmount(amount, format, includeUnit = true) {
+    const divisors = {
+        lakhs: 100000,
+        crores: 10000000
+    };
+    const suffixes = {
+        lakhs: " L",
+        crores: " Cr"
+    };
+    const value = amount / divisors[format];
+    const formatted = new Intl.NumberFormat("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+
+    return `₹${formatted}${includeUnit ? suffixes[format] : ""}`;
+}
+
+function updateDashboardAmounts(format = selectedAmountFormat) {
+    selectedAmountFormat = format;
+
+    document.querySelectorAll(".kpi-value, #pnlTable tbody td:not(:first-child)").forEach(cell => {
+        // Percentages and growth rates are not currency amounts.
+        if (cell.textContent.includes("%")) return;
+
+        const originalAmount = cell.dataset.amountInr
+            ? Number(cell.dataset.amountInr)
+            : parseDashboardAmount(cell.textContent);
+
+        if (originalAmount === null || Number.isNaN(originalAmount)) return;
+
+        cell.dataset.amountInr = String(originalAmount);
+        const isPnlValue = Boolean(cell.closest("#pnlTable"));
+        cell.textContent = formatDashboardAmount(originalAmount, format, !isPnlValue);
+    });
+
+    const footer = document.querySelector(".pnl-footer");
+    if (footer) {
+        const unit = format === "crores" ? "Crores" : "Lakhs";
+        footer.childNodes[0].nodeValue = `All values are in ${unit} `;
+    }
+}
 
 // YTD figures are based on the current-year totals shown in the P&L statement.
 // Keep this data here until these values are supplied by the reporting API.
@@ -313,10 +371,15 @@ function showYtdPnl() {
                 </tr>
             `).join("")}
         </tbody>`;
+
+    updateDashboardAmounts();
 }
 
 function showCurrentYearPnl() {
-    if (pnlTable) pnlTable.innerHTML = currentYearPnlMarkup;
+    if (pnlTable) {
+        pnlTable.innerHTML = currentYearPnlMarkup;
+        updateDashboardAmounts();
+    }
 }
 
 document.querySelectorAll(".period-toggle-btn").forEach(button => {
@@ -345,3 +408,78 @@ document.querySelectorAll(".period-toggle-btn").forEach(button => {
     });
 
 });
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsPopup = document.getElementById("settingsPopup");
+
+settingsBtn.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    settingsPopup.classList.toggle("show");
+
+});
+
+
+// Close popup when clicking outside
+
+document.addEventListener("click", function (event) {
+
+    if (
+        !settingsPopup.contains(event.target) &&
+        !settingsBtn.contains(event.target)
+    ) {
+        settingsPopup.classList.remove("show");
+    }
+
+});
+
+
+// Period Selector
+
+document.querySelectorAll("[data-period]").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        document
+            .querySelectorAll("[data-period]")
+            .forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+        this.classList.add("active");
+
+        const selectedPeriod = this.dataset.period;
+
+        console.log("Period:", selectedPeriod);
+
+    });
+
+});
+
+
+// Amount Selector
+
+document.querySelectorAll("[data-amount]").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        document
+            .querySelectorAll("[data-amount]")
+            .forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+        this.classList.add("active");
+
+        const selectedAmount = this.dataset.amount;
+
+        console.log("Amount:", selectedAmount);
+        updateDashboardAmounts(selectedAmount);
+
+    });
+
+});
+
+// The markup starts with Crore values, so retain that format until the user
+// chooses another amount unit.
+updateDashboardAmounts(selectedAmountFormat);

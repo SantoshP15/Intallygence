@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -106,16 +106,19 @@
      REPORT TYPE BUILDERS
 ================================== -->
 
-    <div class="report-types">
+   <div class="report-types">
+    <button class="report-type active"
+            data-type="sales">
+        Sales
+    </button>
 
-        <button class="report-type active" data-type="sales">Sales</button>
-        <button class="report-type" data-type="purchase">Purchase</button>
-        <button class="report-type" data-type="debit-note">Debit Note</button>
-        <button class="report-type" data-type="credit-note">Credit Note</button>
-        <button class="report-type" data-type="payment">Payment</button>
-        <button class="report-type" data-type="receipt">Receipt</button>
-        <button class="report-type" data-type="day-book">Day Book</button>
-        <button class="report-type" data-type="stock-register">Stock Register</button>
+    <button class="report-type" data-type="purchase">Purchase</button>
+    <button class="report-type" data-type="debit-note">Debit Note</button>
+    <button class="report-type" data-type="credit-note">Credit Note</button>
+    <button class="report-type" data-type="payment">Payment</button>
+    <button class="report-type" data-type="receipt">Receipt</button>
+    <button class="report-type" data-type="day-book">Day Book</button>
+    <button class="report-type" data-type="stock-register">Stock Register</button>
 
     </div>
 

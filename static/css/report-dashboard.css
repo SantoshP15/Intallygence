@@ -751,6 +751,231 @@ body {
     gap: 4px;
 }
 
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-info > span {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgb(174, 174, 175) !important;
+    text-align: right;
+}
+
+.user-role {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Settings button */
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    cursor: pointer;
+}
+
+.settings-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+
+/* Popup */
+
+.settings-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 320px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    padding: 14px;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    display: none;
+    z-index: 1000;
+}
+
+.settings-popup.show {
+    display: block;
+}
+
+
+/* Section title */
+
+.settings-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+
+/* Profile */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+
+.profile-item {
+    min-width: 0;
+}
+
+.profile-item label {
+    display: block;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    color: #9ca3af;
+
+    margin-bottom: 3px;
+}
+
+.profile-item span {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #374151;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* Subscription */
+
+.subscription-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    font-size: 12px;
+}
+
+.subscription-info span {
+    color: #6b7280;
+}
+
+.subscription-info strong {
+    color: #374151;
+}
+
+
+/* Divider */
+
+.settings-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 10px 0;
+}
+
+
+/* Controls */
+
+.settings-control {
+    margin-top: 12px;
+}
+
+.settings-control > label {
+    display: block;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #6b7280;
+
+    margin-bottom: 6px;
+}
+
+
+/* Selector buttons */
+
+.selector-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.selector-btn {
+    flex: 1;
+
+    padding: 7px 8px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #4b5563;
+
+    cursor: pointer;
+
+    transition: 0.15s ease;
+}
+
+.selector-btn:hover {
+    background: #f3f4f6;
+}
+
+.selector-btn.active {
+    background: #374151;
+    color: #ffffff;
+    border-color: #374151;
+}
+
+
+/* Switch company */
+
+.settings-option {
+    width: 100%;
+
+    background: transparent;
+    border: none;
+
+    padding: 8px 4px;
+
+    text-align: left;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #374151;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+}
+
+.settings-option:hover {
+    background: #f3f4f6;
+}
 /* .report-dashboard {
     position: relative;
 } */
@@ -1275,4 +1500,150 @@ body {
 .pnl-table .growth-positive {
     color: #15803d;
     font-weight: 600;
+}
+
+/* =========================================================
+   RESPONSIVE DASHBOARD LAYOUT
+   The desktop view fits the complete dashboard within the viewport.
+   Narrower layouts retain normal scrolling so content stays usable.
+========================================================= */
+
+html,
+body {
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.report-dashboard {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.last-refreshed {
+    flex: 0 0 auto;
+    padding: 5px 0 0;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+@media (max-width: 1050px) {
+    html,
+    body {
+        overflow-y: auto;
+    }
+
+    .report-dashboard {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+
+    .report-section,
+    .reports-panel {
+        height: auto;
+    }
+
+    .reports-panel .report-grid {
+        flex: none;
+        grid-template-rows: none;
+    }
+
+    .pnl-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .pnl-table {
+        min-width: 620px;
+    }
+}
+
+@media (max-width: 750px) {
+    .dashboard-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-user {
+        min-width: 0;
+    }
+
+    .active-company {
+        position: static;
+        transform: none;
+        margin-bottom: 4px;
+        font-size: clamp(18px, 4vw, 24px);
+        text-align: right;
+    }
+
+    .period-controls {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .period-select {
+        flex: 1 1 190px;
+        justify-content: center;
+    }
+
+    .pnl-panel,
+    .reports-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .report-dashboard {
+        padding: 16px 14px 28px;
+    }
+
+    .dashboard-header {
+        gap: 12px;
+    }
+
+    .dashboard-logo img {
+        width: 125px;
+    }
+
+    .user-info > span {
+        display: none;
+    }
+
+    .settings-popup {
+        position: fixed;
+        top: 62px;
+        right: 14px;
+        width: min(320px, calc(100vw - 28px));
+        max-height: calc(100vh - 78px);
+        overflow-y: auto;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pnl-header {
+        padding: 12px 14px;
+    }
+
+    .period-controls,
+    .period-select,
+    .period-toggle {
+        width: 100%;
+    }
+
+    .period-toggle-btn {
+        flex: 1;
+    }
+
+    .report-header-row .create-report-btn {
+        width: 100%;
+    }
+
+    .modal-box {
+        width: calc(100% - 28px);
+        max-height: calc(100vh - 28px);
+        padding: 20px 16px;
+    }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 31 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-1810.75,-120.86)">
+        <g transform="matrix(0.458333,0,0,0.458333,1259.06,75.1099)">
+            <path d="M1270.23,117.273L1270.23,150C1270.23,159.031 1262.89,166.364 1253.86,166.364L1221.14,166.364C1212.11,166.364 1204.77,159.031 1204.77,150L1204.77,117.273C1204.77,108.241 1212.11,100.909 1221.14,100.909L1253.86,100.909C1262.89,100.909 1270.23,108.241 1270.23,117.273Z" style="fill:none;stroke:rgb(88,89,91);stroke-width:2.18px;"/>
+        </g>
+        <g transform="matrix(0.015625,0,0,0.015625,1826.25,136.36)">
+            <g transform="matrix(1,0,0,1,-800,-800)">
+                <clipPath id="_clip1">
+                    <rect x="0" y="0" width="1600" height="1600"/>
+                </clipPath>
+                <g clip-path="url(#_clip1)">
+                    <g transform="matrix(66.6667,0,0,66.6667,0,0)">
+                        <path d="M18.48,18.537L21,18.537M4.68,12L3,12.044M4.68,12C4.68,13.326 5.755,14.4 7.08,14.4C8.405,14.4 9.48,13.326 9.48,12C9.48,10.675 8.405,9.6 7.08,9.6C5.755,9.6 4.68,10.675 4.68,12ZM10.169,12.044L21,12.044M12.801,5.551L3,5.551M21,5.551L18.48,5.551M3,18.537L12.801,18.537M17.88,18.6C17.88,19.926 16.806,21 15.48,21C14.155,21 13.08,19.926 13.08,18.6C13.08,17.275 14.155,16.2 15.48,16.2C16.806,16.2 17.88,17.275 17.88,18.6ZM17.88,5.4C17.88,6.725 16.806,7.8 15.48,7.8C14.155,7.8 13.08,6.725 13.08,5.4C13.08,4.075 14.155,3 15.48,3C16.806,3 17.88,4.075 17.88,5.4Z" style="fill:none;fill-rule:nonzero;stroke:rgb(88,89,91);stroke-width:1.5px;stroke-linejoin:miter;stroke-miterlimit:4;"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
