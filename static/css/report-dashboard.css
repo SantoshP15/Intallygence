@@ -1271,7 +1271,7 @@ body {
     background: #fff;
     border: 1px solid #d7eaf1;
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 4px 15px rgba(0, 141, 204, 0.04);
     min-width: 0;
     height: fit-content;
