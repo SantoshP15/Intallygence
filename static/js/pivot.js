@@ -1444,9 +1444,11 @@ function generatePivot() {
 
     console.log(pivotConfig);
 
-    if (pivotConfig.values.length === 0) {
+    if (pivotConfig.rows.length === 0 || pivotConfig.values.length === 0) {
 
-        alert("Please select at least one Value.");
+        showReportValidation(
+            "Select at least one Row and one Value before clicking Go."
+        );
 
         return;
 
@@ -2238,6 +2240,10 @@ if (generateButton) {
 
     generateButton.addEventListener("click", function () {
 
+        if (pivotConfig.rows.length === 0 || pivotConfig.values.length === 0) {
+            return;
+        }
+
         // Move builder upward
         if (builderArea) {
             builderArea.classList.add("report-generated");
@@ -2260,6 +2266,84 @@ if (generateButton) {
     });
 
 }
+
+function showReportValidation(message) {
+    const modal = document.getElementById("reportValidationModal");
+    const messageElement = document.getElementById("reportValidationMessage");
+    const closeButton = document.getElementById("closeReportValidation");
+
+    if (!modal || !messageElement) return;
+
+    messageElement.textContent = message;
+    modal.hidden = false;
+    closeButton?.focus();
+}
+
+function closeReportValidation() {
+    const modal = document.getElementById("reportValidationModal");
+    if (modal) modal.hidden = true;
+}
+
+document.getElementById("closeReportValidation")?.addEventListener("click", closeReportValidation);
+document.getElementById("reportValidationModal")?.addEventListener("click", function (event) {
+    if (event.target === this) closeReportValidation();
+});
+
+const pivotAiBtn = document.getElementById("pivotAiBtn");
+const pivotAiModal = document.getElementById("pivotAiModal");
+const closePivotAiModal = document.getElementById("closePivotAiModal");
+const pivotSettingsBtn = document.getElementById("pivotSettingsBtn");
+const pivotSettingsMenu = document.getElementById("pivotSettingsMenu");
+
+pivotAiBtn?.addEventListener("click", () => { pivotAiModal.hidden = false; });
+closePivotAiModal?.addEventListener("click", () => { pivotAiModal.hidden = true; });
+pivotAiModal?.addEventListener("click", function (event) { if (event.target === this) this.hidden = true; });
+pivotSettingsBtn?.addEventListener("click", function (event) {
+    event.stopPropagation();
+    const isOpen = pivotSettingsMenu.hidden;
+    pivotSettingsMenu.hidden = !isOpen;
+    this.setAttribute("aria-expanded", String(isOpen));
+});
+document.addEventListener("click", event => {
+    if (pivotSettingsMenu && !pivotSettingsMenu.hidden && !event.target.closest(".pivot-settings-wrap")) {
+        pivotSettingsMenu.hidden = true;
+        pivotSettingsBtn?.setAttribute("aria-expanded", "false");
+    }
+});
+
+document.querySelectorAll("[data-pivot-period]").forEach(button => {
+    button.addEventListener("click", function () {
+        document.querySelectorAll("[data-pivot-period]").forEach(item => item.classList.remove("active"));
+        this.classList.add("active");
+    });
+});
+
+document.querySelectorAll("[data-pivot-amount]").forEach(button => {
+    button.addEventListener("click", function () {
+        document.querySelectorAll("[data-pivot-amount]").forEach(item => item.classList.remove("active"));
+        this.classList.add("active");
+    });
+});
+
+const pivotSwitchCompanyBtn = document.getElementById("pivotSwitchCompanyBtn");
+const pivotCompanySelector = document.getElementById("pivotCompanySelector");
+const pivotSelectAllCompanies = document.getElementById("pivotSelectAllCompanies");
+const pivotCompanyInputs = [...document.querySelectorAll('input[name="pivot-active-company"]')];
+
+pivotSwitchCompanyBtn?.addEventListener("click", function () {
+    const isOpen = pivotCompanySelector.hidden;
+    pivotCompanySelector.hidden = !isOpen;
+    this.setAttribute("aria-expanded", String(isOpen));
+});
+
+pivotSelectAllCompanies?.addEventListener("change", function () {
+    pivotCompanyInputs.forEach((input, index) => { input.checked = this.checked || index === 0; });
+});
+
+pivotCompanyInputs.forEach(input => input.addEventListener("change", () => {
+    if (!pivotCompanyInputs.some(item => item.checked) && pivotCompanyInputs[0]) pivotCompanyInputs[0].checked = true;
+    if (pivotSelectAllCompanies) pivotSelectAllCompanies.checked = pivotCompanyInputs.every(item => item.checked);
+}));
 
 document.addEventListener("DOMContentLoaded", function () {
 

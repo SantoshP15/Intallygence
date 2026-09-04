@@ -86,14 +86,7 @@
 
         </div>
 
-    </header>
-
-
-    <!-- =================================
-         SAVED REPORTS
-    ================================== -->
-
-    <div class="saved-reports">
+        <div class="saved-reports">
 
         <button id="savedReportsBtn" type="button">
 
@@ -101,7 +94,54 @@
 
         </button>
 
-    </div>
+        </div>
+
+        <div class="pivot-header-user">
+            <span class="pivot-user-name">Anand Paurana<small>CEO</small></span>
+            <button type="button" id="pivotAiBtn" class="pivot-header-icon" aria-label="AI mode">
+                <img src="{{ url_for('static', filename='images/ai mode.svg') }}" alt="">
+            </button>
+            <div class="pivot-settings-wrap">
+                <button type="button" id="pivotSettingsBtn" class="pivot-header-icon" aria-label="Settings" aria-expanded="false">
+                    <img src="{{ url_for('static', filename='images/settings.svg') }}" alt="">
+                </button>
+                <div id="pivotSettingsMenu" class="pivot-settings-menu" hidden>
+                    <section class="pivot-settings-section">
+                        <h2>Profile</h2>
+                        <div class="pivot-profile-grid">
+                            <div><label>First Name</label><span>Anand</span></div>
+                            <div><label>Last Name</label><span>Paurana</span></div>
+                            <div><label>Organisation</label><span>ACHP Pvt. Ltd.</span></div>
+                            <div><label>Designation</label><span>CFO</span></div>
+                            <div><label>User Level</label><span>Administrator</span></div>
+                        </div>
+                    </section>
+                    <div class="pivot-settings-divider"></div>
+                    <div class="pivot-subscription"><span>Renew Subscription</span><strong>90 days</strong></div>
+                    <div class="pivot-settings-divider"></div>
+                    <section class="pivot-settings-control">
+                        <label>Period Selector</label>
+                        <div><button type="button" class="pivot-selector-btn active" data-pivot-period="current-year">CURRENT YEAR</button><button type="button" class="pivot-selector-btn" data-pivot-period="cytd-pytd">CYTD Vs PYTD</button></div>
+                    </section>
+                    <section class="pivot-settings-control">
+                        <label>Amount Selector</label>
+                        <div><button type="button" class="pivot-selector-btn active" data-pivot-amount="crores">Cr.</button><button type="button" class="pivot-selector-btn" data-pivot-amount="lakhs">Lakhs</button></div>
+                    </section>
+                    <div class="pivot-settings-divider"></div>
+                    <button type="button" id="pivotSwitchCompanyBtn" class="pivot-settings-option" aria-expanded="false">Switch Company <span>⌄</span></button>
+                    <fieldset id="pivotCompanySelector" class="pivot-company-selector" hidden>
+                        <legend>Choose company</legend>
+                        <label><input type="checkbox" id="pivotSelectAllCompanies"> Select All</label>
+                        <label><input type="checkbox" name="pivot-active-company" value="ACHP Pvt. Ltd." checked> ACHP Pvt. Ltd.</label>
+                        <label><input type="checkbox" name="pivot-active-company" value="InTallygence Pvt. Ltd."> InTallygence Pvt. Ltd.</label>
+                        <label><input type="checkbox" name="pivot-active-company" value="Demo Company Pvt. Ltd."> Demo Company Pvt. Ltd.</label>
+                    </fieldset>
+                    <form action="{{ url_for('logout') }}" method="POST"><button type="submit" class="pivot-settings-option pivot-signout-option"><img src="{{ url_for('static', filename='images/signout.svg') }}" alt=""> Sign Out</button></form>
+                </div>
+            </div>
+        </div>
+
+    </header>
     <!-- =================================
      REPORT TYPE BUILDERS
 ================================== -->
@@ -367,6 +407,7 @@
             <label class="builder-action-label" aria-hidden="true">Action</label>
             <div class="control-row">
                 <button
+                    type="button"
                     id="generate"
                     class="go-button">
 
@@ -555,6 +596,24 @@ and delete redundant reports.
 
     </div>
 
+    </div>
+
+    <div id="reportValidationModal" class="report-validation-modal" role="alertdialog" aria-modal="true" aria-labelledby="reportValidationTitle" hidden>
+        <div class="report-validation-dialog">
+            <div class="report-validation-icon" aria-hidden="true">!</div>
+            <h2 id="reportValidationTitle">Complete your report setup</h2>
+            <p id="reportValidationMessage"></p>
+            <button type="button" id="closeReportValidation">OK</button>
+        </div>
+</div>
+
+<div id="pivotAiModal" class="pivot-ai-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pivotAiTitle">
+    <div class="pivot-ai-dialog">
+        <button type="button" id="closePivotAiModal" class="pivot-ai-close" aria-label="Close">×</button>
+        <img src="{{ url_for('static', filename='images/ai mode.svg') }}" alt="">
+        <h2 id="pivotAiTitle">AI Mode</h2>
+        <p>Coming soon</p>
+    </div>
 </div>
 <!-- =====================================
      DATE COLUMNS

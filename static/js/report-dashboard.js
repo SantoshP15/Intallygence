@@ -185,11 +185,16 @@ function openReportModal(categoryKey) {
 
 
     listContainer.innerHTML =
-        data.items.map(item => `
+        data.items.map(item => {
+            const customerLevelLink =
+                categoryKey === "sales" && item === "Customer Level";
+
+            return `
 
             <a
-                href="#"
+                href="${customerLevelLink ? "/customer-level" : "#"}"
                 class="modal-report-item"
+                ${customerLevelLink ? 'aria-label="Open Customer Level report"' : 'aria-disabled="true"'}
             >
 
                 <span>
@@ -200,7 +205,8 @@ function openReportModal(categoryKey) {
 
             </a>
 
-        `).join("");
+        `;
+        }).join("");
 
 
     // Show modal

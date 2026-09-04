@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Level | InTallygence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-level.css') }}">
+</head>
+<body>
+    <main class="customer-report">
+        <header class="customer-report__header">
+            <a class="back-link" href="{{ url_for('report_dashboard') }}"><i class="fa-solid fa-arrow-left"></i> Reports</a>
+            <div><p class="eyebrow">Sales Reports</p><h1>Customer Level</h1><p class="subtitle">Customer-wise sales, contribution and running percentage.</p></div>
+        </header>
+        <section class="report-parameter" aria-label="Report parameters">
+            <div class="parameter-heading"><i class="fa-regular fa-calendar"></i><div><h2>Period</h2><p>This is the only report parameter.</p></div></div>
+            <form id="periodForm" class="period-form">
+                <label>From <input id="fromDate" type="date" required></label>
+                <label>To <input id="toDate" type="date" required></label>
+                <button type="submit"><i class="fa-solid fa-rotate"></i> Apply period</button>
+            </form>
+        </section>
+        <section class="report-table-card" aria-live="polite"><div id="reportStatus" class="report-status">Loading customer sales…</div><div id="tableWrap" class="table-wrap" hidden></div></section>
+    </main>
+    <script src="{{ url_for('static', filename='js/customer-level.js') }}"></script>
+</body>
+</html>
