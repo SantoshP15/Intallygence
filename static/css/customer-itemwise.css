@@ -1,0 +1,949 @@
+/* =========================================================
+   CUSTOMER-ITEMWISE REPORT
+========================================================= */
+
+:root {
+    color-scheme: light;
+    font-family: "Inter", Arial, sans-serif;
+    color: #17223b;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    background: #ffffff;
+    color: #17223b;
+
+    font-family: "Inter", Arial, sans-serif;
+}
+
+
+/* =========================================================
+   MAIN REPORT CONTAINER
+   Same spacing as Report Dashboard
+========================================================= */
+
+.customer-itemwise-report {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 16px 3.5%;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   REPORT TOP
+   Title on left + filters on right
+========================================================= */
+
+.report-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   REPORT TITLE
+========================================================= */
+
+.report-title {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 18px;
+
+    min-width: 0;
+    flex: 1;
+}
+
+
+.header-content {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   BACK LINK
+========================================================= */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    width: fit-content;
+
+    margin-top: 2px;
+
+    color: #1558a6;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.back-link:hover {
+    color: #0d47a1;
+}
+
+
+.back-link i {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+    margin: 0 0 4px;
+
+    color: #64748b;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+/* =========================================================
+   REPORT TITLE
+========================================================= */
+
+.header-content h1 {
+    margin: 0;
+
+    color: #102a4c;
+
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SUBTITLE
+========================================================= */
+
+.subtitle {
+    margin: 7px 0 0;
+
+    color: #58708f;
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   PERIOD / FILTER FORM
+========================================================= */
+
+.period-form {
+    display: flex;
+    align-items: flex-end;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    padding: 14px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 18px rgb(24 48 86 / 7%);
+}
+
+
+/* =========================================================
+   FILTER LABEL
+========================================================= */
+
+.period-form label {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DATE INPUT
+========================================================= */
+
+.period-form input {
+    width: 138px;
+    height: 38px;
+
+    padding: 0 10px;
+
+    box-sizing: border-box;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #b9cce2;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    outline: none;
+}
+
+
+.period-form input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   CUSTOMER FILTER
+========================================================= */
+
+.period-form select {
+    width: 220px;
+    height: 38px;
+
+    padding: 0 34px 0 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #b9cce2;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+
+    cursor: pointer;
+
+    appearance: auto;
+}
+
+
+.period-form select:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   APPLY BUTTON
+========================================================= */
+
+.period-form button {
+    height: 38px;
+
+    padding: 0 15px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    border: 1px solid #2462a3;
+    border-radius: 7px;
+
+    background: #2462a3;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.period-form button:hover {
+    background: #1d568f;
+    border-color: #1d568f;
+}
+
+
+.period-form button:focus {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgb(36 98 163 / 15%);
+}
+
+
+.period-form button:active {
+    transform: translateY(1px);
+}
+
+
+.period-form button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   REPORT TABLE CARD
+========================================================= */
+
+.report-table-card {
+    width: 100%;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 12px;
+
+    box-shadow:
+        0 5px 18px rgb(24 48 86 / 7%);
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.report-status {
+    padding: 16px 20px;
+
+    color: #66758a;
+
+    font-size: 12px;
+
+    text-align: left;
+}
+
+
+.report-status.error {
+    color: #b42318;
+}
+
+
+.report-status.success {
+    color: #3f5f78;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.table-wrap {
+    position: relative;
+
+    width: 100%;
+
+    max-height: calc(100vh - 220px);
+
+    overflow: auto;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.customer-itemwise-table {
+    width: 100%;
+    min-width: 850px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLE HEADERS
+========================================================= */
+
+.customer-itemwise-table th {
+    padding: 10px 8px;
+
+    color: #132a46;
+    background: #c9e8f5;
+
+    border-right: 1px solid #a9cede;
+    border-bottom: 1px solid #a9cede;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-align: right;
+}
+
+
+.customer-itemwise-table thead tr:first-child th {
+    text-align: center;
+}
+
+
+.customer-itemwise-table thead tr:nth-child(2) th {
+    text-align: right;
+}
+
+
+.customer-itemwise-table th:last-child {
+    border-right: none;
+}
+
+
+/* =========================================================
+   SORTABLE HEADERS
+========================================================= */
+
+.customer-itemwise-table th.sortable-header {
+    cursor: pointer !important;
+
+    user-select: none;
+}
+
+
+.customer-itemwise-table th.sortable-header:hover {
+    background: #b9deed;
+}
+
+
+/* =========================================================
+   CUSTOMER / ITEM COLUMNS
+========================================================= */
+
+.customer-itemwise-table th.customer-column,
+.customer-itemwise-table td.customer-column {
+    text-align: left;
+}
+
+
+.customer-itemwise-table th.item-column,
+.customer-itemwise-table td.item-column {
+    text-align: left;
+}
+
+
+/* =========================================================
+   FIXED CUSTOMER COLUMN
+========================================================= */
+
+/*
+   Only Customer stays fixed.
+
+   The first column remains visible while
+   horizontally scrolling the report.
+*/
+
+
+.customer-itemwise-table thead tr:first-child th:first-child {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 8;
+
+    min-width: 220px;
+    width: 220px;
+
+    background: #c9e8f5;
+}
+
+
+.customer-itemwise-table tbody td:first-child {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 5;
+
+    min-width: 220px;
+    width: 220px;
+    max-width: 220px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.customer-itemwise-table tfoot td:first-child {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 7;
+
+    min-width: 220px;
+    width: 220px;
+    max-width: 220px;
+
+    background: #ddecf4;
+}
+
+
+/* =========================================================
+   ITEM COLUMN
+========================================================= */
+
+.customer-itemwise-table tbody td.item-column {
+    min-width: 220px;
+    max-width: 300px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+========================================================= */
+
+.customer-itemwise-table td {
+    padding: 9px 8px;
+
+    color: #26364d;
+    background: #ffffff;
+
+    border-right: 1px solid #e6edf4;
+    border-bottom: 1px solid #e6edf4;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+.customer-itemwise-table tbody td.customer-column {
+    color: #17223b;
+
+    font-weight: 700;
+}
+
+
+.customer-itemwise-table tbody td.item-column {
+    color: #334155;
+}
+
+
+.customer-itemwise-table td:last-child {
+    border-right: none;
+}
+
+
+/* =========================================================
+   ROW HOVER
+========================================================= */
+
+.customer-itemwise-table tbody tr:hover td {
+    background: #f0f8fc;
+}
+
+
+.customer-itemwise-table tbody tr:hover td:first-child {
+    background: #f0f8fc;
+}
+
+
+/* =========================================================
+   RUNNING %
+========================================================= */
+
+.customer-itemwise-table .running {
+    color: #385879;
+}
+
+
+/* =========================================================
+   CUSTOMER GROUP
+========================================================= */
+
+.customer-itemwise-table .customer-group-start td {
+    border-top: 1px solid #cbd9e6;
+}
+
+
+.customer-itemwise-table .customer-group-start td.customer-column {
+    color: #17223b;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TOTAL ROW
+========================================================= */
+
+.customer-itemwise-table .total {
+    background: #f6fbfd;
+
+    font-weight: 700;
+}
+
+
+.customer-itemwise-table .total td {
+    background: #f6fbfd;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER / GRAND TOTAL
+========================================================= */
+
+.customer-itemwise-table tfoot td {
+    padding: 10px 8px;
+
+    color: #132a46;
+    background: #ddecf4;
+
+    border-top: 2px solid #9ec5d8;
+
+    font-weight: 700;
+}
+
+
+.customer-itemwise-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+.customer-itemwise-table tfoot td:last-child {
+    border-right: none;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 32px;
+
+    color: #66758a;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.report-loading {
+    min-height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.report-error {
+    margin: 15px;
+
+    padding: 13px 15px;
+
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+
+    background: #fef2f2;
+    color: #b91c1c;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.table-wrap::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+
+.table-wrap::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: #b7c7d8;
+
+    border-radius: 10px;
+}
+
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #94a9bd;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .customer-itemwise-report {
+        padding: 16px 12px 25px;
+    }
+
+
+    .report-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 18px;
+    }
+
+
+    .report-title {
+        width: 100%;
+    }
+
+
+    .period-form {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+
+    .period-form select {
+        width: 220px;
+    }
+
+
+    .period-form input {
+        width: 138px;
+    }
+
+
+    .table-wrap {
+        max-height: calc(100vh - 270px);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .customer-itemwise-report {
+        padding: 12px 8px 20px;
+    }
+
+
+    .report-top {
+        gap: 15px;
+    }
+
+
+    .report-title {
+        gap: 12px;
+    }
+
+
+    .header-content h1 {
+        font-size: 23px;
+    }
+
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+
+    .period-form {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        width: 100%;
+
+        gap: 10px;
+
+        padding: 12px;
+    }
+
+
+    .period-form label {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .period-form select,
+    .period-form input {
+        width: 100%;
+    }
+
+
+    .period-form button {
+        width: 100%;
+
+        grid-column: 1 / -1;
+    }
+
+
+    .table-wrap {
+        max-height: calc(100vh - 300px);
+    }
+
+
+    .customer-itemwise-table {
+        min-width: 760px;
+    }
+
+
+    .customer-itemwise-table thead tr:first-child th:first-child,
+    .customer-itemwise-table tbody td:first-child,
+    .customer-itemwise-table tfoot td:first-child {
+        min-width: 180px;
+
+        width: 180px;
+
+        max-width: 180px;
+    }
+
+
+    .customer-itemwise-table tbody td.item-column {
+        min-width: 180px;
+
+        max-width: 240px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 450px) {
+
+    .customer-itemwise-report {
+        padding: 10px 6px 16px;
+    }
+
+
+    .report-title {
+        gap: 10px;
+    }
+
+
+    .back-link {
+        font-size: 13px;
+    }
+
+
+    .header-content h1 {
+        font-size: 21px;
+    }
+
+
+    .subtitle {
+        font-size: 12px;
+    }
+
+
+    .period-form {
+        padding: 10px;
+    }
+
+
+    .customer-itemwise-table {
+        min-width: 720px;
+    }
+}

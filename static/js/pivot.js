@@ -559,7 +559,7 @@ document.body.appendChild(popup);
             popup.style.top = (rect.bottom + 6) + "px";
             popup.style.width = "260px";
             popup.style.maxHeight = "400px";
-            popup.style.overflowY = "auto";
+            popup.style.overflowY = "visible";
 
             popup.style.display =
                 popup.style.display === "block"
@@ -1832,45 +1832,39 @@ if (resetReportBtn) {
     );
 
 }
+// ============================================================
+// DATE FILTER
+// ============================================================
+
 function createDateFilter(filter, popup, summary) {
 
     popup.innerHTML = "";
 
-    // --------------------------
-    // FROM DATE
-    // --------------------------
+    // ========================================================
+    // DATE HIERARCHY FIRST
+    // ========================================================
 
-    const fromLabel = document.createElement("label");
-    fromLabel.innerText = "From";
+    const hierarchyContainer = document.createElement("div");
 
-    popup.appendChild(fromLabel);
+    hierarchyContainer.className = "date-tree";
 
-    const fromInput = document.createElement("input");
-    fromInput.type = "text";
-    fromInput.className = "date-picker";
-    fromInput.placeholder = "Start Date";
+    popup.appendChild(hierarchyContainer);
 
-    popup.appendChild(fromInput);
 
-    // --------------------------
-    // TO DATE
-    // --------------------------
+    // ========================================================
+    // LOAD YEAR / MONTH / DATE HIERARCHY
+    // ========================================================
 
-    const toLabel = document.createElement("label");
-    toLabel.innerText = "To";
+    loadDateHierarchy(
+        filter.field,
+        hierarchyContainer,
+        filter
+    );
 
-    popup.appendChild(toLabel);
 
-    const toInput = document.createElement("input");
-    toInput.type = "text";
-    toInput.className = "date-picker";
-    toInput.placeholder = "End Date";
-
-    popup.appendChild(toInput);
-
-    // --------------------------
-    // APPLY
-    // --------------------------
+    // ========================================================
+    // APPLY BUTTON
+    // ========================================================
 
     const apply = document.createElement("button");
 
@@ -1880,139 +1874,224 @@ function createDateFilter(filter, popup, summary) {
 
     popup.appendChild(apply);
 
-    // --------------------------
-    // Hierarchy Title
-    // --------------------------
+
+    // ========================================================
+    // SEPARATOR
+    // ========================================================
 
     const hr = document.createElement("hr");
+
     popup.appendChild(hr);
 
-    const heading = document.createElement("div");
 
-    heading.className = "date-heading";
-    heading.innerHTML = "<strong>Browse Dates</strong>";
-
-    popup.appendChild(heading);
-
-// --------------------------
-// Search Box
-// --------------------------
-
-    const search = document.createElement("input");
-
-    search.type = "text";
-    search.placeholder = "Search...";
-    search.className = "filter-search";
-
-    popup.appendChild(search);
-
-// --------------------------
-// Hierarchy Container
-// --------------------------
-
-    const hierarchyContainer = document.createElement("div");
-
-    hierarchyContainer.className = "date-tree";
-
-    popup.appendChild(hierarchyContainer);
-
-// Load hierarchy
-
-    loadDateHierarchy(
-        filter.field,
-        hierarchyContainer,
-        filter
-    );
-
-
-    // --------------------------
-    // Flatpickr Date Range
-    // --------------------------
-
-    let fromPicker;
-    let toPicker;
-
-
+    // ========================================================
     // FROM DATE
-    fromPicker = flatpickr(fromInput, {
-        dateFormat: "Y-m-d",
+    // ========================================================
 
-        onChange: function(selectedDates) {
+    const fromLabel = document.createElement("label");
 
-            if (selectedDates.length === 0)
-                return;
+    fromLabel.innerText = "From";
 
-            const fromDate = selectedDates[0];
-
-            // To date cannot be before From date
-            toPicker.set("minDate", fromDate);
-
-            // If existing To date is invalid, clear it
-            if (toInput.value && toInput.value < fromInput.value) {
-                toPicker.clear();
-            }
-        }
-    });
+    popup.appendChild(fromLabel);
 
 
-    // TO DATE
-    toPicker = flatpickr(toInput, {
-        dateFormat: "Y-m-d",
+    const fromInput = document.createElement("input");
 
-        onChange: function(selectedDates) {
+    fromInput.type = "text";
 
-            if (
-                selectedDates.length > 0 &&
-                fromInput.value &&
-                toInput.value < fromInput.value
-            ) {
-                alert("To date cannot be earlier than From date.");
-            toPicker.clear();
-            }
+    fromInput.className = "date-picker";
+
+    fromInput.placeholder = "Start Date";
+
+    if (filter.from) {
+        fromInput.value = filter.from;
     }
-});
 
-    // --------------------------
-    // Apply
-    // --------------------------
+    popup.appendChild(fromInput);
 
-    apply.onclick = function () {
 
-    // =====================================
-    // DATE RANGE VALIDATION
-    // =====================================
+    // ========================================================
+    // TO DATE
+    // ========================================================
 
-    if (fromInput.value && toInput.value) {
+    const toLabel = document.createElement("label");
 
-        if (toInput.value < fromInput.value) {
+    toLabel.innerText = "To";
 
-            alert("To date cannot be earlier than From date.");
+    popup.appendChild(toLabel);
 
+
+    const toInput = document.createElement("input");
+
+    toInput.type = "text";
+
+    toInput.className = "date-picker";
+
+    toInput.placeholder = "End Date";
+
+    if (filter.to) {
+        toInput.value = filter.to;
+    }
+
+    popup.appendChild(toInput);
+
+
+    // =========================================================
+// FLATPICKR DATE RANGE
+// =========================================================
+
+let fromPicker;
+let toPicker;
+
+
+// =========================================================
+// FROM DATE
+// =========================================================
+
+fromPicker = flatpickr(fromInput, {
+
+    dateFormat: "Y-m-d",
+
+    allowInput: true,
+
+    positionElement: fromInput,
+
+    position: "below",
+
+    static: false,
+
+    onChange: function(selectedDates) {
+
+        if (selectedDates.length === 0) {
             return;
         }
 
-        filter.selectedDates = [];
+        const fromDate = selectedDates[0];
 
-        filter.from = fromInput.value;
-        filter.to = toInput.value;
+        // To date cannot be before From date
+        toPicker.set("minDate", fromDate);
 
-        summary.innerHTML =
-            filter.field +
-            "  " +
-            filter.from +
-            " → " +
-            filter.to;
+        // Clear existing invalid To date
+        if (
+            toInput.value &&
+            toInput.value < fromInput.value
+        ) {
+            toPicker.clear();
+        }
     }
 
-    // =====================================
-    // HIERARCHY SELECTION
-    // =====================================
-    else {
+});
+
+
+// =========================================================
+// TO DATE
+// =========================================================
+
+toPicker = flatpickr(toInput, {
+
+    dateFormat: "Y-m-d",
+
+    allowInput: true,
+
+    positionElement: toInput,
+
+    position: "below",
+
+    static: false,
+
+    onChange: function(selectedDates) {
+
+        if (
+            selectedDates.length > 0 &&
+            fromInput.value &&
+            toInput.value < fromInput.value
+        ) {
+
+            alert(
+                "To date cannot be earlier than From date."
+            );
+
+            toPicker.clear();
+        }
+    }
+
+});
+
+    // ========================================================
+    // APPLY
+    // ========================================================
+
+    apply.onclick = function(e) {
+
+        e.preventDefault();
+
+        e.stopPropagation();
+
+
+        // ====================================================
+        // DATE RANGE
+        // ====================================================
+
+        if (
+            fromInput.value &&
+            toInput.value
+        ) {
+
+            if (
+                toInput.value <
+                fromInput.value
+            ) {
+
+                alert(
+                    "To date cannot be earlier than From date."
+                );
+
+                return;
+
+            }
+
+
+            // Clear hierarchy selection
+            filter.selectedDates = [];
+
+
+            // Save range
+            filter.from =
+                fromInput.value;
+
+            filter.to =
+                toInput.value;
+
+
+            // Update summary
+            summary.innerHTML =
+                filter.field +
+                "  " +
+                filter.from +
+                " → " +
+                filter.to;
+
+
+            popup.style.display = "none";
+
+            return;
+
+        }
+
+
+        // ====================================================
+        // HIERARCHY DATE SELECTION
+        // ====================================================
 
         filter.from = "";
+
         filter.to = "";
 
-        if (filter.selectedDates.length > 0) {
+
+        if (
+            filter.selectedDates &&
+            filter.selectedDates.length > 0
+        ) {
 
             summary.innerHTML =
                 filter.field +
@@ -2020,50 +2099,79 @@ function createDateFilter(filter, popup, summary) {
                 filter.selectedDates.length +
                 " date(s) selected";
 
-        } else {
+        }
+
+        else {
 
             summary.innerHTML =
                 "Select Date Range ▼";
-        }
-    }
 
-    popup.style.display = "none";
-};
+        }
+
+
+        popup.style.display = "none";
+
+    };
 
 }
-function loadDateHierarchy(field, container, filter)
-{
+
+
+// ============================================================
+// LOAD DATE HIERARCHY
+// ============================================================
+
+function loadDateHierarchy(field, container, filter) {
+
     container.innerHTML = "Loading...";
 
-    fetch("/date-hierarchy/" + encodeURIComponent(field) + "?table=" + encodeURIComponent(currentDataSource))
-    .then(r => r.json())
+    // Make sure the hierarchy can receive mouse events
+    container.style.pointerEvents = "auto";
+    container.style.position = "relative";
+    container.style.zIndex = "2";
+
+    if (!filter.selectedDates) {
+        filter.selectedDates = [];
+    }
+
+    fetch(
+        "/date-hierarchy/" +
+        encodeURIComponent(field) +
+        "?table=" +
+        encodeURIComponent(currentDataSource)
+    )
+    .then(response => response.json())
     .then(data => {
 
         container.innerHTML = "";
 
-        if(!filter.selectedDates)
-            filter.selectedDates=[];
+        Object.keys(data).forEach(year => {
 
-        Object.keys(data).forEach(year=>{
-
-            // ======================
+            // =========================================
             // YEAR
-            // ======================
+            // =========================================
 
-            const yearDiv=document.createElement("div");
-            yearDiv.className="tree-year";
+            const yearDiv = document.createElement("div");
+            yearDiv.className = "tree-year";
 
-            const yearHeader=document.createElement("div");
-            yearHeader.className="tree-header";
+            const yearHeader = document.createElement("div");
+            yearHeader.className = "tree-header";
 
-            const yearToggle=document.createElement("span");
-            yearToggle.innerHTML="▶";
+            yearHeader.style.pointerEvents = "auto";
+            yearHeader.style.cursor = "pointer";
 
-            const yearCheck=document.createElement("input");
-            yearCheck.type="checkbox";
+            const yearToggle = document.createElement("span");
+            yearToggle.innerHTML = "▶";
+            yearToggle.style.cursor = "pointer";
+            yearToggle.style.pointerEvents = "auto";
 
-            const yearText=document.createElement("span");
-            yearText.innerText=" "+year;
+            const yearCheck = document.createElement("input");
+            yearCheck.type = "checkbox";
+            yearCheck.style.pointerEvents = "auto";
+            yearCheck.style.cursor = "pointer";
+
+            const yearText = document.createElement("span");
+            yearText.innerText = " " + year;
+            yearText.style.cursor = "pointer";
 
             yearHeader.appendChild(yearToggle);
             yearHeader.appendChild(yearCheck);
@@ -2071,50 +2179,66 @@ function loadDateHierarchy(field, container, filter)
 
             yearDiv.appendChild(yearHeader);
 
-            const yearBody=document.createElement("div");
-            yearBody.className="tree-body";
-            yearBody.style.display="none";
+            const yearBody = document.createElement("div");
+            yearBody.className = "tree-body";
+            yearBody.style.display = "none";
+            yearBody.style.pointerEvents = "auto";
 
             yearDiv.appendChild(yearBody);
 
-            // expand collapse
+            // =========================================
+            // YEAR EXPAND / COLLAPSE
+            // =========================================
 
-            yearToggle.onclick=function(){
+            function toggleYear(event) {
 
-                if(yearBody.style.display==="none"){
+                event.preventDefault();
+                event.stopPropagation();
 
-                    yearBody.style.display="block";
-                    yearToggle.innerHTML="▼";
+                if (yearBody.style.display === "none") {
 
-                }else{
+                    yearBody.style.display = "block";
+                    yearToggle.innerHTML = "▼";
 
-                    yearBody.style.display="none";
-                    yearToggle.innerHTML="▶";
+                } else {
 
+                    yearBody.style.display = "none";
+                    yearToggle.innerHTML = "▶";
                 }
+            }
 
-            };
+            yearToggle.addEventListener("click", toggleYear);
 
-            // ======================
-            // MONTH
-            // ======================
+            yearText.addEventListener("click", toggleYear);
 
-            Object.keys(data[year]).forEach(month=>{
+            // =========================================
+            // MONTHS
+            // =========================================
 
-                const monthDiv=document.createElement("div");
-                monthDiv.className="tree-month";
+            Object.keys(data[year]).forEach(month => {
 
-                const monthHeader=document.createElement("div");
-                monthHeader.className="tree-header";
+                const monthDiv = document.createElement("div");
+                monthDiv.className = "tree-month";
 
-                const monthToggle=document.createElement("span");
-                monthToggle.innerHTML="▶";
+                const monthHeader = document.createElement("div");
+                monthHeader.className = "tree-header";
 
-                const monthCheck=document.createElement("input");
-                monthCheck.type="checkbox";
+                monthHeader.style.pointerEvents = "auto";
+                monthHeader.style.cursor = "pointer";
 
-                const monthText=document.createElement("span");
-                monthText.innerText=" "+month;
+                const monthToggle = document.createElement("span");
+                monthToggle.innerHTML = "▶";
+                monthToggle.style.cursor = "pointer";
+                monthToggle.style.pointerEvents = "auto";
+
+                const monthCheck = document.createElement("input");
+                monthCheck.type = "checkbox";
+                monthCheck.style.pointerEvents = "auto";
+                monthCheck.style.cursor = "pointer";
+
+                const monthText = document.createElement("span");
+                monthText.innerText = " " + month;
+                monthText.style.cursor = "pointer";
 
                 monthHeader.appendChild(monthToggle);
                 monthHeader.appendChild(monthCheck);
@@ -2122,114 +2246,182 @@ function loadDateHierarchy(field, container, filter)
 
                 monthDiv.appendChild(monthHeader);
 
-                const monthBody=document.createElement("div");
-                monthBody.className="tree-body";
-                monthBody.style.display="none";
+                const monthBody = document.createElement("div");
+                monthBody.className = "tree-body";
+                monthBody.style.display = "none";
+                monthBody.style.pointerEvents = "auto";
 
                 monthDiv.appendChild(monthBody);
 
-                monthToggle.onclick=function(){
+                // =========================================
+                // MONTH EXPAND / COLLAPSE
+                // =========================================
 
-                    if(monthBody.style.display==="none"){
+                function toggleMonth(event) {
 
-                        monthBody.style.display="block";
-                        monthToggle.innerHTML="▼";
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                    }else{
+                    if (monthBody.style.display === "none") {
 
-                        monthBody.style.display="none";
-                        monthToggle.innerHTML="▶";
+                        monthBody.style.display = "block";
+                        monthToggle.innerHTML = "▼";
 
+                    } else {
+
+                        monthBody.style.display = "none";
+                        monthToggle.innerHTML = "▶";
+                    }
+                }
+
+                monthToggle.addEventListener("click", toggleMonth);
+
+                monthText.addEventListener("click", toggleMonth);
+
+                // =========================================
+                // DATES
+                // =========================================
+
+                data[year][month].forEach(date => {
+
+                    const label = document.createElement("label");
+                    label.className = "checkbox-item";
+
+                    label.style.pointerEvents = "auto";
+                    label.style.cursor = "pointer";
+                    label.style.display = "flex";
+
+                    const check = document.createElement("input");
+
+                    check.type = "checkbox";
+                    check.value = date;
+
+                    check.style.pointerEvents = "auto";
+                    check.style.cursor = "pointer";
+
+                    if (filter.selectedDates.includes(date)) {
+                        check.checked = true;
                     }
 
-                };
+                    // =====================================
+                    // DATE CHECKBOX
+                    // =====================================
 
-                // ======================
-                // DATES
-                // ======================
+                    check.addEventListener("click", function(event) {
 
-                data[year][month].forEach(date=>{
+                        event.stopPropagation();
 
-                    const label=document.createElement("label");
-                    label.className="checkbox-item";
+                    });
 
-                    const check=document.createElement("input");
+                    check.addEventListener("change", function(event) {
 
-                    check.type="checkbox";
-                    check.value=date;
-
-                    if(filter.selectedDates.includes(date))
-                        check.checked=true;
-
-                    check.onchange = function () {
-
-                        console.log("Clicked:", date);
-
-                        if (!filter.selectedDates)
-                            filter.selectedDates = [];
+                        event.stopPropagation();
 
                         if (this.checked) {
 
-                            if (!filter.selectedDates.includes(date))
+                            if (!filter.selectedDates.includes(date)) {
                                 filter.selectedDates.push(date);
+                            }
 
                         } else {
 
                             filter.selectedDates =
-                                filter.selectedDates.filter(d => d !== date);
-
+                                filter.selectedDates.filter(
+                                    d => d !== date
+                                );
                         }
 
-                        console.log("selectedDates =", filter.selectedDates);
-                        console.log("Length =", filter.selectedDates.length);
-                        console.log("pivotConfig =", pivotConfig.filters);
-
-                    };
-
-                    label.appendChild(check);
-                    label.append(" "+date);
-
-                    monthBody.appendChild(label);
-
-                });
-
-                // Month select all
-
-                monthCheck.onchange=function(){
-
-                    monthBody.querySelectorAll("input").forEach(c=>{
-
-                        c.checked=this.checked;
-                        c.dispatchEvent(new Event("change"));
+                        console.log(
+                            "Selected dates:",
+                            filter.selectedDates
+                        );
 
                     });
 
-                };
+                    label.appendChild(check);
+                    label.append(" " + date);
 
-                yearBody.appendChild(monthDiv);
+                    monthBody.appendChild(label);
+                });
 
-            });
+                // =========================================
+                // MONTH SELECT ALL
+                // =========================================
 
-            // Year select all
+                monthCheck.addEventListener("click", function(event) {
+                    event.stopPropagation();
+                });
 
-            yearCheck.onchange=function(){
+                monthCheck.addEventListener("change", function(event) {
 
-                yearBody.querySelectorAll("input").forEach(c=>{
+                    event.stopPropagation();
 
-                    c.checked=this.checked;
-                    c.dispatchEvent(new Event("change"));
+                    const dateCheckboxes =
+                        monthBody.querySelectorAll(
+                            'input[type="checkbox"]'
+                        );
+
+                    dateCheckboxes.forEach(check => {
+
+                        check.checked = this.checked;
+
+                        check.dispatchEvent(
+                            new Event("change", {
+                                bubbles: false
+                            })
+                        );
+
+                    });
 
                 });
 
-            };
+                yearBody.appendChild(monthDiv);
+            });
+
+            // =========================================
+            // YEAR SELECT ALL
+            // =========================================
+
+            yearCheck.addEventListener("click", function(event) {
+                event.stopPropagation();
+            });
+
+            yearCheck.addEventListener("change", function(event) {
+
+                event.stopPropagation();
+
+                const monthCheckboxes =
+                    yearBody.querySelectorAll(
+                        '.tree-month > .tree-header input[type="checkbox"]'
+                    );
+
+                monthCheckboxes.forEach(check => {
+
+                    check.checked = this.checked;
+
+                    check.dispatchEvent(
+                        new Event("change", {
+                            bubbles: false
+                        })
+                    );
+
+                });
+
+            });
 
             container.appendChild(yearDiv);
-
         });
 
-    });
+    })
+    .catch(error => {
 
-}
+        console.error("Date hierarchy error:", error);
+
+        container.innerHTML =
+            "Unable to load dates.";
+
+    });
+}   
 const generateButton = document.getElementById("generate");
 const builderArea = document.getElementById("builderArea");
 const infoArea = document.querySelector(".info-area");
@@ -2289,61 +2481,327 @@ document.getElementById("reportValidationModal")?.addEventListener("click", func
     if (event.target === this) closeReportValidation();
 });
 
-const pivotAiBtn = document.getElementById("pivotAiBtn");
+const pivotAiBtn = document.querySelector(".ai-mode-btn");
 const pivotAiModal = document.getElementById("pivotAiModal");
 const closePivotAiModal = document.getElementById("closePivotAiModal");
-const pivotSettingsBtn = document.getElementById("pivotSettingsBtn");
-const pivotSettingsMenu = document.getElementById("pivotSettingsMenu");
 
-pivotAiBtn?.addEventListener("click", () => { pivotAiModal.hidden = false; });
-closePivotAiModal?.addEventListener("click", () => { pivotAiModal.hidden = true; });
-pivotAiModal?.addEventListener("click", function (event) { if (event.target === this) this.hidden = true; });
-pivotSettingsBtn?.addEventListener("click", function (event) {
+// ============================================================
+// SHARED HEADER CONTROLS
+// ============================================================
+
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsPopup = document.getElementById("settingsPopup");
+
+const switchCompanyBtn = document.getElementById("switchCompanyBtn");
+const companySelector = document.getElementById("companySelector");
+
+const selectAllCompanies =
+    document.getElementById("selectAllCompanies");
+
+const activeCompanyName =
+    document.getElementById("activeCompanyName");
+
+const companyInputs = [
+    ...document.querySelectorAll('input[name="active-company"]')
+];
+
+
+// ============================================================
+// PIVOT AI
+// ============================================================
+
+pivotAiBtn?.addEventListener("click", function (event) {
+
     event.stopPropagation();
-    const isOpen = pivotSettingsMenu.hidden;
-    pivotSettingsMenu.hidden = !isOpen;
-    this.setAttribute("aria-expanded", String(isOpen));
-});
-document.addEventListener("click", event => {
-    if (pivotSettingsMenu && !pivotSettingsMenu.hidden && !event.target.closest(".pivot-settings-wrap")) {
-        pivotSettingsMenu.hidden = true;
-        pivotSettingsBtn?.setAttribute("aria-expanded", "false");
+
+    if (pivotAiModal) {
+        pivotAiModal.hidden = false;
     }
 });
 
-document.querySelectorAll("[data-pivot-period]").forEach(button => {
-    button.addEventListener("click", function () {
-        document.querySelectorAll("[data-pivot-period]").forEach(item => item.classList.remove("active"));
-        this.classList.add("active");
+closePivotAiModal?.addEventListener("click", function () {
+
+    if (pivotAiModal) {
+        pivotAiModal.hidden = true;
+    }
+});
+
+pivotAiModal?.addEventListener("click", function (event) {
+
+    if (event.target === this) {
+        this.hidden = true;
+    }
+});
+
+
+// ============================================================
+// SETTINGS
+// ============================================================
+
+settingsBtn?.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    if (!settingsPopup) {
+        return;
+    }
+
+    const open =
+        settingsPopup.classList.toggle("show");
+
+    this.setAttribute(
+        "aria-expanded",
+        String(open)
+    );
+});
+
+
+// Don't let clicks INSIDE settings close it.
+settingsPopup?.addEventListener(
+    "click",
+    function (event) {
+        event.stopPropagation();
+    }
+);
+
+
+// ============================================================
+// PERIOD
+// ============================================================
+
+document
+    .querySelectorAll(".selector-btn[data-period]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                document
+                    .querySelectorAll(
+                        ".selector-btn[data-period]"
+                    )
+                    .forEach(item => {
+                        item.classList.remove("active");
+                    });
+
+                this.classList.add("active");
+            }
+        );
     });
-});
 
-document.querySelectorAll("[data-pivot-amount]").forEach(button => {
-    button.addEventListener("click", function () {
-        document.querySelectorAll("[data-pivot-amount]").forEach(item => item.classList.remove("active"));
-        this.classList.add("active");
+
+// ============================================================
+// AMOUNT
+// ============================================================
+
+document
+    .querySelectorAll(".selector-btn[data-amount]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                document
+                    .querySelectorAll(
+                        ".selector-btn[data-amount]"
+                    )
+                    .forEach(item => {
+                        item.classList.remove("active");
+                    });
+
+                this.classList.add("active");
+            }
+        );
     });
+
+
+// ============================================================
+// SWITCH COMPANY
+// ============================================================
+
+switchCompanyBtn?.addEventListener(
+    "click",
+    function (event) {
+
+        event.stopPropagation();
+
+        if (!companySelector) {
+            return;
+        }
+
+        const open =
+            companySelector.classList.toggle("show");
+
+        this.setAttribute(
+            "aria-expanded",
+            String(open)
+        );
+    }
+);
+
+
+// Don't let clicks inside company selector
+// bubble to document.
+companySelector?.addEventListener(
+    "click",
+    function (event) {
+        event.stopPropagation();
+    }
+);
+
+
+// ============================================================
+// COMPANY CHECKBOXES
+// ============================================================
+
+companyInputs.forEach(input => {
+
+    input.addEventListener(
+        "change",
+        function () {
+
+            if (
+                !this.checked &&
+                !companyInputs.some(
+                    item => item.checked
+                )
+            ) {
+                this.checked = true;
+                return;
+            }
+
+            if (
+                this.checked &&
+                activeCompanyName
+            ) {
+                activeCompanyName.textContent =
+                    this.value;
+            }
+
+            if (selectAllCompanies) {
+
+                selectAllCompanies.checked =
+                    companyInputs.length > 0 &&
+                    companyInputs.every(
+                        item => item.checked
+                    );
+            }
+        }
+    );
 });
 
-const pivotSwitchCompanyBtn = document.getElementById("pivotSwitchCompanyBtn");
-const pivotCompanySelector = document.getElementById("pivotCompanySelector");
-const pivotSelectAllCompanies = document.getElementById("pivotSelectAllCompanies");
-const pivotCompanyInputs = [...document.querySelectorAll('input[name="pivot-active-company"]')];
 
-pivotSwitchCompanyBtn?.addEventListener("click", function () {
-    const isOpen = pivotCompanySelector.hidden;
-    pivotCompanySelector.hidden = !isOpen;
-    this.setAttribute("aria-expanded", String(isOpen));
-});
+// ============================================================
+// SELECT ALL
+// ============================================================
 
-pivotSelectAllCompanies?.addEventListener("change", function () {
-    pivotCompanyInputs.forEach((input, index) => { input.checked = this.checked || index === 0; });
-});
+selectAllCompanies?.addEventListener(
+    "change",
+    function () {
 
-pivotCompanyInputs.forEach(input => input.addEventListener("change", () => {
-    if (!pivotCompanyInputs.some(item => item.checked) && pivotCompanyInputs[0]) pivotCompanyInputs[0].checked = true;
-    if (pivotSelectAllCompanies) pivotSelectAllCompanies.checked = pivotCompanyInputs.every(item => item.checked);
-}));
+        companyInputs.forEach(input => {
+            input.checked = this.checked;
+        });
+
+        if (
+            !this.checked &&
+            companyInputs.length > 0
+        ) {
+
+            companyInputs.forEach(
+                (input, index) => {
+                    input.checked = index === 0;
+                }
+            );
+
+            if (activeCompanyName) {
+                activeCompanyName.textContent =
+                    companyInputs[0].value;
+            }
+        }
+    }
+);
+
+
+// ============================================================
+// CLOSE ONLY HEADER POPUPS
+// ============================================================
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        /*
+         * Do NOT touch Saved Reports here.
+         * Do NOT touch Pivot builder here.
+         * Do NOT prevent normal button clicks.
+         */
+
+        if (
+            settingsPopup &&
+            !event.target.closest("#settingsPopup") &&
+            !event.target.closest("#settingsBtn")
+        ) {
+
+            settingsPopup.classList.remove("show");
+
+            settingsBtn?.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+
+        if (
+            companySelector &&
+            !event.target.closest("#companySelector") &&
+            !event.target.closest("#switchCompanyBtn")
+        ) {
+
+            companySelector.classList.remove("show");
+
+            switchCompanyBtn?.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+    }
+);
+
+
+// ============================================================
+// ESCAPE
+// ============================================================
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        settingsPopup?.classList.remove("show");
+
+        settingsBtn?.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        companySelector?.classList.remove("show");
+
+        switchCompanyBtn?.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        if (pivotAiModal) {
+            pivotAiModal.hidden = true;
+        }
+    }
+);
 
 document.addEventListener("DOMContentLoaded", function () {
 

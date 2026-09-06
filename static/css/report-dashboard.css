@@ -41,7 +41,6 @@ body {
     color: #123;
 }
 
-
 body {
     height: 100vh;
 }
@@ -53,7 +52,6 @@ textarea {
     font: inherit;
 }
 
-
 /* =========================================================
    MAIN
 ========================================================= */
@@ -64,38 +62,6 @@ textarea {
 
     padding: 30px 5%;
 }
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.dashboard-header {
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-}
-
-
-.dashboard-logo img {
-    width: 190px;
-
-    display: block;
-}
-
-
-.dashboard-user {
-    font-size: 15px;
-
-    font-weight: 500;
-
-    color: #008dcc;
-}
-
 
 /* =========================================================
    CREATE REPORT
@@ -110,7 +76,6 @@ textarea {
 
     margin-top: 20px;
 }
-
 
 .create-report-btn {
     height: 38px;
@@ -144,18 +109,15 @@ textarea {
         transform .2s ease;
 }
 
-
 .create-report-btn:hover {
     background: #057eaf;
 
     transform: translateY(-2px);
 }
 
-
 .create-report-btn i {
     font-size: 14px;
 }
-
 
 /* =========================================================
    REPORT SECTION
@@ -169,7 +131,6 @@ textarea {
     margin: 70px auto 0;
 }
 
-
 .report-section h1 {
     margin: 0;
 
@@ -180,7 +141,6 @@ textarea {
     color: #123;
 }
 
-
 .report-subtitle {
     margin-top: 8px;
 
@@ -188,7 +148,6 @@ textarea {
 
     font-size: 15px;
 }
-
 
 /* =========================================================
    REPORT GRID
@@ -204,7 +163,6 @@ textarea {
 
     gap: 18px;
 }
-
 
 /* =========================================================
    REPORT CARD
@@ -241,7 +199,6 @@ textarea {
         border-color .2s ease;
 }
 
-
 .report-card:hover {
     transform: translateY(-3px);
 
@@ -251,7 +208,6 @@ textarea {
         0 8px 25px
         rgba(0, 141, 204, .12);
 }
-
 
 /* =========================================================
    ICON
@@ -277,7 +233,6 @@ textarea {
     font-size: 20px;
 }
 
-
 /* =========================================================
    TEXT
 ========================================================= */
@@ -292,7 +247,6 @@ textarea {
     color: #123;
 }
 
-
 .report-info p {
     margin: 6px 0 0;
 
@@ -300,7 +254,6 @@ textarea {
 
     color: #7b8a90;
 }
-
 
 /* =========================================================
    ARROW
@@ -324,12 +277,10 @@ textarea {
         transform .2s ease;
 }
 
-
 .report-card:hover .card-arrow {
     transform:
         translate(4px, -50%);
 }
-
 
 /* =========================================================
    RESPONSIVE
@@ -344,30 +295,15 @@ textarea {
 
 }
 
-
 @media (max-width: 650px) {
 
     .report-dashboard {
         padding: 25px 20px;
     }
 
-
-    .dashboard-header {
-        align-items: flex-start;
-
-        gap: 20px;
-    }
-
-
-    .dashboard-logo img {
-        width: 150px;
-    }
-
-
     .create-report-section {
         justify-content: flex-start;
     }
-
 
     .report-grid {
         grid-template-columns: 1fr;
@@ -815,416 +751,9 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
-
-/* Container layout for right-aligned text */
-.dashboard-user {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-}
-
-.user-info {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.user-info > span {
-    font-size: 15px;
-    font-weight: 700;
-    color: rgb(174, 174, 175) !important;
-    text-align: right;
-}
-
-.user-role {
-    display: block;
-    text-align: right;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-/* AI mode button */
-
-.ai-mode-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-}
-
-.ai-mode-icon {
-    width: 35px;
-    height: 35px;
-    display: block;
-    object-fit: contain;
-    transition: transform .2s ease, filter .2s ease;
-}
-
-.ai-mode-btn:hover .ai-mode-icon,
-.ai-mode-btn:focus-visible .ai-mode-icon {
-    transform: scale(1.15);
-    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg) brightness(90%) contrast(94%);
-}
-
-.ai-mode-btn:focus-visible {
-    outline: 2px solid #0798d4;
-    outline-offset: 3px;
-    border-radius: 4px;
-}
-
-/* Settings button */
-
-.settings-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: transparent;
-    border: none;
-    padding: 0;
-
-    cursor: pointer;
-}
-
-.settings-icon {
-    width: 26px;
-    height: 26px;
-    object-fit: contain;
-    transition: transform .2s ease, filter .2s ease;
-}
-
-.settings-btn:hover .settings-icon,
-.settings-btn:focus-visible .settings-icon {
-    transform: scale(1.15);
-    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg) brightness(90%) contrast(94%);
-}
-
-.settings-btn:focus-visible {
-    outline: 2px solid #0798d4;
-    outline-offset: 3px;
-    border-radius: 4px;
-}
-
-/* Popup */
-
-.settings-popup {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
-
-    width: 320px;
-
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-
-    padding: 14px;
-
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-
-    display: none;
-    z-index: 1000;
-}
-
-.settings-popup.show {
-    display: block;
-}
-
-
-/* Section title */
-
-.settings-title {
-    margin: -14px -14px 12px -14px;
-
-    padding: 10px 14px;
-
-    background: #c4c4c4;
-
-    border: none;
-    border-radius: 6px 10px 0 0;
-
-    font-size: 13px;
-    font-weight: 700;
-    color: #374151;
-}
-
-
-/* Profile */
-
-.profile-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 16px;
-}
-
-.profile-item {
-    min-width: 0;
-}
-
-.profile-item label {
-    display: block;
-
-    font-size: 10px;
-    font-weight: 600;
-
-    color: #9ca3af;
-
-    margin-bottom: 3px;
-}
-
-.profile-item span {
-    display: block;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    color: #414141 !important;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-/* Subscription */
-
-.subscription-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 8px 0;
-
-    font-size: 12px;
-}
-
-.subscription-info span {
-    color: #414141 !important;
-}
-
-.subscription-info strong {
-    color: #374151;
-}
-
-
-/* Divider */
-
-.settings-divider {
-    height: 1px;
-    background: #e5e7eb;
-    margin: 10px 0;
-}
-
-
-/* Controls */
-
-.settings-control {
-    margin-top: 12px;
-}
-
-.settings-control > label {
-    display: block;
-
-    font-size: 11px;
-    font-weight: 600;
-
-    color: #6b7280;
-
-    margin-bottom: 6px;
-}
-
-
-/* Selector buttons */
-
-.selector-buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.selector-btn {
-    flex: 1;
-
-    padding: 7px 8px;
-
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-
-    background: #ffffff;
-
-    font-size: 11px;
-    font-weight: 600;
-
-    color: #4b5563;
-
-    cursor: pointer;
-
-    transition: 0.15s ease;
-}
-
-.selector-btn:hover {
-    background: #f3f4f6;
-}
-
-.selector-btn.active {
-    background: #b9b9b9;
-    color: #ffffff;
-    border-color: #b9b9b9;
-}
-
-
-/* Switch company */
-
-.settings-option {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    background: transparent;
-    border: none;
-
-    padding: 8px 4px;
-
-    text-align: left;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    color: #374151;
-
-    cursor: pointer;
-
-    border-radius: 5px;
-}
-
-.settings-option:hover {
-    background: #f3f4f6;
-}
-
-/* =========================================================
-   SWITCH COMPANY
-========================================================= */
-
-.switch-company-btn {
-    width: 100%;
-
-    justify-content: space-between;
-
-    padding: 7px 9px;
-
-    background: #d6d6d6;
-
-    border-radius: 5px;
-
-    color: #374151 !important;
-
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.switch-company-btn:hover {
-    background: #f1f3f5;
-    color: #374151 !important;
-}
-
-.switch-company-btn i {
-    color: #6b7280 !important;
-    font-size: 11px;
-    transition: transform .15s ease;
-}
-
-.switch-company-btn[aria-expanded="true"] i {
-    transform: rotate(180deg);
-}
-
-
-
-.company-selector {
-    display: none;
-    margin: 6px 0 2px;
-    padding: 7px 10px;
-    border: 1px solid #d7eaf1;
-    border-radius: 6px;
-}
-
-.company-selector.show {
-    display: grid;
-    gap: 3px;
-}
-
-.company-selector legend {
-    padding: 0 3px;
-    color: #6b7280;
-    font-size: 10px;
-    font-weight: 600;
-}
-
-.company-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 3px;
-    color: #374151;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.company-option input {
-    width: 14px;
-    height: 14px;
-    margin: 0;
-    accent-color: #0798d4;
-}
-
-.company-option-all {
-    margin-bottom: 3px;
-    padding-bottom: 7px;
-    border-bottom: 1px solid #e5e7eb;
-    font-weight: 600;
-}
-
-.company-option:hover {
-    color: #0798d4;
-}
-
-.signout-option {
-    color: #dc2626;
-}
-
-.signout-form {
-    margin: 0;
-}
-
-.signout-icon {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-}
 /* .report-dashboard {
     position: relative;
-} */
-
-.active-company {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    
-    font-size: 30px;
-    font-weight: 1000;
 }
-
 
 /* Blinking Green Dot Indicator */
 .status-dot {
@@ -1256,12 +785,6 @@ textarea {
     }
 }
 
-.dashboard-user span {
-    font-size: 14px;
-    font-weight: 500;
-    color: #0d0d0e;
-}
-
 /* =========================================================
    UPDATED DASHBOARD: P&L LEFT / REPORTS RIGHT
 ========================================================= */
@@ -1274,27 +797,6 @@ textarea {
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
-}
-
-.dashboard-header {
-    position: relative;
-    margin-bottom: 12px;
-    padding-bottom: 14px;
-}
-
-.dashboard-header::after {
-    position: absolute;
-    bottom: 0;
-    left: -3.77%;
-    width: 107.54%;
-    height: 2px;
-    content: "";
-    background: #cbdce3;
-}
-
-.dashboard-logo img {
-    width: 155px;
-    display: block;
 }
 
 .kpi-action-container {
@@ -1315,14 +817,14 @@ textarea {
     width: 100%;
     max-width: none;
     margin: 0;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
 
     display: grid;
     grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
     gap: var(--dashboard-panel-gap);
 
-    align-items: stretch;
+    align-items: start;
 }
 
 /* P&L */
@@ -1333,7 +835,7 @@ textarea {
     overflow: visible;
     box-shadow: 0 4px 15px rgba(0, 141, 204, 0.04);
     min-width: 0;
-    height: 100%;
+    height: auto;
 }
 
 .pnl-header {
@@ -1690,9 +1192,6 @@ textarea {
 }
 
 @media (max-width: 520px) {
-    .dashboard-logo img {
-        width: 145px;
-    }
 
     .kpi-grid {
         grid-template-columns: 1fr;
@@ -1715,7 +1214,7 @@ textarea {
     justify-content: flex-end;
     align-items: center;
 
-    padding: 8px 16px;
+    padding: 3px 16px;
     margin-top: 8px;
     font-size: 11px;
     font-weight: 500;
@@ -1790,10 +1289,9 @@ textarea {
     font-weight: 600;
 }
 
-
 .last-refreshed {
     flex: 0 0 auto;
-    padding: 10px 0 0;
+    padding: 2px 0 0;
     bottom:auto;
     font-size: 10px;
     line-height: 1.2;
@@ -1843,21 +1341,6 @@ body {
 }
 
 @media (max-width: 750px) {
-    .dashboard-header {
-        align-items: flex-start;
-    }
-
-    .dashboard-user {
-        min-width: 0;
-    }
-
-    .active-company {
-        position: static;
-        transform: none;
-        margin-bottom: 4px;
-        font-size: clamp(18px, 4vw, 24px);
-        text-align: right;
-    }
 
     .period-controls {
         width: 100%;
@@ -1878,31 +1361,6 @@ body {
 @media (max-width: 520px) {
     .report-dashboard {
         padding: 16px 14px 28px;
-    }
-
-    .dashboard-header {
-        gap: 12px;
-    }
-
-    .dashboard-logo img {
-        width: 125px;
-    }
-
-    .user-info > span {
-        display: none;
-    }
-
-    .settings-popup {
-        position: fixed;
-        top: 62px;
-        right: 14px;
-        width: min(320px, calc(100vw - 28px));
-        max-height: calc(100vh - 78px);
-        overflow-y: auto;
-    }
-
-    .profile-grid {
-        grid-template-columns: 1fr;
     }
 
     .pnl-header {

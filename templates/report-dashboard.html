@@ -43,14 +43,17 @@
 
     <!-- Dashboard CSS -->
 
+    <!-- Dashboard CSS -->
     <link
         rel="stylesheet"
-        href="{{ url_for(
-            'static',
-            filename='css/report-dashboard.css'
-        ) }}"
+        href="{{ url_for('static', filename='css/report-dashboard.css') }}"
     >
 
+    <!-- Common Header CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/header.css') }}"
+    >
 </head>
 
 
@@ -60,212 +63,8 @@
     <main class="report-dashboard">
 
 
-        <!-- =================================================
-             TOP BAR
-        ================================================== -->
+        {% include 'header.html' %}
 
-        <header class="dashboard-header">
-
-            <div class="dashboard-logo">
-
-                <img
-                    src="{{ url_for(
-                        'static',
-                        filename='images/logo.svg'
-                    ) }}"
-                    alt="InTallygence"
-                >
-
-            </div>
-
-
-            <div class="dashboard-user">
-
-                <div class="active-company">
-                    <strong id="activeCompanyName">ACHP Pvt. Ltd.</strong>
-                </div>
-
-                <div class="user-info">
-
-                    <span>
-                        Anand Paurana
-                        <br>
-                        <small class="user-role">CEO</small>
-                    </span>
-
-                    <button type="button"
-                            class="ai-mode-btn"
-                            aria-label="AI mode">
-                        <img src="{{ url_for('static', filename='images/ai mode.svg') }}"
-                            alt=""
-                            class="ai-mode-icon">
-                    </button>
-
-                    <button type="button"
-                            class="settings-btn"
-                            id="settingsBtn">
-                        <img src="/static/images/settings.svg"
-                            alt="Settings"
-                            class="settings-icon">
-                    </button>
-
-                    <!-- Settings Popup -->
-                    <div class="settings-popup" id="settingsPopup">
-
-    <!-- Profile -->
-    <div class="settings-section">
-
-        <div class="settings-title">
-            Profile
-        </div>
-
-        <div class="profile-grid">
-
-            <div class="profile-item">
-                <label>First Name</label>
-                <span>Anand</span>
-            </div>
-
-            <div class="profile-item">
-                <label>Last Name</label>
-                <span>Paurana</span>
-            </div>
-
-            <div class="profile-item">
-                <label>Organisation</label>
-                <span>ACHP Pvt. Ltd.</span>
-            </div>
-
-            <div class="profile-item">
-                <label>Designation</label>
-                <span>CFO</span>
-            </div>
-
-            <div class="profile-item">
-                <label>User Level</label>
-                <span>Administrator</span>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Subscription -->
-    <div class="settings-divider"></div>
-
-    <div class="subscription-info">
-        <span>Renew Subscription</span>
-        <strong>90 days</strong>
-    </div>
-
-
-    <!-- Period Selector -->
-    <div class="settings-divider"></div>
-
-    <div class="settings-control">
-
-        <label>Period Selector</label>
-
-        <div class="selector-buttons">
-
-            <button type="button"
-                    class="selector-btn active"
-                    data-period="current-year">
-                CURRENT YEAR
-            </button>
-
-            <button type="button"
-                    class="selector-btn"
-                    data-period="cytd-pytd">
-                CYTD Vs PYTD
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- Amount Selector -->
-    <div class="settings-control">
-
-        <label>Amount Selector</label>
-
-        <div class="selector-buttons">
-
-            <button type="button"
-                    class="selector-btn active"
-                    data-amount="crores">
-                Cr.
-            </button>
-
-            <button type="button"
-                    class="selector-btn"
-                    data-amount="lakhs">
-                Lakhs
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- Switch Company -->
-    <div class="settings-divider"></div>
-
-    <button type="button"
-            class="settings-option switch-company-btn"
-            id="switchCompanyBtn"
-            aria-expanded="false"
-            aria-controls="companySelector">
-        <span>Switch Company</span>
-        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-    </button>
-
-    <fieldset class="company-selector" id="companySelector" aria-label="Choose company">
-        <legend>Choose company</legend>
-
-        <label class="company-option company-option-all">
-            <input type="checkbox" id="selectAllCompanies">
-            <span>Select All</span>
-        </label>
-
-        <label class="company-option">
-            <input type="checkbox" name="active-company" value="ACHP Pvt. Ltd." checked>
-            <span>ACHP Pvt. Ltd.</span>
-        </label>
-
-        <label class="company-option">
-            <input type="checkbox" name="active-company" value="InTallygence Pvt. Ltd.">
-            <span>InTallygence Pvt. Ltd.</span>
-        </label>
-
-        <label class="company-option">
-            <input type="checkbox" name="active-company" value="Demo Company Pvt. Ltd.">
-            <span>Demo Company Pvt. Ltd.</span>
-        </label>
-    </fieldset>
-
-    <form action="{{ url_for('logout') }}" method="POST" class="signout-form">
-        <button type="submit" class="settings-option signout-option">
-            <img src="{{ url_for('static', filename='images/signout.svg') }}"
-                alt=""
-                class="signout-icon">
-            <span>Sign Out</span>
-        </button>
-    </form>
-
-</div>  
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-        </header>
 
 <!-- =================================================
      KPI SUMMARY CARDS

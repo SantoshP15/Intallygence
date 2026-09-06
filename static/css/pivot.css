@@ -37,7 +37,6 @@ body {
     --canvas-scale: 1;
 }
 
-
 /* =========================================================
    BACKGROUND
    ========================================================= */
@@ -56,7 +55,6 @@ body {
     display: none;
 }
 
-
 /* =========================================================
    REPORT PANEL
    ========================================================= */
@@ -70,54 +68,6 @@ body {
     padding: 0 0 30px;
     background: #ffffff;
     box-sizing: border-box;
-}
-
-
-/* =========================================================
-   REPORT HEADER
-   ========================================================= */
-
-.report-header {
-    position: relative;
-    z-index: 5000;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    width: 100%;
-    height: 88px;
-
-    padding: 0 22px 0 18px;
-
-    background: #ffffff;
-    border-bottom: 1px solid #0a0a0a;
-
-    box-sizing: border-box;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-}
-
-.brand img {
-    display: block;
-    width: 205px;
-    height: auto;
-}
-
-.report-title {
-    margin-left: 25px;
-    padding-left: 24px;
-
-    border-left: 2px solid #000;
-
-    color: #000;
-
-    font-family: var(--pivot-font-family);
-    font-size: 21px;
-    font-weight: 400;
 }
 
 /* =========================================================
@@ -180,7 +130,7 @@ body {
     max-width: 1440px;
 
     margin: 0 auto;
-    padding: 75px 20px 0;
+    padding: 0 20px;
 
     gap: 8px;
 
@@ -215,7 +165,6 @@ body {
     background: #f3f3f3;
     color: #000;
 }
-
 
 /* =========================================================
    BUILDER
@@ -259,7 +208,6 @@ body {
     max-width: 1440px;
 }
 
-
 /* =========================================================
    BUILDER SECTION
    ========================================================= */
@@ -282,7 +230,6 @@ body {
     font-size: 16px;
     font-weight: 400;
 }
-
 
 /* =========================================================
    CONTROL ROW
@@ -308,7 +255,6 @@ body {
 
     white-space: nowrap;
 }
-
 
 /* =========================================================
    SELECT CONTROLS
@@ -367,7 +313,6 @@ body {
     box-shadow: 0 0 0 1px rgba(2, 34, 48, 0.2);
 }
 
-
 /* =========================================================
    SELECT OPTIONS
    ========================================================= */
@@ -401,21 +346,6 @@ body {
     font-size: calc(14px * var(--canvas-scale, 1));
     font-weight: 400;
 }
-
-.pivot-header-user { position: relative; display: flex; align-items: center; gap: 16px; margin-left: 0; }
-.pivot-user-name { color: #a9aeb7; font-size: 15px; font-weight: 700; line-height: 1.1; text-align: right; }
-.pivot-user-name small { display: block; font-size: 12px; font-weight: 500; }
-.pivot-header-icon { display: grid; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; }
-.pivot-header-icon img { display: block; width: 30px; height: 30px; object-fit: contain; transition: transform .2s ease; }
-.pivot-header-icon:hover img, .pivot-header-icon:focus-visible img { transform: scale(1.12); }
-.pivot-header-icon:focus-visible { outline: 2px solid #0798d4; outline-offset: 3px; border-radius: 4px; }
-.pivot-settings-wrap { position: relative; }
-.pivot-settings-menu { position: absolute; top: calc(100% + 12px); right: 0; width: 360px; max-height: calc(100vh - 100px); overflow-y: auto; padding: 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; box-shadow: 0 8px 24px rgba(0, 0, 0, .12); z-index: 8000; }
-.pivot-settings-section h2 { margin: -14px -14px 12px; padding: 10px 14px; color: #374151; background: #f8fafc; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
-.pivot-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }.pivot-profile-grid div { display: grid; gap: 3px; }.pivot-profile-grid label, .pivot-settings-control > label { color: #6b7280; font-size: 11px; font-weight: 600; }.pivot-profile-grid span { color: #1f2937; font-size: 13px; font-weight: 500; }
-.pivot-settings-divider { height: 1px; margin: 14px -14px; background: #e5e7eb; }.pivot-subscription { display: flex; justify-content: space-between; color: #374151; font-size: 13px; }.pivot-subscription strong { color: #0798d4; }
-.pivot-settings-control { display: grid; gap: 7px; margin: 12px 0; }.pivot-settings-control > div { display: flex; gap: 8px; }.pivot-selector-btn { flex: 1; padding: 8px 7px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #4b5563; font: 600 11px var(--pivot-font-family); cursor: pointer; }.pivot-selector-btn:hover, .pivot-selector-btn.active { color: #fff; background: #0798d4; border-color: #0798d4; }
-.pivot-settings-option { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 9px 4px; border: 0; background: transparent; color: #374151; font: 500 13px var(--pivot-font-family); text-align: left; cursor: pointer; }.pivot-settings-option:hover { color: #0798d4; }.pivot-company-selector { display: grid; gap: 8px; margin: 0 0 8px; padding: 10px; border: 1px solid #dbe5eb; border-radius: 7px; }.pivot-company-selector legend { padding: 0 4px; color: #6b7280; font-size: 11px; }.pivot-company-selector label { color: #374151; font-size: 12px; }.pivot-signout-option { color: #dc2626; }.pivot-signout-option img { width: 15px; height: 15px; }
 
 #rowField option:first-child,
 #columnField option:first-child,
@@ -469,7 +399,6 @@ body {
 .report-validation-dialog p { margin: 10px 0 22px; color: #52616c; line-height: 1.5; }
 .report-validation-dialog button { min-width: 92px; }
 
-
 /* =========================================================
    DROPDOWN ARROWS
    ========================================================= */
@@ -490,7 +419,6 @@ body {
     background-size: 14px 14px;
 }
 
-
 /* =========================================================
    ROW FIELD
    ========================================================= */
@@ -502,7 +430,6 @@ body {
 
     flex: 0 0 190px;
 }
-
 
 /* =========================================================
    COLUMN FIELD
@@ -516,7 +443,6 @@ body {
     flex: 0 0 200px;
 }
 
-
 /* =========================================================
    VALUES
    ========================================================= */
@@ -528,7 +454,6 @@ body {
 
     flex: 0 0 160px;
 }
-
 
 /* =========================================================
    AGGREGATION
@@ -576,7 +501,6 @@ body {
     gap: 8px;
 }
 
-
 /* =========================================================
    PERIOD
    ========================================================= */
@@ -589,7 +513,6 @@ body {
     flex: 0 0 190px;
 }
 
-
 /* =========================================================
    FILTER
    ========================================================= */
@@ -601,7 +524,6 @@ body {
 
     flex: 0 0 190px;
 }
-
 
 /* =========================================================
    LAYOUT
@@ -636,7 +558,6 @@ body {
     box-sizing: border-box;
 }
 
-
 /* =========================================================
    ADD BUTTON
    ========================================================= */
@@ -662,7 +583,6 @@ body {
 .add-btn:hover {
     color: #000;
 }
-
 
 /* =========================================================
    GO BUTTON
@@ -713,7 +633,6 @@ body {
     color: #000;
 }
 
-
 /* =========================================================
    RESET BUTTON
    ========================================================= */
@@ -755,7 +674,6 @@ body {
 #resetReportBtn:active {
     transform: scale(0.97);
 }
-
 
 /* =========================================================
    SELECTED FIELD CHIPS
@@ -852,7 +770,6 @@ body {
     color: #d22;
 }
 
-
 /* =========================================================
    PERIOD VALUES
    ========================================================= */
@@ -889,7 +806,6 @@ body {
 
     white-space: nowrap;
 }
-
 
 /* =========================================================
    FILTER VALUES
@@ -972,7 +888,6 @@ body {
     margin-left: auto;
 }
 
-
 /* =========================================================
    VALUE OPTIONS
    ========================================================= */
@@ -985,7 +900,6 @@ body {
 
     display: none;
 }
-
 
 /* =========================================================
    FILTER POPUP
@@ -1060,7 +974,6 @@ body {
     background: #0788ba;
 }
 
-
 /* =========================================================
    FILTER SEARCH
    ========================================================= */
@@ -1077,7 +990,6 @@ body {
 
     outline: none;
 }
-
 
 /* =========================================================
    CHECKBOX LIST
@@ -1111,7 +1023,6 @@ body {
     background: #eaf7fc;
 }
 
-
 /* =========================================================
    APPLY BUTTONS
    ========================================================= */
@@ -1137,7 +1048,6 @@ body {
 .apply-date:hover {
     background: #087fae;
 }
-
 
 /* =========================================================
    DATE FILTER
@@ -1213,7 +1123,6 @@ body {
     font-family: var(--pivot-font-family);
 }
 
-
 /* =========================================================
    DATE TREE
    ========================================================= */
@@ -1281,7 +1190,6 @@ body {
     border-top: 1px solid #ddd;
 }
 
-
 /* =========================================================
    INFO AREA
    ========================================================= */
@@ -1347,7 +1255,6 @@ body {
     font-weight: 700;
 }
 
-
 /* =========================================================
    OUTPUT AREA
    ========================================================= */
@@ -1395,7 +1302,6 @@ body {
     transform: none;
 }
 
-
 /* =========================================================
    TABLE CONTAINER
    ========================================================= */
@@ -1416,7 +1322,6 @@ body {
 
     box-sizing: border-box;
 }
-
 
 /* =========================================================
    DATATABLES WRAPPER
@@ -1442,7 +1347,6 @@ body {
 
     overflow: visible;
 }
-
 
 /* =========================================================
    TOP CONTROLS
@@ -1509,7 +1413,6 @@ body {
     content: "";
 }
 
-
 /* =========================================================
    ENTRIES SELECT
    ========================================================= */
@@ -1539,7 +1442,6 @@ body {
 
     box-sizing: border-box;
 }
-
 
 /* =========================================================
    SEARCH BOX
@@ -1575,7 +1477,6 @@ body {
         0 0 0 2px rgba(7, 152, 212, 0.10);
 }
 
-
 /* =========================================================
    ROUNDED TABLE BOX
    ========================================================= */
@@ -1596,7 +1497,6 @@ body {
 
     box-sizing: border-box;
 }
-
 
 /* =========================================================
    TABLE HEADER SCROLL
@@ -1621,7 +1521,6 @@ body {
     box-sizing: border-box;
 }
 
-
 /* =========================================================
    TABLE BODY SCROLL
    ========================================================= */
@@ -1639,7 +1538,6 @@ body {
 
     box-sizing: border-box;
 }
-
 
 /* =========================================================
    PIVOT TABLE
@@ -1666,7 +1564,6 @@ body {
 
     box-sizing: border-box;
 }
-
 
 /* =========================================================
    TABLE HEADER
@@ -1707,7 +1604,6 @@ body {
 .pivot-canvas .output-area table.dataTable thead th:last-child {
     border-right: none;
 }
-
 
 /* =========================================================
    TABLE BODY
@@ -1752,7 +1648,6 @@ body {
     border-right: none;
 }
 
-
 /* =========================================================
    TABLE HOVER
    ========================================================= */
@@ -1760,7 +1655,6 @@ body {
 .pivot-canvas .output-area table.dataTable tbody tr:hover td {
     background: #f5fafc;
 }
-
 
 /* =========================================================
    SUBTOTAL
@@ -1772,7 +1666,6 @@ body {
 
     font-weight: 600;
 }
-
 
 /* =========================================================
    GRAND TOTAL
@@ -1788,7 +1681,6 @@ body {
 
     border-top: 1px solid #9ec5ff;
 }
-
 
 /* =========================================================
    BOTTOM CONTROLS
@@ -1822,7 +1714,6 @@ body {
     background: transparent;
 }
 
-
 /* Clear bottom controls */
 
 .pivot-canvas .output-area .dataTables_wrapper::after {
@@ -1832,7 +1723,6 @@ body {
 
     content: "";
 }
-
 
 /* =========================================================
    PAGINATION BUTTONS
@@ -1889,7 +1779,6 @@ body {
     cursor: default;
 }
 
-
 /* =========================================================
    TABLE HORIZONTAL SCROLLBAR
    ========================================================= */
@@ -1911,7 +1800,6 @@ body {
 .pivot-canvas .output-area .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
     background: #888888;
 }
-
 
 /* =========================================================
    OLD PIVOT TABLE
@@ -1962,7 +1850,6 @@ body {
 .grand-total td {
     border-top: 2px solid #0798d4;
 }
-
 
 /* =========================================================
    EXCEL PIVOT TABLE
@@ -2092,7 +1979,6 @@ body {
     vertical-align: middle;
 }
 
-
 /* =========================================================
    PIVOT GROUPING
    ========================================================= */
@@ -2160,7 +2046,6 @@ body {
     font-weight: 700;
 }
 
-
 /* =========================================================
    SAVE AREA
    ========================================================= */
@@ -2219,7 +2104,6 @@ body {
     background: #087fae;
 }
 
-
 /* =========================================================
    REPORT GENERATED STATE
    ========================================================= */
@@ -2240,7 +2124,6 @@ body {
 
     overflow: hidden;
 }
-
 
 /* =========================================================
    PIVOT CANVAS
@@ -2299,10 +2182,6 @@ body {
     background: #ffffff;
 }
 
-.pivot-canvas .report-header {
-    width: 1920px;
-}
-
 .pivot-canvas .report-types {
     width: 1920px;
 
@@ -2318,7 +2197,6 @@ body {
     max-width: 1440px;
     margin: 15px auto 0;
 }
-
 
 /* =========================================================
    SAVED REPORTS MODAL
@@ -2414,7 +2292,6 @@ body {
     pointer-events: auto;
 }
 
-
 /* =========================================================
    SAVED REPORT HEADER
    ========================================================= */
@@ -2487,7 +2364,6 @@ body {
 
     transform: rotate(90deg);
 }
-
 
 /* =========================================================
    SAVED REPORT LIST
@@ -2631,7 +2507,6 @@ body {
     transform: translateX(4px);
 }
 
-
 /* =========================================================
    SAVED REPORT MENU
    ========================================================= */
@@ -2769,7 +2644,6 @@ body {
     color: #c62828;
 }
 
-
 /* =========================================================
    SAVED REPORT EMPTY / FOOTER
    ========================================================= */
@@ -2827,7 +2701,6 @@ body {
     color: #ffffff;
 }
 
-
 /* =========================================================
    SAVED REPORT SCROLLBAR
    ========================================================= */
@@ -2850,7 +2723,6 @@ body {
     background: #0798d4;
 }
 
-
 /* =========================================================
    DISABLED COLUMN
    ========================================================= */
@@ -2862,7 +2734,6 @@ body {
 
     background: #e9eef1;
 }
-
 
 /* =========================================================
    DESKTOP RESPONSIVE
@@ -2944,34 +2815,15 @@ body {
     }
 }
 
-
 /* =========================================================
    TABLET
    ========================================================= */
 
-@media (max-width: 900px) and (min-width: 601px) {
+@media (max-width: 900px) {
 
-    .report-header {
-        height: 70px;
-    }
 
-    .brand img {
-        width: 145px;
-    }
-
-    .report-title {
-        margin-left: 14px;
-        padding-left: 14px;
-
-        font-size: 16px;
-    }
-
-    .saved-reports {
-        height: 70px;
-    }
-
-    .report-types {
-        padding-top: 90px;
+.report-types {
+        padding-top: 0;
 
         overflow-x: auto;
 
@@ -3021,36 +2873,15 @@ body {
     }
 }
 
-
 /* =========================================================
    MOBILE
    ========================================================= */
 
 @media (max-width: 600px) {
 
-    .report-header {
-        height: 62px;
 
-        padding: 0 10px;
-    }
-
-    .brand img {
-        width: 120px;
-    }
-
-    .report-title {
-        margin-left: 8px;
-        padding-left: 8px;
-
-        font-size: 13px;
-    }
-
-    .saved-reports {
-        display: none;
-    }
-
-    .report-types {
-        padding-top: 80px;
+.report-types {
+        padding-top: 0;
     }
 
     .builder,
@@ -3119,7 +2950,6 @@ body {
         font-size: 14px;
     }
 
-
     /* -----------------------------------------
        DataTables mobile controls
        ----------------------------------------- */
@@ -3157,4 +2987,607 @@ body {
     .pivot-canvas .output-area .dataTables_wrapper .dataTables_paginate {
         margin-top: 8px;
     }
+}
+
+
+/* =========================================================
+   FINAL DESKTOP LAYOUT - MATCH TARGET DESIGN
+========================================================= */
+
+/* Pivot uses its own single application header so that
+   Report Generator and My Saved Reports sit in the header. */
+.report-header {
+    position: relative;
+    width: 1920px;
+    height: 80px;
+    min-height: 80px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+    margin: 0;
+
+    background: #ffffff;
+    border-bottom: 1px solid #1f1f1f;
+    box-sizing: border-box;
+    z-index: 5000;
+}
+
+.report-header .brand {
+    width: 210px;
+    flex: 0 0 210px;
+    display: flex;
+    align-items: center;
+}
+
+.report-header .brand a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.report-header .brand img {
+    width: 190px;
+    height: auto;
+    display: block;
+}
+
+.report-title {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding-left: 22px;
+    border-left: 2px solid #111111;
+    color: #111111;
+    font-family: var(--pivot-font-family);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.report-header .saved-reports {
+    margin-left: auto;
+    margin-right: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.report-header #savedReportsBtn {
+    padding: 6px 0;
+    border: 0;
+    background: transparent;
+    color: #111111;
+    font-family: var(--pivot-font-family);
+    font-size: 17px;
+    font-weight: 400;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.report-header #savedReportsBtn:hover {
+    font-size: 18px;
+}
+
+.pivot-header-user {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 0 0 auto;
+}
+
+.pivot-user-name {
+    display: block;
+    color: #aeb0b3;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.05;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.pivot-user-name small {
+    display: block;
+    margin-top: 2px;
+    color: #aeb0b3;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.pivot-header-icon {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pivot-header-icon img {
+    width: 26px;
+    height: 26px;
+    display: block;
+    object-fit: contain;
+}
+
+.pivot-header-icon:hover img {
+    transform: scale(1.08);
+}
+
+.pivot-settings-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pivot-settings-menu {
+    position: absolute;
+    top: 42px;
+    right: 0;
+    width: 320px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    z-index: 10000;
+}
+
+.pivot-settings-menu[hidden] {
+    display: none !important;
+}
+
+.pivot-settings-section h2 {
+    margin: -14px -14px 12px;
+    padding: 10px 14px;
+    background: #c4c4c4;
+    border-radius: 6px 10px 0 0;
+    color: #374151;
+    font-size: 13px;
+}
+
+.pivot-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+
+.pivot-profile-grid label {
+    display: block;
+    margin-bottom: 3px;
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.pivot-profile-grid span {
+    display: block;
+    color: #414141;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pivot-settings-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: #e5e7eb;
+}
+
+.pivot-subscription {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    color: #414141;
+    font-size: 12px;
+}
+
+.pivot-settings-control {
+    margin-top: 12px;
+}
+
+.pivot-settings-control > label {
+    display: block;
+    margin-bottom: 6px;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.pivot-settings-control > div {
+    display: flex;
+    gap: 5px;
+}
+
+.pivot-selector-btn {
+    flex: 1;
+    padding: 7px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #4b5563;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pivot-selector-btn.active {
+    background: #b9b9b9;
+    border-color: #b9b9b9;
+    color: #ffffff;
+}
+
+.pivot-settings-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 9px;
+    border: 0;
+    border-radius: 5px;
+    background: #d6d6d6;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.pivot-company-selector {
+    margin: 6px 0 2px;
+    padding: 7px 10px;
+    border: 1px solid #d7eaf1;
+    border-radius: 6px;
+}
+
+.pivot-company-selector[hidden] {
+    display: none;
+}
+
+.pivot-company-selector legend {
+    padding: 0 3px;
+    color: #6b7280;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.pivot-company-selector label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 3px;
+    color: #374151;
+    font-size: 12px;
+}
+
+.pivot-company-selector input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #0798d4;
+}
+
+.pivot-signout-option {
+    justify-content: flex-start;
+    gap: 8px;
+    background: transparent;
+    color: #dc2626;
+}
+
+.pivot-signout-option img {
+    width: 16px !important;
+    height: 16px !important;
+    object-fit: contain;
+}
+
+/* Main content starts exactly below the header. */
+.pivot-canvas .report-types {
+    width: 75%;
+    max-width: 1440px;
+    padding: 0 20px;
+    gap: 8px;
+}
+.pivot-canvas .report-type {
+    min-width: 92px;
+    height: 38px;
+    padding: 0 15px;
+    font-size: 15px;
+    border-radius: 9px 9px 0 0;
+}
+
+.pivot-canvas .builder,
+.builder {
+    width: 75%;
+    max-width: 1440px;
+    padding: 18px 26px 26px;
+    grid-template-columns:
+        190px 200px 390px 190px 190px 106px 48px;
+    column-gap: 12px;
+    border-radius: 16px;
+}
+.pivot-canvas .builder-section > label {
+    margin-left: 8px;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.pivot-canvas .control-row {
+    height: 44px;
+    gap: 7px;
+}
+
+.pivot-canvas .control-row select,
+.pivot-canvas #rowField,
+.pivot-canvas #columnField,
+.pivot-canvas #valueField,
+.pivot-canvas #aggregate,
+.pivot-canvas #periodField,
+.pivot-canvas #filterField,
+.pivot-canvas .layout-select {
+    height: 44px;
+    font-size: 14px;
+}
+
+.pivot-canvas .go-button {
+    height: 44px;
+    font-size: 14px;
+}
+
+.pivot-canvas #resetReportBtn {
+    margin-top: 9px;
+    font-size: 13px;
+}
+
+.pivot-canvas .info-area {
+    width: 790px;
+    max-width: none;
+    margin: 118px 0 0 calc((100% - 1320px) / 2 + 33px);
+}
+
+.pivot-canvas .info-box {
+    min-height: 285px;
+    padding: 18px 21px;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+.pivot-canvas .info-icon {
+    margin-left: -34px;
+}
+
+/* Keep generated reports aligned with the same content width. */
+.pivot-canvas .output-area,
+.pivot-canvas .save-area {
+    width: 69%;
+    max-width: 1320px;
+}
+
+@media (max-width: 900px) {
+    .report-header {
+        width: 1920px;
+    }
+}
+
+
+/* =========================================================
+   REPORT TYPE TABS - VISIBILITY / POSITION
+   ========================================================= */
+.report-types {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+}
+
+.report-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* =========================================================
+   PIVOT — USE THE SAME HEADER ZONE AS REPORT DASHBOARD
+   ========================================================= */
+
+.pivot-header-zone {
+    width: 100%;
+    padding: var(--dashboard-page-padding-y, 16px)
+             var(--dashboard-page-padding-x, 3.5%)
+             0;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.pivot-header-zone .dashboard-header {
+    width: 100%;
+    margin: 0;
+}
+
+/* Pivot-only controls sit below the shared header. */
+.pivot-page-toolbar {
+    width: 75%;
+    max-width: 1440px;
+    min-height: 42px;
+    margin: 12px auto 0;
+    padding: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+.pivot-page-title {
+    color: #111111;
+    font-family: var(--pivot-font-family);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.pivot-saved-reports-btn {
+    border: 0;
+    padding: 6px 0;
+    margin: 0;
+    background: transparent;
+    color: #111111;
+    font-family: var(--pivot-font-family);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.pivot-saved-reports-btn:hover {
+    font-size: 18px;
+}
+
+/* Report tabs remain immediately below the Pivot toolbar. */
+.report-types {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+@media (max-width: 750px) {
+    .pivot-header-zone {
+        padding: 16px 20px 0;
+    }
+
+    .pivot-page-toolbar {
+        width: calc(100% - 40px);
+        max-width: none;
+    }
+
+    .pivot-page-title {
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 520px) {
+    .pivot-page-toolbar {
+        width: calc(100% - 28px);
+        margin-top: 10px;
+    }
+
+    .pivot-page-title {
+        font-size: 18px;
+    }
+
+    .pivot-saved-reports-btn {
+        font-size: 14px;
+    }
+}
+/* =========================================================
+   REPORT GENERATOR
+   ========================================================= */
+
+.pivot-header-zone {
+    position: relative;
+}
+
+.report-title {
+    position: absolute;
+    left: 248px;
+    top: 24px;
+
+    height: 32px;
+    padding-left: 24px;
+
+    display: flex;
+    align-items: center;
+
+    border-left: 2px solid #111111;
+
+    color: #111111;
+    font-family: var(--pivot-font-family);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1;
+
+    white-space: nowrap;
+    z-index: 10;
+}
+
+
+/* =========================================================
+   MY SAVED REPORTS
+   ========================================================= */
+
+.pivot-saved-reports-btn {
+    position: absolute;
+    right: 250px;
+    top: 22px;
+
+    border: 0;
+    padding: 0;
+    margin: 0 30px;
+
+    background: transparent;
+    color: #111111;
+
+    font-family: var(--pivot-font-family);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    z-index: 10;
+}
+
+.pivot-saved-reports-btn:hover {
+    color: #333333;
+}
+
+.pivot-header-zone + .report-types {
+    margin-top: 90px;
+}
+
+.pivot-header-zone + .report-types + .builder {
+    margin-top: 0;
+}
+/* =========================================================
+   KEEP SHARED HEADER IDENTICAL TO REPORT DASHBOARD
+   ========================================================= */
+
+/* =========================================================
+   SHARED HEADER — DO NOT CHANGE ITS POSITION
+   ========================================================= */
+
+
+/* Company name */
+.pivot-header-zone .active-company {
+    font-family: "Inter", Arial, sans-serif !important;
+    font-size: 30px !important;
+    font-weight: 500 !important;
+    color: #008dcc !important;
+}
+/* =========================================================
+   FLATPICKR INSIDE DATE FILTER POPUP
+   ========================================================= */
+
+.filter-popup {
+    overflow: visible !important;
+}
+
+.filter-popup .date-picker {
+    position: relative;
+    z-index: 2;
+}
+.flatpickr-calendar {
+    z-index: 1000000 !important;
+    pointer-events: auto !important;
 }

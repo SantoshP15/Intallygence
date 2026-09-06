@@ -1,0 +1,534 @@
+/* =========================================================
+   COMMON HEADER
+   Extracted from report-dashboard.css
+========================================================= */
+
+.dashboard-header {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 14px;
+}
+
+.dashboard-header::after {
+    position: absolute;
+    bottom: 0;
+    left: -3.77%;
+    width: 107.54%;
+    height: 2px;
+    content: "";
+    background: #cbdce3;
+}
+
+.dashboard-logo {
+    flex-shrink: 0;
+}
+
+.dashboard-logo img {
+    width: 155px;
+    display: block;
+}
+
+
+/* =========================================================
+   COMPANY + USER AREA
+========================================================= */
+
+.dashboard-user {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #008dcc;
+}
+
+.active-company {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 30px;
+    font-weight: 1000;
+    /* white-space: nowrap; */
+    COLOR: #008dcc;
+}
+
+.dashboard-user span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #0d0d0e;
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-info > span {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(174, 174, 175) !important;
+    text-align: right;
+}
+
+.user-role {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   AI MODE BUTTON
+========================================================= */
+
+.ai-mode-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.ai-mode-icon {
+    width: 35px;
+    height: 35px;
+    display: block;
+    object-fit: contain;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.ai-mode-btn:hover .ai-mode-icon,
+.ai-mode-btn:focus-visible .ai-mode-icon {
+    transform: scale(1.15);
+    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg)
+            brightness(90%) contrast(94%);
+}
+
+.ai-mode-btn:focus-visible {
+    outline: 2px solid #0798d4;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* =========================================================
+   SETTINGS BUTTON
+========================================================= */
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.settings-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.settings-btn:hover .settings-icon,
+.settings-btn:focus-visible .settings-icon {
+    transform: scale(1.15);
+    filter: invert(51%) sepia(94%) saturate(1040%) hue-rotate(165deg)
+            brightness(90%) contrast(94%);
+}
+
+.settings-btn:focus-visible {
+    outline: 2px solid #0798d4;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* =========================================================
+   SETTINGS POPUP
+========================================================= */
+
+.settings-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 320px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    display: none;
+    z-index: 1000;
+}
+
+.settings-popup.show {
+    display: block;
+}
+
+
+/* =========================================================
+   SETTINGS - PROFILE
+========================================================= */
+
+.settings-title {
+    margin: -14px -14px 12px -14px;
+    padding: 10px 14px;
+    background: #c4c4c4;
+    border: none;
+    border-radius: 6px 10px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+
+.profile-item {
+    min-width: 0;
+}
+
+.profile-item label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 3px;
+}
+
+.profile-item span {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #414141 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   SETTINGS - SUBSCRIPTION
+========================================================= */
+
+.subscription-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 12px;
+}
+
+.subscription-info span {
+    color: #414141 !important;
+}
+
+.subscription-info strong {
+    color: #374151;
+}
+
+
+/* =========================================================
+   SETTINGS - DIVIDER
+========================================================= */
+
+.settings-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 10px 0;
+}
+
+
+/* =========================================================
+   SETTINGS - CONTROLS
+========================================================= */
+
+.settings-control {
+    margin-top: 12px;
+}
+
+.settings-control > label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.selector-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.selector-btn {
+    flex: 1;
+    padding: 7px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4b5563;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.selector-btn:hover {
+    background: #f3f4f6;
+}
+
+.selector-btn.active {
+    background: #b9b9b9;
+    color: #ffffff;
+    border-color: #b9b9b9;
+}
+
+
+/* =========================================================
+   SETTINGS - OPTIONS
+========================================================= */
+
+.settings-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 8px 4px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.settings-option:hover {
+    background: #f3f4f6;
+}
+
+
+/* =========================================================
+   SWITCH COMPANY
+========================================================= */
+
+.switch-company-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 7px 9px;
+    background: #d6d6d6;
+    border-radius: 5px;
+    color: #374151 !important;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.switch-company-btn:hover {
+    background: #f1f3f5;
+    color: #374151 !important;
+}
+
+.switch-company-btn i {
+    color: #6b7280 !important;
+    font-size: 11px;
+    transition: transform .15s ease;
+}
+
+.switch-company-btn[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   COMPANY SELECTOR
+========================================================= */
+
+.company-selector {
+    display: none;
+    margin: 6px 0 2px;
+    padding: 7px 10px;
+    border: 1px solid #d7eaf1;
+    border-radius: 6px;
+}
+
+.company-selector.show {
+    display: grid;
+    gap: 3px;
+}
+
+.company-selector legend {
+    padding: 0 3px;
+    color: #6b7280;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.company-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 3px;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.company-option input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #b9b9b9;
+}
+
+.company-option-all {
+    margin-bottom: 3px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 600;
+}
+
+.company-option:hover {
+    color: #0798d4;
+}
+
+
+/* =========================================================
+   SIGN OUT
+========================================================= */
+
+.signout-option {
+    color: #dc2626;
+}
+
+.signout-form {
+    margin: 0;
+}
+
+.signout-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   COMMON ELEMENTS
+========================================================= */
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RESPONSIVE HEADER
+========================================================= */
+
+@media (max-width: 750px) {
+
+    .dashboard-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-user {
+        min-width: 0;
+    }
+
+    .active-company {
+        position: static;
+        transform: none;
+        margin-bottom: 4px;
+        font-size: clamp(18px, 4vw, 24px);
+        text-align: right;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .dashboard-logo img {
+        width: 125px;
+    }
+
+    .user-info > span {
+        display: none;
+    }
+
+    .settings-popup {
+        position: fixed;
+        top: 62px;
+        right: 14px;
+        width: min(320px, calc(100vw - 28px));
+        max-height: calc(100vh - 78px);
+        overflow-y: auto;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================================================
+   HEADER POPUPS - ALWAYS ABOVE PIVOT CONTENT
+   ========================================================= */
+
+.dashboard-header {
+    position: relative;
+    z-index: 10000;
+}
+
+.settings-popup {
+    position: absolute;
+    z-index: 10001 !important;
+}
+.company-selector {
+    position: static !important;
+    width: 100%;
+    margin: 6px 0 2px;
+    padding: 7px 10px;
+    box-sizing: border-box;
+    z-index: auto !important;
+}
+
+.company-selector.show {
+    display: grid;
+    gap: 3px;
+}
+
+/* Pivot content must stay below the shared header */
+.pivot-canvas,
+.pivot-page-toolbar,
+.pivot-canvas .report-types,
+.pivot-canvas .builder {
+    position: relative;
+    z-index: 1;
+}

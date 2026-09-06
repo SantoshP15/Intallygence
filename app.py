@@ -67,6 +67,36 @@ def customer_level_columns():
         )
     return selected
 
+def item_level_columns():
+    return {
+        "date": "VoucherDate",
+        "item": "StockItemName",
+        "amount": "Amount"
+    }
+
+def customer_itemwise_columns():
+    return {
+        "date": "VoucherDate",
+        "customer": "PartyLedgerName",
+        "item": "StockItemName",
+        "amount": "Amount"
+    }
+
+def itemwise_customer_columns():
+    return {
+        "date": "VoucherDate",
+        "item": "StockItemName",
+        "customer": "PartyLedgerName",
+        "amount": "Amount"
+    }
+
+def customer_growth_columns():
+    return {
+        "date": "VoucherDate",
+        "customer": "PartyLedgerName",
+        "amount": "Amount"
+    }
+
 
 def parse_report_date(value):
     if isinstance(value, datetime):
@@ -309,6 +339,1698 @@ def customer_level_data():
         print(f"CUSTOMER LEVEL REPORT ERROR: {error}")
         return jsonify({"error": str(error)}), 500
 
+@app.route("/item-level")
+def item_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+    return render_template("item-level.html")
+
+
+@app.route("/api/item-level")
+def item_level_data():
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    today = date.today()
+    fiscal_start_year = today.year if today.month >= 4 else today.year - 1
+    default_from = date(fiscal_start_year, 4, 1)
+    default_to = date(fiscal_start_year + 1, 3, 31)
+
+    try:
+        from_date = datetime.strptime(
+            request.args.get("from", default_from.isoformat()),
+            "%Y-%m-%d"
+        ).date()
+
+        to_date = datetime.strptime(
+            request.args.get("to", default_to.isoformat()),
+            "%Y-%m-%d"
+        ).date()
+
+    except ValueError:
+        return jsonify({
+            "error": "Use YYYY-MM-DD for the period."
+        }), 400
+
+    if from_date > to_date:
+        return jsonify({
+            "error": "The start date must be before the end date."
+        }), 400
+
+    try:
+        columns = item_level_columns()
+
+        date_column = quote_identifier(columns["date"])
+        item_column = quote_identifier(columns["item"])
+        amount_column = quote_identifier(columns["amount"])
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        try:
+            cursor.execute(
+                f"""
+                SELECT
+                    {item_column} AS item,
+                    {date_column} AS transaction_date,
+                    SUM({amount_column}) AS sales
+                FROM SalesInventory
+                WHERE {date_column} >= %s
+                  AND {date_column} <= %s
+                GROUP BY {item_column}, {date_column}
+                """,
+                (from_date, to_date),
+            )
+
+            source_rows = cursor.fetchall()
+
+        finally:
+            cursor.close()
+            db.close()
+
+        # -------------------------------------------------
+        # CREATE MONTH LIST
+        # -------------------------------------------------
+
+        months = []
+
+        current_month = date(
+            from_date.year,
+            from_date.month,
+            1
+        )
+
+        while current_month <= to_date:
+
+            months.append(
+                current_month.strftime("%b-%y")
+            )
+
+            current_month = date(
+                current_month.year +
+                (current_month.month == 12),
+
+                1 if current_month.month == 12
+                else current_month.month + 1,
+
+                1
+            )
+
+        # -------------------------------------------------
+        # STORE ITEM VALUES
+        # -------------------------------------------------
+
+        values = defaultdict(
+            lambda: defaultdict(float)
+        )
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row["transaction_date"]
+            )
+
+            item = str(
+                row["item"] or "Unspecified item"
+            ).strip()
+
+            if transaction_date and item:
+
+                month_key = transaction_date.strftime(
+                    "%b-%y"
+                )
+
+                if month_key in months:
+
+                    values[item][month_key] += float(
+                        row["sales"] or 0
+                    )
+
+        # -------------------------------------------------
+        # TOTALS
+        # -------------------------------------------------
+
+        month_totals = {
+            month: sum(
+                item[month]
+                for item in values.values()
+            )
+            for month in months
+        }
+
+        grand_total = sum(
+            month_totals.values()
+        )
+
+        # -------------------------------------------------
+        # SORT ITEMS BY TOTAL
+        # -------------------------------------------------
+
+        items = sorted(
+            values,
+            key=lambda item: sum(
+                values[item].values()
+            ),
+            reverse=True
+        )
+
+        # -------------------------------------------------
+        # BUILD RESPONSE ROWS
+        # -------------------------------------------------
+
+        running_by_month = defaultdict(float)
+
+        rows = []
+
+        for item in items:
+
+            monthly = []
+
+            total = sum(
+                values[item][month]
+                for month in months
+            )
+
+            for month in months:
+
+                sales = values[item][month]
+
+                running_by_month[month] += sales
+
+                monthly.append({
+                    "sales": sales,
+
+                    "percent":
+                        sales /
+                        month_totals[month] * 100
+                        if month_totals[month]
+                        else 0,
+
+                    "running_percent":
+                        running_by_month[month] /
+                        month_totals[month] * 100
+                        if month_totals[month]
+                        else 0,
+                })
+
+            rows.append({
+                "item": item,
+                "months": monthly,
+                "total": total,
+                "total_percent":
+                    total /
+                    grand_total * 100
+                    if grand_total
+                    else 0,
+            })
+
+        return jsonify({
+            "months": months,
+            "rows": rows,
+            "grand_total": grand_total,
+            "period": {
+                "from": from_date.isoformat(),
+                "to": to_date.isoformat(),
+            },
+        })
+
+    except Exception as error:
+
+        print(
+            f"ITEM LEVEL REPORT ERROR: {error}"
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+
+@app.route("/customer-itemwise")
+def customer_itemwise():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("customer-itemwise.html")
+
+@app.route("/api/customer-itemwise")
+def customer_itemwise_data():
+
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    today = date.today()
+
+    # --------------------------------------------------
+    # DEFAULT FINANCIAL YEAR
+    # --------------------------------------------------
+
+    fiscal_start_year = (
+        today.year
+        if today.month >= 4
+        else today.year - 1
+    )
+
+    default_from = date(
+        fiscal_start_year,
+        4,
+        1
+    )
+
+    default_to = date(
+        fiscal_start_year + 1,
+        3,
+        31
+    )
+
+    # --------------------------------------------------
+    # PERIOD
+    # --------------------------------------------------
+
+    try:
+
+        from_date = datetime.strptime(
+            request.args.get(
+                "from",
+                default_from.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+        to_date = datetime.strptime(
+            request.args.get(
+                "to",
+                default_to.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+    except ValueError:
+
+        return jsonify({
+            "error": "Use YYYY-MM-DD for the period."
+        }), 400
+
+
+    if from_date > to_date:
+
+        return jsonify({
+            "error":
+                "The start date must be before the end date."
+        }), 400
+
+
+    # --------------------------------------------------
+    # CUSTOMER FILTER
+    # --------------------------------------------------
+
+    selected_customer = (
+        request.args.get("customer", "")
+        .strip()
+    )
+
+
+    try:
+
+        columns = customer_itemwise_columns()
+
+        date_column = quote_identifier(
+            columns["date"]
+        )
+
+        customer_column = quote_identifier(
+            columns["customer"]
+        )
+
+        item_column = quote_identifier(
+            columns["item"]
+        )
+
+        amount_column = quote_identifier(
+            columns["amount"]
+        )
+
+
+        db = get_db_connection()
+
+        cursor = db.cursor(
+            dictionary=True
+        )
+
+
+        try:
+
+            # ==================================================
+            # 1. GET CUSTOMER LIST
+            # ==================================================
+
+            cursor.execute(
+                f"""
+                SELECT DISTINCT
+                    {customer_column} AS customer
+
+                FROM SalesInventory
+
+                WHERE
+                    {date_column} >= %s
+                    AND {date_column} <= %s
+
+                ORDER BY
+                    {customer_column}
+                """,
+                (
+                    from_date,
+                    to_date
+                )
+            )
+
+
+            customer_rows = cursor.fetchall()
+
+
+            customers = []
+
+            for row in customer_rows:
+
+                customer = str(
+                    row["customer"] or ""
+                ).strip()
+
+                if customer:
+                    customers.append(customer)
+
+
+            # ==================================================
+            # 2. BUILD SALES QUERY
+            # ==================================================
+
+            query = f"""
+                SELECT
+                    {customer_column} AS customer,
+                    {item_column} AS item,
+                    {date_column} AS transaction_date,
+                    SUM({amount_column}) AS sales
+
+                FROM SalesInventory
+
+                WHERE
+                    {date_column} >= %s
+                    AND {date_column} <= %s
+            """
+
+            query_params = [
+                from_date,
+                to_date
+            ]
+
+
+            # ==================================================
+            # 3. APPLY CUSTOMER FILTER
+            # ==================================================
+
+            if selected_customer:
+
+                query += f"""
+                    AND {customer_column} = %s
+                """
+
+                query_params.append(
+                    selected_customer
+                )
+
+
+            query += f"""
+                GROUP BY
+                    {customer_column},
+                    {item_column},
+                    {date_column}
+
+                ORDER BY
+                    {customer_column},
+                    {item_column},
+                    {date_column}
+            """
+
+
+            cursor.execute(
+                query,
+                tuple(query_params)
+            )
+
+
+            source_rows = cursor.fetchall()
+
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+
+        # ==================================================
+        # MONTH LIST
+        # ==================================================
+
+        months = []
+
+        current_month = date(
+            from_date.year,
+            from_date.month,
+            1
+        )
+
+
+        while current_month <= to_date:
+
+            months.append(
+                current_month.strftime("%b-%y")
+            )
+
+
+            if current_month.month == 12:
+
+                current_month = date(
+                    current_month.year + 1,
+                    1,
+                    1
+                )
+
+            else:
+
+                current_month = date(
+                    current_month.year,
+                    current_month.month + 1,
+                    1
+                )
+
+
+        # ==================================================
+        # VALUES
+        # ==================================================
+
+        values = defaultdict(
+            lambda: defaultdict(
+                lambda: defaultdict(float)
+            )
+        )
+
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row["transaction_date"]
+            )
+
+
+            if not transaction_date:
+                continue
+
+
+            customer = str(
+                row["customer"] or
+                "Unspecified customer"
+            ).strip()
+
+
+            item = str(
+                row["item"] or
+                "Unspecified item"
+            ).strip()
+
+
+            if not customer:
+                customer = "Unspecified customer"
+
+
+            if not item:
+                item = "Unspecified item"
+
+
+            month_key = (
+                transaction_date.strftime("%b-%y")
+            )
+
+
+            if month_key in months:
+
+                values[
+                    customer
+                ][
+                    item
+                ][
+                    month_key
+                ] += float(
+                    row["sales"] or 0
+                )
+
+
+        # ==================================================
+        # MONTH TOTALS
+        # ==================================================
+
+        month_totals = {
+            month: 0
+            for month in months
+        }
+
+
+        for customer_data in values.values():
+
+            for item_data in customer_data.values():
+
+                for month in months:
+
+                    month_totals[month] += (
+                        item_data[month]
+                    )
+
+
+        # ==================================================
+        # GRAND TOTAL
+        # ==================================================
+
+        grand_total = sum(
+            month_totals.values()
+        )
+
+
+        # ==================================================
+        # BUILD ROWS
+        # ==================================================
+
+        rows = []
+
+
+        for customer in values:
+
+            for item in values[customer]:
+
+                monthly = []
+
+                total = 0
+
+
+                for month in months:
+
+                    sales = (
+                        values[
+                            customer
+                        ][
+                            item
+                        ][
+                            month
+                        ]
+                    )
+
+
+                    total += sales
+
+
+                    monthly.append({
+
+                        "sales": sales,
+
+                        "percent":
+                            (
+                                sales /
+                                month_totals[month] *
+                                100
+                            )
+                            if month_totals[month]
+                            else 0,
+
+                        "running_percent": 0
+                    })
+
+
+                rows.append({
+
+                    "customer":
+                        customer,
+
+                    "item":
+                        item,
+
+                    "months":
+                        monthly,
+
+                    "total":
+                        total,
+
+                    "total_percent":
+                        (
+                            total /
+                            grand_total *
+                            100
+                        )
+                        if grand_total
+                        else 0
+                })
+
+
+        # ==================================================
+        # ORIGINAL ORDER
+        #
+        # Customer A-Z
+        # Then Item A-Z
+        # ==================================================
+
+        rows.sort(
+            key=lambda row: (
+                str(
+                    row["customer"]
+                ).lower(),
+
+                str(
+                    row["item"]
+                ).lower()
+            )
+        )
+
+
+        # ==================================================
+        # RUNNING %
+        # ==================================================
+
+        for month_index, month in enumerate(months):
+
+            running_sales = 0
+
+
+            for row in rows:
+
+                sales = float(
+                    row["months"][
+                        month_index
+                    ]["sales"]
+                )
+
+
+                running_sales += sales
+
+
+                if month_totals[month]:
+
+                    row["months"][
+                        month_index
+                    ]["running_percent"] = (
+                        running_sales /
+                        month_totals[month]
+                    ) * 100
+
+                else:
+
+                    row["months"][
+                        month_index
+                    ]["running_percent"] = 0
+
+
+        # ==================================================
+        # RESPONSE
+        # ==================================================
+
+        return jsonify({
+
+            "customers":
+                customers,
+
+            "months":
+                months,
+
+            "rows":
+                rows,
+
+            "month_totals":
+                month_totals,
+
+            "grand_total":
+                grand_total,
+
+            "selected_customer":
+                selected_customer,
+
+            "period": {
+
+                "from":
+                    from_date.isoformat(),
+
+                "to":
+                    to_date.isoformat()
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            f"CUSTOMER ITEMWISE REPORT ERROR: {error}"
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+@app.route("/itemwise-customer")
+def itemwise_customer():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("itemwise-customer.html")
+
+@app.route("/api/itemwise-customer")
+def itemwise_customer_data():
+
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    today = date.today()
+
+    # --------------------------------------------------
+    # DEFAULT FINANCIAL YEAR
+    # --------------------------------------------------
+
+    fiscal_start_year = (
+        today.year
+        if today.month >= 4
+        else today.year - 1
+    )
+
+    default_from = date(
+        fiscal_start_year,
+        4,
+        1
+    )
+
+    default_to = date(
+        fiscal_start_year + 1,
+        3,
+        31
+    )
+
+    # --------------------------------------------------
+    # PERIOD
+    # --------------------------------------------------
+
+    try:
+
+        from_date = datetime.strptime(
+            request.args.get(
+                "from",
+                default_from.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+        to_date = datetime.strptime(
+            request.args.get(
+                "to",
+                default_to.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+    except ValueError:
+
+        return jsonify({
+            "error": "Use YYYY-MM-DD for the period."
+        }), 400
+
+
+    if from_date > to_date:
+
+        return jsonify({
+            "error": "The start date must be before the end date."
+        }), 400
+
+
+    # --------------------------------------------------
+    # SELECTED ITEM
+    # --------------------------------------------------
+
+    selected_item = (
+        request.args.get("item", "")
+        .strip()
+    )
+
+
+    try:
+
+        columns = itemwise_customer_columns()
+
+        date_column = quote_identifier(
+            columns["date"]
+        )
+
+        item_column = quote_identifier(
+            columns["item"]
+        )
+
+        customer_column = quote_identifier(
+            columns["customer"]
+        )
+
+        amount_column = quote_identifier(
+            columns["amount"]
+        )
+
+
+        db = get_db_connection()
+
+        cursor = db.cursor(
+            dictionary=True
+        )
+
+
+        try:
+
+            # ==================================================
+            # 1. GET ALL ITEMS FOR DROPDOWN
+            # ==================================================
+
+            cursor.execute(
+                f"""
+                SELECT DISTINCT
+                    {item_column} AS item
+
+                FROM SalesInventory
+
+                WHERE
+                    {date_column} >= %s
+                    AND {date_column} <= %s
+
+                ORDER BY
+                    {item_column}
+                """,
+                (
+                    from_date,
+                    to_date
+                )
+            )
+
+
+            item_rows = cursor.fetchall()
+
+
+            items = []
+
+            for row in item_rows:
+
+                item = str(
+                    row["item"] or ""
+                ).strip()
+
+                if item:
+                    items.append(item)
+
+
+            # ==================================================
+            # 2. REPORT QUERY
+            # ==================================================
+
+            query = f"""
+                SELECT
+                    {item_column} AS item,
+                    {customer_column} AS customer,
+                    {date_column} AS transaction_date,
+                    SUM({amount_column}) AS sales
+
+                FROM SalesInventory
+
+                WHERE
+                    {date_column} >= %s
+                    AND {date_column} <= %s
+            """
+
+            query_params = [
+                from_date,
+                to_date
+            ]
+
+
+            # ==================================================
+            # 3. APPLY ITEM FILTER
+            # ==================================================
+
+            if selected_item:
+
+                query += f"""
+                    AND {item_column} = %s
+                """
+
+                query_params.append(
+                    selected_item
+                )
+
+
+            query += f"""
+                GROUP BY
+                    {item_column},
+                    {customer_column},
+                    {date_column}
+
+                ORDER BY
+                    {item_column},
+                    {customer_column},
+                    {date_column}
+            """
+
+
+            cursor.execute(
+                query,
+                tuple(query_params)
+            )
+
+
+            source_rows = cursor.fetchall()
+
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+
+        # ==================================================
+        # MONTHS
+        # ==================================================
+
+        months = []
+
+        current_month = date(
+            from_date.year,
+            from_date.month,
+            1
+        )
+
+
+        while current_month <= to_date:
+
+            months.append(
+                current_month.strftime("%b-%y")
+            )
+
+
+            if current_month.month == 12:
+
+                current_month = date(
+                    current_month.year + 1,
+                    1,
+                    1
+                )
+
+            else:
+
+                current_month = date(
+                    current_month.year,
+                    current_month.month + 1,
+                    1
+                )
+
+
+        # ==================================================
+        # STORE VALUES
+        # ==================================================
+
+        values = defaultdict(
+            lambda: defaultdict(
+                lambda: defaultdict(float)
+            )
+        )
+
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row["transaction_date"]
+            )
+
+            if not transaction_date:
+                continue
+
+
+            item = str(
+                row["item"] or
+                "Unspecified item"
+            ).strip()
+
+
+            customer = str(
+                row["customer"] or
+                "Unspecified customer"
+            ).strip()
+
+
+            if not item:
+                item = "Unspecified item"
+
+
+            if not customer:
+                customer = "Unspecified customer"
+
+
+            month_key = (
+                transaction_date.strftime("%b-%y")
+            )
+
+
+            if month_key in months:
+
+                values[
+                    item
+                ][
+                    customer
+                ][
+                    month_key
+                ] += float(
+                    row["sales"] or 0
+                )
+
+
+        # ==================================================
+        # MONTH TOTALS
+        # ==================================================
+
+        month_totals = {
+            month: 0
+            for month in months
+        }
+
+
+        for item_data in values.values():
+
+            for customer_data in item_data.values():
+
+                for month in months:
+
+                    month_totals[month] += (
+                        customer_data[month]
+                    )
+
+
+        # ==================================================
+        # GRAND TOTAL
+        # ==================================================
+
+        grand_total = sum(
+            month_totals.values()
+        )
+
+
+        # ==================================================
+        # BUILD REPORT ROWS
+        # ==================================================
+
+        rows = []
+
+
+        for item in values:
+
+            for customer in values[item]:
+
+                monthly = []
+
+                total = 0
+
+
+                for month in months:
+
+                    sales = (
+                        values[
+                            item
+                        ][
+                            customer
+                        ][
+                            month
+                        ]
+                    )
+
+
+                    total += sales
+
+
+                    monthly.append({
+
+                        "sales":
+                            sales,
+
+                        "percent":
+                            (
+                                sales /
+                                month_totals[month] *
+                                100
+                            )
+                            if month_totals[month]
+                            else 0,
+
+                        "running_percent":
+                            0
+                    })
+
+
+                rows.append({
+
+                    "item":
+                        item,
+
+                    "customer":
+                        customer,
+
+                    "months":
+                        monthly,
+
+                    "total":
+                        total,
+
+                    "total_percent":
+                        (
+                            total /
+                            grand_total *
+                            100
+                        )
+                        if grand_total
+                        else 0
+                })
+
+
+        # ==================================================
+        # ORIGINAL ORDER
+        #
+        # Item A-Z
+        # Customer A-Z
+        # ==================================================
+
+        rows.sort(
+            key=lambda row: (
+                str(
+                    row["item"]
+                ).lower(),
+
+                str(
+                    row["customer"]
+                ).lower()
+            )
+        )
+
+
+        # ==================================================
+        # RUNNING %
+        # ==================================================
+
+        for month_index, month in enumerate(months):
+
+            running_sales = 0
+
+
+            for row in rows:
+
+                sales = float(
+                    row["months"][
+                        month_index
+                    ]["sales"]
+                )
+
+
+                running_sales += sales
+
+
+                if month_totals[month]:
+
+                    row["months"][
+                        month_index
+                    ]["running_percent"] = (
+                        running_sales /
+                        month_totals[month]
+                    ) * 100
+
+                else:
+
+                    row["months"][
+                        month_index
+                    ]["running_percent"] = 0
+
+
+        # ==================================================
+        # RESPONSE
+        # ==================================================
+
+        return jsonify({
+
+            "items":
+                items,
+
+            "months":
+                months,
+
+            "rows":
+                rows,
+
+            "month_totals":
+                month_totals,
+
+            "grand_total":
+                grand_total,
+
+            "selected_item":
+                selected_item,
+
+            "period": {
+
+                "from":
+                    from_date.isoformat(),
+
+                "to":
+                    to_date.isoformat()
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            f"ITEMWISE-CUSTOMER REPORT ERROR: {error}"
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+
+@app.route("/customer-growth")
+def customer_growth():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("customer-growth.html")
+
+@app.route("/api/customer-growth")
+def customer_growth_data():
+
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    today = date.today()
+
+    # -----------------------------------------
+    # Determine current financial year
+    # -----------------------------------------
+
+    current_fy_start_year = (
+        today.year
+        if today.month >= 4
+        else today.year - 1
+    )
+
+    default_from = date(
+        current_fy_start_year,
+        4,
+        1
+    )
+
+    default_to = date(
+        current_fy_start_year + 1,
+        3,
+        31
+    )
+
+    # -----------------------------------------
+    # Read selected period
+    # -----------------------------------------
+
+    try:
+
+        from_date = datetime.strptime(
+            request.args.get(
+                "from",
+                default_from.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+        to_date = datetime.strptime(
+            request.args.get(
+                "to",
+                default_to.isoformat()
+            ),
+            "%Y-%m-%d"
+        ).date()
+
+    except ValueError:
+
+        return jsonify({
+            "error": "Use YYYY-MM-DD for the period."
+        }), 400
+
+
+    if from_date > to_date:
+
+        return jsonify({
+            "error": "The start date must be before the end date."
+        }), 400
+
+
+    try:
+
+        columns = customer_growth_columns()
+
+        date_column = quote_identifier(
+            columns["date"]
+        )
+
+        customer_column = quote_identifier(
+            columns["customer"]
+        )
+
+        amount_column = quote_identifier(
+            columns["amount"]
+        )
+
+
+        # -----------------------------------------
+        # Previous financial year
+        #
+        # Example:
+        # Selected: 01-Apr-2026 to 31-Mar-2027
+        #
+        # Previous:
+        # 01-Apr-2025 to 31-Mar-2026
+        # -----------------------------------------
+
+        previous_from = date(
+            from_date.year - 1,
+            from_date.month,
+            from_date.day
+        )
+
+        previous_to = date(
+            to_date.year - 1,
+            to_date.month,
+            to_date.day
+        )
+
+
+        # -----------------------------------------
+        # Query both years
+        # -----------------------------------------
+
+        db = get_db_connection()
+
+        cursor = db.cursor(dictionary=True)
+
+        try:
+
+            cursor.execute(
+                f"""
+                SELECT
+                    {customer_column} AS customer,
+                    {date_column} AS transaction_date,
+                    SUM({amount_column}) AS sales
+
+                FROM SalesInventory
+
+                WHERE
+                    {date_column} >= %s
+                    AND {date_column} <= %s
+
+                GROUP BY
+                    {customer_column},
+                    {date_column}
+
+                ORDER BY
+                    {customer_column}
+                """,
+                (
+                    previous_from,
+                    to_date
+                )
+            )
+
+            source_rows = cursor.fetchall()
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+
+        # -----------------------------------------
+        # Build customer totals
+        # -----------------------------------------
+
+        previous_values = {}
+        current_values = {}
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row["transaction_date"]
+            )
+
+            if not transaction_date:
+                continue
+
+
+            customer = str(
+                row["customer"] or
+                "Unspecified customer"
+            ).strip()
+
+
+            if not customer:
+                customer = "Unspecified customer"
+
+
+            sales = float(
+                row["sales"] or 0
+            )
+
+
+            # -------------------------------------
+            # Previous financial year
+            # -------------------------------------
+
+            if (
+                previous_from
+                <= transaction_date
+                <= previous_to
+            ):
+
+                previous_values[customer] = (
+                    previous_values.get(
+                        customer,
+                        0
+                    ) + sales
+                )
+
+
+            # -------------------------------------
+            # Current financial year
+            # -------------------------------------
+
+            elif (
+                from_date
+                <= transaction_date
+                <= to_date
+            ):
+
+                current_values[customer] = (
+                    current_values.get(
+                        customer,
+                        0
+                    ) + sales
+                )
+
+
+        # -----------------------------------------
+        # All customers
+        # -----------------------------------------
+
+        customers = set(
+            previous_values.keys()
+        ) | set(
+            current_values.keys()
+        )
+
+
+        rows = []
+
+
+        for customer in customers:
+
+            previous = float(
+                previous_values.get(
+                    customer,
+                    0
+                )
+            )
+
+            current = float(
+                current_values.get(
+                    customer,
+                    0
+                )
+            )
+
+
+            # -------------------------------------
+            # Growth
+            # -------------------------------------
+
+            growth = current - previous
+
+
+            # -------------------------------------
+            # Growth %
+            #
+            # If previous year = 0:
+            #
+            # Current > 0 → New
+            # Current = 0 → 0%
+            # -------------------------------------
+
+            if previous != 0:
+
+                growth_percent = (
+                    growth / previous
+                ) * 100
+
+                status = "existing"
+
+            elif current > 0:
+
+                growth_percent = 0
+
+                status = "new"
+
+            else:
+
+                growth_percent = 0
+
+                status = "no-change"
+
+
+            rows.append({
+
+                "customer": customer,
+
+                "previous": previous,
+
+                "current": current,
+
+                "growth": growth,
+
+                "growth_percent": growth_percent,
+
+                "status": status
+            })
+
+
+        # -----------------------------------------
+        # Default order
+        #
+        # Customer A → Z
+        # -----------------------------------------
+
+        rows.sort(
+            key=lambda row: (
+                str(
+                    row["customer"]
+                ).lower()
+            )
+        )
+
+
+        # -----------------------------------------
+        # Grand totals
+        # -----------------------------------------
+
+        previous_total = sum(
+            row["previous"]
+            for row in rows
+        )
+
+        current_total = sum(
+            row["current"]
+            for row in rows
+        )
+
+
+        growth_total = (
+            current_total -
+            previous_total
+        )
+
+
+        if previous_total != 0:
+
+            growth_percent_total = (
+                growth_total /
+                previous_total
+            ) * 100
+
+        else:
+
+            growth_percent_total = 0
+
+
+        # -----------------------------------------
+        # Financial year labels
+        # -----------------------------------------
+
+        previous_label = (
+            f"FY {previous_from.year}-"
+            f"{str(previous_to.year)[-2:]}"
+        )
+
+        current_label = (
+            f"FY {from_date.year}-"
+            f"{str(to_date.year)[-2:]}"
+        )
+
+
+        return jsonify({
+
+            "previous_label":
+                previous_label,
+
+            "current_label":
+                current_label,
+
+            "previous_total":
+                previous_total,
+
+            "current_total":
+                current_total,
+
+            "growth_total":
+                growth_total,
+
+            "growth_percent_total":
+                growth_percent_total,
+
+            "rows":
+                rows,
+
+            "period": {
+
+                "from":
+                    from_date.isoformat(),
+
+                "to":
+                    to_date.isoformat()
+            }
+        })
+
+
+    except Exception as error:
+
+        print(
+            f"CUSTOMER GROWTH REPORT ERROR: {error}"
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
 
 @app.route("/pivot")
 def pivot():

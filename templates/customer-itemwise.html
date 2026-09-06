@@ -2,82 +2,59 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Customer Level | InTallygence</title>
-
+    <title>Customer-Itemwise | InTallygence</title>
 
     <!-- Google Font -->
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet"
     >
 
-
     <!-- Font Awesome -->
-
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
 
-
     <!-- Common Header CSS -->
-
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/header.css') }}"
     >
 
-
-    <!-- Customer Level CSS -->
-
+    <!-- Customer-Itemwise CSS -->
     <link
         rel="stylesheet"
-        href="{{ url_for('static', filename='css/customer-level.css') }}"
+        href="{{ url_for('static', filename='css/customer-itemwise.css') }}"
     >
-
 </head>
-
 
 <body>
 
-    <!-- =====================================================
-         COMMON APPLICATION HEADER
-         ===================================================== -->
+    <main class="customer-itemwise-report">
 
-    
-
-
-    <!-- =====================================================
-         CUSTOMER LEVEL REPORT
-         ===================================================== -->
-
-    <main class="customer-report">
+        <!-- =========================================
+             COMMON HEADER
+        ========================================== -->
 
         {% include 'header.html' %}
 
-        <!-- Report title + filters -->
+
+        <!-- =========================================
+             REPORT TITLE + FILTERS
+        ========================================== -->
 
         <section class="report-top">
+
+            <!-- =====================================
+                 REPORT TITLE
+            ====================================== -->
 
             <div class="report-title">
 
@@ -86,8 +63,11 @@
                     href="{{ url_for('report_dashboard') }}"
                     aria-label="Back to Reports"
                 >
+
                     <i class="fa-solid fa-arrow-left"></i>
+
                     Reports
+
                 </a>
 
 
@@ -98,11 +78,11 @@
                     </p>
 
                     <h1>
-                        Customer Level
+                        Customer-Itemwise
                     </h1>
 
                     <p class="subtitle">
-                        Customer-wise sales, contribution and running percentage.
+                        Customer-wise item sales, contribution and running percentage.
                     </p>
 
                 </div>
@@ -110,12 +90,36 @@
             </div>
 
 
-            <!-- Period Filter -->
+            <!-- =====================================
+                 REPORT FILTERS
+            ====================================== -->
 
             <form
                 id="periodForm"
                 class="period-form"
             >
+
+                <!-- Customer -->
+
+                <label for="customerSelect">
+
+                    Customer
+
+                    <select
+                        id="customerSelect"
+                        name="customer"
+                    >
+
+                        <option value="">
+                            All Customers
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <!-- From -->
 
                 <label for="fromDate">
 
@@ -123,12 +127,15 @@
 
                     <input
                         id="fromDate"
+                        name="from"
                         type="date"
                         required
                     >
 
                 </label>
 
+
+                <!-- To -->
 
                 <label for="toDate">
 
@@ -136,12 +143,15 @@
 
                     <input
                         id="toDate"
+                        name="to"
                         type="date"
                         required
                     >
 
                 </label>
 
+
+                <!-- Apply -->
 
                 <button
                     type="submit"
@@ -159,9 +169,9 @@
         </section>
 
 
-        <!-- =================================================
+        <!-- =========================================
              REPORT TABLE
-             ================================================= -->
+        ========================================== -->
 
         <section
             class="report-table-card"
@@ -172,7 +182,7 @@
                 id="reportStatus"
                 class="report-status"
             >
-                Loading customer sales…
+                Loading customer-itemwise sales…
             </div>
 
 
@@ -187,12 +197,14 @@
     </main>
 
 
-    <!-- Customer Level JavaScript -->
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
     <script
     src="{{ url_for('static', filename='js/header.js') }}"
     ></script>
     <script
-        src="{{ url_for('static', filename='js/customer-level.js') }}"
+        src="{{ url_for('static', filename='js/customer-itemwise.js') }}"
     ></script>
 
 </body>

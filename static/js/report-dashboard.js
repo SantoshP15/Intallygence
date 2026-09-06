@@ -55,10 +55,10 @@ const reportData = {
 
         items: [
             "Entity",
-            "Customer type",
+            "Customer-Itemwise",
             "Customer Level",
-            "Open Sales Order",
-            "Pending Bills",
+            "Itemwise-Customer",
+            "Customer Growth",
             "Inventory Level",
             "Register",
             "Register Margin"
@@ -189,23 +189,53 @@ function openReportModal(categoryKey) {
             const customerLevelLink =
                 categoryKey === "sales" && item === "Customer Level";
 
+            const inventoryLevelLink =
+                categoryKey === "sales" && item === "Inventory Level";
+
+            const customerItemwiseLink =
+                categoryKey === "sales" && item === "Customer-Itemwise";
+
+            const itemwiseCustomerLink =
+                categoryKey === "sales" && item === "Itemwise-Customer";
+            
+            const customerGrowthLink =
+                categoryKey === "sales" && item === "Customer Growth";
+
+            const reportLink =
+                customerLevelLink
+                    ? "/customer-level"
+                    : inventoryLevelLink
+                    ? "/item-level"
+                    : customerItemwiseLink
+                    ? "/customer-itemwise"
+                    : itemwiseCustomerLink
+                    ? "/itemwise-customer"
+                    : customerGrowthLink
+                    ? "/customer-growth"
+                    : "#";
+
+            const isClickable =
+                customerLevelLink || inventoryLevelLink || customerItemwiseLink || itemwiseCustomerLink || customerGrowthLink;
+
             return `
 
-            <a
-                href="${customerLevelLink ? "/customer-level" : "#"}"
-                class="modal-report-item"
-                ${customerLevelLink ? 'aria-label="Open Customer Level report"' : 'aria-disabled="true"'}
-            >
+                <a
+                    href="${reportLink}"
+                    class="modal-report-item"
+                    ${isClickable
+                        ? `aria-label="Open ${item} report"`
+                        : 'aria-disabled="true"'}
+                >
 
-                <span>
-                    ${item}
-                </span>
+                    <span>
+                        ${item}
+                    </span>
 
-                <i class="fa-solid fa-arrow-right"></i>
+                    <i class="fa-solid fa-arrow-right"></i>
 
-            </a>
+                </a>
 
-        `;
+            `;
         }).join("");
 
 

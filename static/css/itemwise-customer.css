@@ -1,6 +1,10 @@
+/* =========================================================
+   ITEMWISE-CUSTOMER REPORT
+   ========================================================= */
+
 :root {
     color-scheme: light;
-    font-family: Inter, Arial, sans-serif;
+    font-family: Inter, sans-serif;
     color: #17223b;
     background: #f4f7fb;
 }
@@ -16,28 +20,25 @@ body {
 
 
 /* =========================================================
-   REPORT CONTAINER
+   MAIN CONTAINER
    ========================================================= */
 
-.customer-report {
+.itemwise-customer-report {
     width: 100%;
     min-height: 100vh;
-
     padding: 16px 3.5%;
-
     box-sizing: border-box;
 }
 
+
 /* =========================================================
    REPORT TOP
-   TITLE + FILTERS
    ========================================================= */
 
 .report-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 30px;
 
     width: 100%;
@@ -46,38 +47,26 @@ body {
 
 
 /* =========================================================
-   REPORT TITLE AREA
+   REPORT TITLE
    ========================================================= */
 
 .report-title {
     display: flex;
     align-items: flex-start;
-
     gap: 18px;
 
     min-width: 0;
     flex: 1;
 }
 
-.header-content {
-    min-width: 0;
-}
-
-
-/* =========================================================
-   BACK LINK
-   ========================================================= */
-
 .back-link {
     display: inline-flex;
     align-items: center;
-
     gap: 8px;
 
     padding-top: 6px;
 
     color: #1e4f91;
-
     text-decoration: none;
 
     font-size: 13px;
@@ -90,63 +79,49 @@ body {
     color: #15487f;
 }
 
-
-/* =========================================================
-   REPORT EYEBROW
-   ========================================================= */
+.header-content {
+    min-width: 0;
+}
 
 .eyebrow {
-    margin: 0 0 4px;
+    margin: 0 0 5px;
 
     color: #64748b;
 
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
 
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
-
-/* =========================================================
-   REPORT TITLE
-   ========================================================= */
-
 h1 {
     margin: 0;
 
     color: #17223b;
 
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
-
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
-
-/* =========================================================
-   REPORT SUBTITLE
-   ========================================================= */
-
 .subtitle {
-    margin: 5px 0 0;
+    margin: 7px 0 0;
 
     color: #64748b;
 
-    font-size: 13px;
-
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 
 /* =========================================================
-   FILTER FORM
+   PERIOD FORM / FILTER PANEL
    ========================================================= */
 
 .period-form {
     display: flex;
     align-items: flex-end;
-
     gap: 12px;
 
     flex-shrink: 0;
@@ -154,52 +129,45 @@ h1 {
     padding: 14px 18px;
 
     background: #ffffff;
-
     border: 1px solid #dce5f0;
-
     border-radius: 10px;
 
-    box-shadow:
-        0 5px 18px
-        rgb(24 48 86 / 7%);
+    box-shadow: 0 5px 18px rgb(24 48 86 / 7%);
 }
 
 
 /* =========================================================
-   FILTER LABEL
+   FILTER LABELS
    ========================================================= */
 
 .period-form label {
     display: grid;
-
-    gap: 5px;
+    gap: 6px;
 
     color: #536174;
 
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
 }
 
 
 /* =========================================================
-   DATE INPUT
+   DATE INPUTS
    ========================================================= */
 
 .period-form input {
-    width: 138px;
+    width: 150px;
 
-    padding: 8px 9px;
+    padding: 9px 10px;
 
     color: #17223b;
-
     background: #ffffff;
 
     border: 1px solid #bccadd;
-
     border-radius: 6px;
 
     font: inherit;
-    font-size: 12px;
+    font-size: 13px;
 
     outline: none;
 }
@@ -207,9 +175,38 @@ h1 {
 .period-form input:focus {
     border-color: #1d5b9f;
 
-    box-shadow:
-        0 0 0 2px
-        rgb(29 91 159 / 10%);
+    box-shadow: 0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   ITEM SELECT
+   ========================================================= */
+
+.period-form select {
+    width: 220px;
+
+    padding: 9px 34px 9px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: inherit;
+    font-size: 13px;
+
+    outline: none;
+
+    cursor: pointer;
+    appearance: auto;
+}
+
+.period-form select:focus {
+    border-color: #1d5b9f;
+
+    box-shadow: 0 0 0 2px rgb(29 91 159 / 10%);
 }
 
 
@@ -219,25 +216,21 @@ h1 {
 
 .period-form button {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
+    gap: 7px;
 
-    gap: 6px;
-
-    padding: 9px 14px;
+    padding: 10px 15px;
 
     color: #ffffff;
-
     background: #1d5b9f;
 
     border: 0;
-
     border-radius: 6px;
 
     cursor: pointer;
 
-    font: 600 12px Inter, Arial, sans-serif;
+    font: 600 13px Inter, Arial, sans-serif;
 
     white-space: nowrap;
 }
@@ -252,32 +245,30 @@ h1 {
 
 .period-form button:disabled {
     opacity: 0.65;
-
     cursor: not-allowed;
 }
 
 
 /* =========================================================
-   TABLE CARD
+   REPORT TABLE CARD
    ========================================================= */
 
 .report-table-card {
     overflow: hidden;
 
+    width: 100%;
+
     background: #ffffff;
 
     border: 1px solid #dce5f0;
-
     border-radius: 12px;
 
-    box-shadow:
-        0 5px 18px
-        rgb(24 48 86 / 7%);
+    box-shadow: 0 5px 18px rgb(24 48 86 / 7%);
 }
 
 
 /* =========================================================
-   REPORT STATUS
+   STATUS
    ========================================================= */
 
 .report-status {
@@ -296,28 +287,26 @@ h1 {
 
 
 /* =========================================================
-   TABLE SCROLL AREA
+   TABLE WRAPPER
    ========================================================= */
 
 .table-wrap {
     position: relative;
 
     width: 100%;
-
-    max-height: calc(100vh - 250px);
+    max-height: calc(100vh - 220px);
 
     overflow: auto;
 }
 
 
 /* =========================================================
-   CUSTOMER TABLE
+   TABLE
    ========================================================= */
 
-.customer-table {
+.itemwise-customer-table {
     width: 100%;
-
-    min-width: 1060px;
+    min-width: 850px;
 
     border-collapse: separate;
     border-spacing: 0;
@@ -327,14 +316,13 @@ h1 {
 
 
 /* =========================================================
-   TABLE HEADER
+   TABLE HEADERS
    ========================================================= */
 
-.customer-table th {
+.itemwise-customer-table th {
     padding: 10px 8px;
 
     color: #132a46;
-
     background: #c9e8f5;
 
     border-bottom: 1px solid #a9cede;
@@ -342,12 +330,15 @@ h1 {
     font-weight: 700;
 
     white-space: nowrap;
-
     text-align: right;
 }
 
-.customer-table thead tr:first-child th {
+.itemwise-customer-table thead tr:first-child th {
     text-align: center;
+}
+
+.itemwise-customer-table thead tr:nth-child(2) th {
+    text-align: right;
 }
 
 
@@ -355,98 +346,130 @@ h1 {
    SORTABLE HEADERS
    ========================================================= */
 
-.customer-table th.sortable-header {
-    cursor: pointer;
-
+.itemwise-customer-table th.sortable-header {
+    cursor: pointer !important;
     user-select: none;
 }
 
-.customer-table th.sortable-header:hover {
+.itemwise-customer-table th.sortable-header:hover {
     background: #b9deed;
 }
 
 
 /* =========================================================
-   FIXED CUSTOMER HEADER
+   ITEM COLUMN
    ========================================================= */
 
-.customer-table thead tr:first-child th:first-child {
+.itemwise-customer-table th.item-column,
+.itemwise-customer-table td.item-column {
+    text-align: left;
+}
+
+
+/* =========================================================
+   CUSTOMER COLUMN
+   ========================================================= */
+
+.itemwise-customer-table th.customer-column,
+.itemwise-customer-table td.customer-column {
+    text-align: left;
+}
+
+
+/* =========================================================
+   FIXED ITEM COLUMN
+   ========================================================= */
+
+/*
+   ONLY the Item column is fixed.
+
+   Do not use:
+
+       .itemwise-customer-table th:first-child
+
+   because the first TH of the second header row
+   may not represent the Item column.
+*/
+
+.itemwise-customer-table thead tr:first-child th:first-child {
     position: sticky;
-
     left: 0;
+    z-index: 8;
 
-    z-index: 10;
-
-    width: 250px;
-
-    min-width: 250px;
-    max-width: 250px;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
 
     background: #c9e8f5;
 
     text-align: center;
 }
 
+.itemwise-customer-table tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+
+    padding: 9px 8px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    text-align: left;
+    font-weight: 700;
+}
+
+.itemwise-customer-table tfoot td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 7;
+
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+
+    background: #ddecf4;
+}
+
 
 /* =========================================================
-   TABLE BODY
+   CUSTOMER TEXT
    ========================================================= */
 
-.customer-table td {
+.itemwise-customer-table tbody td.customer-column {
+    min-width: 220px;
+    max-width: 300px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #334155;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+.itemwise-customer-table td {
     padding: 9px 8px;
 
     color: #26364d;
-
     background: #ffffff;
 
     border-bottom: 1px solid #e6edf4;
 
     text-align: right;
-
     white-space: nowrap;
-}
-
-
-/* =========================================================
-   FIXED CUSTOMER BODY COLUMN
-   ========================================================= */
-
-.customer-table tbody td:first-child {
-    position: sticky;
-
-    left: 0;
-
-    z-index: 5;
-
-    width: 250px;
-
-    min-width: 250px;
-    max-width: 250px;
-
-    padding: 9px 8px;
-
-    color: #17223b;
-
-    background: #ffffff;
-
-    text-align: left;
-
-    font-weight: 600;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   CUSTOMER NAME TOOLTIP
-   ========================================================= */
-
-.customer-table tbody td:first-child[title] {
-    cursor: default;
 }
 
 
@@ -454,11 +477,11 @@ h1 {
    ROW HOVER
    ========================================================= */
 
-.customer-table tbody tr:hover td {
+.itemwise-customer-table tbody tr:hover td {
     background: #f0f8fc;
 }
 
-.customer-table tbody tr:hover td:first-child {
+.itemwise-customer-table tbody tr:hover td:first-child {
     background: #f0f8fc;
 }
 
@@ -467,31 +490,48 @@ h1 {
    RUNNING %
    ========================================================= */
 
-.customer-table .running {
+.itemwise-customer-table .running {
     color: #385879;
 }
 
 
 /* =========================================================
-   TOTAL CELLS
+   ITEM GROUP
    ========================================================= */
 
-.customer-table .total {
-    background: #f6fbfd;
+.itemwise-customer-table .item-group-start td {
+    border-top: 1px solid #cbd9e6;
+}
 
+.itemwise-customer-table .item-group-start td.item-column {
+    color: #17223b;
     font-weight: 700;
 }
 
 
 /* =========================================================
-   FOOTER
+   TOTAL ROW
    ========================================================= */
 
-.customer-table tfoot td {
+.itemwise-customer-table .total {
+    background: #f6fbfd;
+    font-weight: 700;
+}
+
+.itemwise-customer-table .total td {
+    background: #f6fbfd;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER / GRAND TOTAL
+   ========================================================= */
+
+.itemwise-customer-table tfoot td {
     padding: 10px 8px;
 
     color: #132a46;
-
     background: #ddecf4;
 
     border-top: 2px solid #9ec5d8;
@@ -499,32 +539,8 @@ h1 {
     font-weight: 700;
 }
 
-
-/* =========================================================
-   FIXED CUSTOMER FOOTER
-   ========================================================= */
-
-.customer-table tfoot td:first-child {
-    position: sticky;
-
-    left: 0;
-
-    z-index: 6;
-
-    width: 250px;
-
-    min-width: 250px;
-    max-width: 250px;
-
-    background: #ddecf4;
-
+.itemwise-customer-table tfoot td:first-child {
     text-align: left;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
 }
 
 
@@ -558,7 +574,6 @@ h1 {
 
 .table-wrap::-webkit-scrollbar-thumb {
     background: #b7c7d8;
-
     border-radius: 10px;
 }
 
@@ -568,59 +583,15 @@ h1 {
 
 
 /* =========================================================
-   TABLE SORT INDICATOR
-   ========================================================= */
-
-.customer-table th.sortable-header::after {
-    content: "";
-
-    display: inline-block;
-
-    width: 0;
-    height: 0;
-
-    margin-left: 5px;
-
-    vertical-align: middle;
-
-    opacity: 0.35;
-}
-
-
-/* =========================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET
    ========================================================= */
 
 @media (max-width: 1100px) {
 
     .report-top {
         align-items: flex-start;
-
-        gap: 20px;
-    }
-
-    .period-form {
-        padding: 12px 14px;
-    }
-
-    .period-form input {
-        width: 125px;
-    }
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .customer-report {
-        padding: 22px;
-    }
-
-    .report-top {
         flex-direction: column;
+        gap: 18px;
     }
 
     .report-title {
@@ -629,28 +600,36 @@ h1 {
 
     .period-form {
         width: 100%;
-
         justify-content: flex-end;
     }
 
-    .period-form input {
-        width: 145px;
+    .table-wrap {
+        max-height: calc(100vh - 280px);
     }
 }
 
 
 /* =========================================================
-   MOBILE
+   RESPONSIVE — MOBILE
    ========================================================= */
 
 @media (max-width: 700px) {
 
-    .customer-report {
-        padding: 18px 14px;
+    .itemwise-customer-report {
+        padding: 16px;
+    }
+
+    .report-top {
+        gap: 16px;
+        margin-bottom: 16px;
     }
 
     .report-title {
         gap: 12px;
+    }
+
+    .back-link {
+        padding-top: 4px;
     }
 
     h1 {
@@ -661,6 +640,11 @@ h1 {
         font-size: 13px;
     }
 
+
+    /* -------------------------
+       FILTER FORM
+       ------------------------- */
+
     .period-form {
         display: grid;
 
@@ -669,6 +653,8 @@ h1 {
         width: 100%;
 
         padding: 14px;
+
+        gap: 10px;
     }
 
     .period-form label {
@@ -679,26 +665,44 @@ h1 {
         width: 100%;
     }
 
+    .period-form select {
+        width: 100%;
+    }
+
     .period-form button {
         grid-column: 1 / -1;
 
         width: 100%;
     }
 
+
+    /* -------------------------
+       TABLE
+       ------------------------- */
+
     .table-wrap {
-        max-height: calc(100vh - 300px);
+        max-height: calc(100vh - 320px);
     }
 
-    .customer-table {
-        min-width: 900px;
+    .itemwise-customer-table {
+        min-width: 760px;
     }
 
-    .customer-table thead tr:first-child th:first-child,
-    .customer-table tbody td:first-child,
-    .customer-table tfoot td:first-child {
-        width: 200px;
 
-        min-width: 200px;
-        max-width: 200px;
+    /* -------------------------
+       STICKY ITEM COLUMN
+       ------------------------- */
+
+    .itemwise-customer-table thead tr:first-child th:first-child,
+    .itemwise-customer-table tbody td:first-child,
+    .itemwise-customer-table tfoot td:first-child {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+
+    .itemwise-customer-table tbody td.customer-column {
+        min-width: 180px;
+        max-width: 240px;
     }
 }

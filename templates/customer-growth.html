@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Growth | InTallygence</title>
+
+    <!-- Common Header CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/header.css') }}">
+
+    <!-- Customer Growth CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/customer-growth.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<main class="customer-growth-report">
+
+    <!-- =========================================
+         COMMON HEADER
+    ========================================== -->
+
+    {% include 'header.html' %}
+
+
+    <!-- =========================================
+         REPORT HEADER + FILTERS
+    ========================================== -->
+
+    <section class="report-top">
+
+        <div class="report-title">
+
+            <a href="{{ url_for('report_dashboard') }}"
+               class="back-link"
+               aria-label="Back to Reports">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Reports</span>
+
+            </a>
+
+            <div class="header-content">
+
+                <p class="eyebrow">
+                    Sales Reports
+                </p>
+
+                <h1>
+                    Customer Growth
+                </h1>
+
+                <p class="subtitle">
+                    Customer-wise sales growth compared with previous financial year.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             PERIOD FILTER
+        ========================================== -->
+
+        <form id="periodForm"
+              class="period-form">
+
+            <label for="fromDate">
+                From
+
+                <input
+                    type="date"
+                    id="fromDate"
+                    name="from"
+                    required
+                >
+            </label>
+
+
+            <label for="toDate">
+                To
+
+                <input
+                    type="date"
+                    id="toDate"
+                    name="to"
+                    required
+                >
+            </label>
+
+
+            <button
+                type="submit"
+                id="applyPeriodBtn">
+
+                <i class="fa-solid fa-arrows-rotate"></i>
+                Apply period
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- =========================================
+         REPORT TABLE
+    ========================================== -->
+
+    <section class="report-table-card"
+             aria-live="polite">
+
+        <div id="reportStatus"
+             class="report-status">
+
+            Loading customer growth…
+
+        </div>
+
+
+        <div id="tableWrap"
+             class="table-wrap"
+             hidden>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script
+    src="{{ url_for('static', filename='js/header.js') }}"
+    ></script>
+<script src="{{ url_for('static', filename='js/customer-growth.js') }}"></script>
+
+</body>
+</html>
