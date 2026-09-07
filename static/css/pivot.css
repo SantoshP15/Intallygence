@@ -129,7 +129,7 @@ body {
     width: 75%;
     max-width: 1440px;
 
-    margin: 0 auto;
+    margin: 0px 60px;
     padding: 0 20px;
 
     gap: 8px;
@@ -3590,4 +3590,141 @@ body {
 .flatpickr-calendar {
     z-index: 1000000 !important;
     pointer-events: auto !important;
+}
+/* =========================================================
+   PIVOT BUILDER — SAME ONE-ROW DESIGN AT ALL SCALE LEVELS
+   =========================================================
+   Do not switch the builder into a 2-column/stacked layout
+   merely because the effective CSS viewport becomes smaller
+   under Windows display scaling or browser zoom.
+
+   The builder stays ONE ROW. Its eight controls share the
+   available width proportionally.
+   ========================================================= */
+
+@media (max-width: 1600px) and (min-width: 601px) {
+
+    .pivot-canvas {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        overflow-x: hidden !important;
+    }
+
+    .pivot-canvas .report-panel {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+
+    .pivot-canvas .report-types {
+        width: 92% !important;
+        max-width: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        overflow-x: auto !important;
+        justify-content: flex-start !important;
+    }
+
+    /* Keep all 8 builder sections on ONE row. */
+    .pivot-canvas .builder,
+    .builder {
+        width: 92% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 14px 18px 22px !important;
+
+        grid-template-columns:
+            1.05fr
+            1.05fr
+            2.35fr
+            1.05fr
+            1.05fr
+            .72fr
+            .40fr !important;
+
+        column-gap: 8px !important;
+        row-gap: 0 !important;
+        align-items: start !important;
+    }
+
+    .pivot-canvas .builder-section,
+    .builder-section {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        grid-column: auto !important;
+    }
+
+    .pivot-canvas .builder-section > label,
+    .builder-section > label {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        margin-bottom: 5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .pivot-canvas .control-row,
+    .control-row {
+        display: flex !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: 44px !important;
+        gap: 5px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    /* Cancel all fixed desktop field widths. */
+    .pivot-canvas #rowField,
+    .pivot-canvas #columnField,
+    .pivot-canvas #valueField,
+    .pivot-canvas #aggregate,
+    .pivot-canvas #periodField,
+    .pivot-canvas #filterField,
+    .pivot-canvas .layout-select,
+    .pivot-canvas .go-button,
+    #rowField,
+    #columnField,
+    #valueField,
+    #aggregate,
+    #periodField,
+    #filterField,
+    .layout-select,
+    .go-button {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        flex: 1 1 auto !important;
+        box-sizing: border-box !important;
+        height: 44px !important;
+    }
+
+    /* Values must NOT span the whole builder in this design. */
+    .pivot-canvas .builder-section:has(#valueField),
+    .builder-section:has(#valueField) {
+        grid-column: auto !important;
+    }
+
+    .pivot-canvas #resetReportBtn,
+    #resetReportBtn {
+        white-space: nowrap !important;
+        margin-top: 8px !important;
+    }
+}
+
+/* At very small phone widths, keep the existing mobile behavior. */
+@media (max-width: 600px) {
+    .pivot-canvas .builder,
+    .builder {
+        grid-template-columns: 1fr !important;
+    }
 }
