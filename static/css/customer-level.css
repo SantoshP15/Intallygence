@@ -335,20 +335,36 @@ h1 {
 
     color: #132a46;
 
-    background: #c9e8f5;
+    background: #c4c4c4;
 
-    border-bottom: 1px solid #a9cede;
+    border-bottom: 1px solid #c4c4c4;
 
     font-weight: 700;
-
     white-space: nowrap;
 
     text-align: right;
+
+    position: sticky;
+    top: 0;
+    z-index: 8;
 }
 
 .customer-table thead tr:first-child th {
     text-align: center;
 }
+
+/* STICKY TABLE HEADER */
+.customer-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #c4c4c4;
+}
+
+.customer-table thead th {
+    background: #c4c4c4;
+}
+
 
 
 /* =========================================================
@@ -362,7 +378,7 @@ h1 {
 }
 
 .customer-table th.sortable-header:hover {
-    background: #b9deed;
+    background: #a0a0a0;
 }
 
 
@@ -372,18 +388,15 @@ h1 {
 
 .customer-table thead tr:first-child th:first-child {
     position: sticky;
-
+    top: 0;
     left: 0;
-
-    z-index: 10;
+    z-index: 15;
 
     width: 250px;
-
     min-width: 250px;
     max-width: 250px;
 
-    background: #c9e8f5;
-
+    background: #c4c4c4;
     text-align: center;
 }
 

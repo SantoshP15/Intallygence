@@ -903,7 +903,7 @@ textarea {
 }
 
 .pnl-table thead {
-    background: #edf3f6;
+    background: #c4c4c4;
 }
 
 .pnl-table th {
@@ -960,13 +960,13 @@ textarea {
 }
 
 .pnl-table tr.highlight td {
-    background: #f0fcf6;
-    color: #079b68;
+    background: #f3f4f6;
+    color: #4b5563;
     font-weight: 700;
 }
 
 .pnl-table tr.highlight td:first-child {
-    color: #079b68;
+    color: #4b5563;
 }
 
 .pnl-table tr.percent td {

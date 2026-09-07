@@ -441,13 +441,21 @@ function renderFilters() {
         const left = document.createElement("div");
 
         left.style.display = "flex";
-        left.style.alignItems = "center";
-        left.style.gap = "6px";
-        left.style.flex = "0 0 auto";
+        left.style.flexDirection = "column";
+        left.style.alignItems = "flex-start";
+        left.style.width = "100%";
+        left.style.minWidth = "0";
+        left.style.flex = "1 1 auto";
+        left.style.gap = "2px";
 
         const title = document.createElement("span");
 
         title.innerHTML = `<strong>${filter.field}</strong>`;
+
+        title.style.width = "100%";
+        title.style.whiteSpace = "nowrap";
+        title.style.overflow = "hidden";
+        title.style.textOverflow = "ellipsis";
 
         left.appendChild(title);
 
@@ -458,6 +466,13 @@ function renderFilters() {
         const summary = document.createElement("div");
 
         summary.className = "filter-summary";
+
+        summary.style.width = "100%";
+        summary.style.minWidth = "0";
+        summary.style.maxWidth = "100%";
+        summary.style.whiteSpace = "normal";
+        summary.style.overflowWrap = "break-word";
+        summary.style.wordBreak = "normal";
 
         summary.innerHTML = "Select Values ▼";
 
@@ -629,21 +644,56 @@ function renderPeriod() {
     // =================================
 
     const wrapper =
-        document.createElement("div");
+    document.createElement("div");
 
     wrapper.className =
         "field-item";
 
+    wrapper.style.display = "flex";
+    wrapper.style.flexDirection = "row";
+    wrapper.style.alignItems = "flex-start";
+    wrapper.style.width = "100%";
+    wrapper.style.minWidth = "0";
+    wrapper.style.maxWidth = "100%";
+    wrapper.style.boxSizing = "border-box";
 
-    // =================================
-    // SUMMARY
-    // =================================
+    const left =
+        document.createElement("div");
+
+    left.style.display = "flex";
+    left.style.flexDirection = "column";
+    left.style.alignItems = "flex-start";
+    left.style.width = "100%";
+    left.style.minWidth = "0";
+    left.style.flex = "1 1 auto";
+    left.style.gap = "2px";
+
+    const title =
+        document.createElement("span");
+
+    title.innerHTML =
+        `<strong>${period.field}</strong>`;
+
+    title.style.width = "100%";
+    title.style.whiteSpace = "nowrap";
+    title.style.overflow = "hidden";
+    title.style.textOverflow = "ellipsis";
 
     const summary =
         document.createElement("div");
 
     summary.className =
         "filter-summary";
+
+    summary.style.width = "100%";
+    summary.style.minWidth = "0";
+    summary.style.maxWidth = "100%";
+    summary.style.whiteSpace = "normal";
+    summary.style.overflowWrap = "break-word";
+    summary.style.wordBreak = "normal";
+
+    left.appendChild(title);
+    left.appendChild(summary);
 
 
     // =================================
@@ -684,11 +734,10 @@ function renderPeriod() {
     // SHOW COLUMN NAME
     // =================================
 
-    summary.innerHTML =
-        period.field +
-        "  " +
-        periodText +
-        " ▼";
+    summary.innerHTML = `
+    <span>${period.field}</span>
+    <span>${periodText} ▼</span>
+    `;
 
 
     // =================================
