@@ -29,6 +29,10 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/itemwise-customer.css') }}"
     >
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/sales-period-format.css') }}"
+    >
 </head>
 
 <body>
@@ -81,6 +85,17 @@
                 id="periodForm"
                 class="period-form"
             >
+
+                <div class="format-control">
+                    <span class="filter-caption">Format</span>
+                    <button type="button" id="formatValue" class="format-button" aria-expanded="false">YTD <i class="fa-solid fa-chevron-down"></i></button>
+                    <div id="formatMenu" class="format-menu" hidden>
+                        <div class="format-menu-group"><button type="button" class="format-option format-parent" data-parent="YTD">YTD <i class="fa-solid fa-chevron-right"></i></button><div class="format-submenu" data-submenu="YTD"><label class="period-year-control">Year <select class="period-year-select ytd-year-select" aria-label="YTD fiscal year"></select></label></div></div>
+                        <div class="format-menu-group"><button type="button" class="format-option format-parent" data-parent="MTD">MTD <i class="fa-solid fa-chevron-right"></i></button><div class="format-submenu" data-submenu="MTD"><label class="period-year-control">Year <select class="period-year-select" aria-label="MTD fiscal year"></select></label><button type="button" data-month="April">April</button><button type="button" data-month="May">May</button><button type="button" data-month="June">June</button><button type="button" data-month="July">July</button><button type="button" data-month="August">August</button><button type="button" data-month="September">September</button><button type="button" data-month="October">October</button><button type="button" data-month="November">November</button><button type="button" data-month="December">December</button><button type="button" data-month="January">January</button><button type="button" data-month="February">February</button><button type="button" data-month="March">March</button></div></div>
+                        <div class="format-menu-group"><button type="button" class="format-option format-parent" data-parent="QTD">QTD <i class="fa-solid fa-chevron-right"></i></button><div class="format-submenu" data-submenu="QTD"><label class="period-year-control">Year <select class="period-year-select" aria-label="QTD fiscal year"></select></label><button type="button" data-quarter="Q1">Q1 <span>Apr - Jun</span></button><button type="button" data-quarter="Q2">Q2 <span>Jul - Sep</span></button><button type="button" data-quarter="Q3">Q3 <span>Oct - Dec</span></button><button type="button" data-quarter="Q4">Q4 <span>Jan - Mar</span></button></div></div>
+                        <button type="button" class="format-option" data-format="CUSTOM">Custom</button>
+                    </div>
+                </div>
 
                 <!-- ITEM -->
 
@@ -177,6 +192,8 @@
     <script
     src="{{ url_for('static', filename='js/header.js') }}"
     ></script>
+
+    <script src="{{ url_for('static', filename='js/sales-period-format.js') }}"></script>
 
     <script
     src="{{ url_for('static', filename='js/itemwise-customer.js') }}"

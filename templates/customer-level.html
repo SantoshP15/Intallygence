@@ -133,13 +133,26 @@
 
                         <!-- YTD -->
 
-                        <button
-                            type="button"
-                            class="format-option"
-                            data-format="YTD"
-                        >
-                            YTD
-                        </button>
+                        <div class="format-menu-group">
+                            <button
+                                type="button"
+                                class="format-option format-parent"
+                                data-parent="YTD"
+                            >
+                                YTD
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            <div
+                                class="format-submenu"
+                                data-submenu="YTD"
+                            >
+                                <label class="period-year-control">
+                                    Year
+                                    <select class="period-year-select ytd-year-select" aria-label="YTD fiscal year"></select>
+                                </label>
+                            </div>
+                        </div>
 
 
                         <!-- MTD -->
@@ -160,6 +173,11 @@
                                 class="format-submenu"
                                 data-submenu="MTD"
                             >
+
+                                <label class="period-year-control">
+                                    Year
+                                    <select class="period-year-select" aria-label="MTD fiscal year"></select>
+                                </label>
 
                                 <button type="button" data-format="MTD" data-month="April">
                                     April
@@ -232,6 +250,11 @@
                                 class="format-submenu"
                                 data-submenu="QTD"
                             >
+
+                                <label class="period-year-control">
+                                    Year
+                                    <select class="period-year-select" aria-label="QTD fiscal year"></select>
+                                </label>
 
                                 <button
                                     type="button"

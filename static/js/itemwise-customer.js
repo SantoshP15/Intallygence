@@ -27,7 +27,7 @@ function getDefaultPeriod() {
 
     return {
         from: `${fiscalStartYear}-04-01`,
-        to: `${fiscalStartYear + 1}-03-31`
+        to: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
     };
 }
 
@@ -588,6 +588,53 @@ async function loadReport(
         currentReport = data;
 
 
+        if (window.salesPeriodFormatType !== "CUSTOM") {
+
+            const previousParams =
+                new URLSearchParams(params);
+
+            previousParams.set(
+                "from",
+                shiftSalesPeriodOneYear(fromDate)
+            );
+
+            previousParams.set(
+                "to",
+                shiftSalesPeriodOneYear(toDate)
+            );
+
+            const previousResponse = await fetch(
+                `/api/itemwise-customer?${previousParams.toString()}`,
+                {
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            const previousData = await previousResponse.json();
+
+            if (!previousResponse.ok) {
+                throw new Error(
+                    previousData.error ||
+                    "Unable to load the comparison report."
+                );
+            }
+
+            renderSalesComparison(
+                previousData,
+                data,
+                {
+                    keys: ["item", "customer"],
+                    labels: ["Item", "Customer"]
+                }
+            );
+
+            status.hidden = true;
+            return;
+        }
+
+
         /* -------------------------------------------------
            INITIAL SORT
            Item A → Z
@@ -1123,6 +1170,15 @@ document.addEventListener(
 
         toDate.value =
             defaultPeriod.to;
+
+
+        initSalesPeriodFormat(() => {
+            loadReport(
+                fromDate.value,
+                toDate.value,
+                document.getElementById("itemSelect")?.value || ""
+            );
+        });
 
 
         /* ---------------------------------------------

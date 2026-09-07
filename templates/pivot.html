@@ -76,12 +76,6 @@
         Report Generator
     </div>
 
-    <button id="savedReportsBtn"
-            type="button"
-            class="pivot-saved-reports-btn">
-        My Saved Reports
-    </button>
-
 </div>
 
 <!-- =================================================
@@ -102,21 +96,28 @@
      REPORT TYPE BUILDERS
 ================================== -->
 
-   <div class="report-types">
-    <button class="report-type active"
-            data-type="sales">
-        Sales
-    </button>
+   <div class="report-type-toolbar">
+    <div class="report-types" aria-label="Report types">
+        <button class="report-type active"
+                data-type="sales">
+            Sales
+        </button>
 
-    <button class="report-type" data-type="purchase">Purchase</button>
-    <button class="report-type" data-type="debit-note">Debit Note</button>
-    <button class="report-type" data-type="credit-note">Credit Note</button>
-    <button class="report-type" data-type="payment">Payment</button>
-    <button class="report-type" data-type="receipt">Receipt</button>
-    <button class="report-type" data-type="day-book">Day Book</button>
-    <button class="report-type" data-type="stock-register">Stock Register</button>
-
+        <button class="report-type" data-type="purchase">Purchase</button>
+        <button class="report-type" data-type="debit-note">Debit Note</button>
+        <button class="report-type" data-type="credit-note">Credit Note</button>
+        <button class="report-type" data-type="payment">Payment</button>
+        <button class="report-type" data-type="receipt">Receipt</button>
+        <button class="report-type" data-type="day-book">Day Book</button>
+        <button class="report-type" data-type="stock-register">Stock Register</button>
     </div>
+
+    <button id="savedReportsBtn"
+            type="button"
+            class="pivot-saved-reports-btn">
+        My Saved Reports
+    </button>
+   </div>
 
     <!-- =================================
          REPORT BUILDER

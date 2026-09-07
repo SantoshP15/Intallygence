@@ -42,7 +42,7 @@ function fiscalYearDates() {
 
     return {
         from: `${startYear}-04-01`,
-        to: `${startYear + 1}-03-31`
+        to: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
     };
 }
 
@@ -546,6 +546,40 @@ async function loadReport() {
         };
 
 
+        if (window.salesPeriodFormatType !== "CUSTOM") {
+
+            const previousResponse =
+                await fetch(
+                    `/api/item-level?${new URLSearchParams({
+                        from: shiftSalesPeriodOneYear(fromDate.value),
+                        to: shiftSalesPeriodOneYear(toDate.value)
+                    })}`
+                );
+
+            const previousReport =
+                await previousResponse.json();
+
+            if (!previousResponse.ok) {
+                throw new Error(
+                    previousReport.error ||
+                    "Unable to load the comparison report."
+                );
+            }
+
+            renderSalesComparison(
+                previousReport,
+                report,
+                {
+                    keys: ["item"],
+                    labels: ["Item"]
+                }
+            );
+
+            reportStatus.hidden = true;
+            return;
+        }
+
+
         renderReport(report);
 
         reportStatus.hidden = true;
@@ -570,6 +604,11 @@ fromDate.value =
 
 toDate.value =
     fiscalDates.to;
+
+
+initSalesPeriodFormat(() => {
+    loadReport();
+});
 
 
 /* =========================================================

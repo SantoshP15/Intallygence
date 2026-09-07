@@ -7,6 +7,7 @@ let currentReport = null;
 let selectedFormat = "YTD";
 let selectedMonth = null;
 let selectedQuarter = null;
+let selectedPeriodYear = null;
 
 
 /* =========================================================
@@ -182,15 +183,26 @@ function getFiscalYearStart(date) {
    FISCAL YEAR DATES
    ========================================================= */
 
-function fiscalYearDates() {
+function fiscalYearDates(fiscalStartYear) {
 
     const today = todayDate();
 
-    const start = getFiscalYearStart(today);
+    const currentFiscalStartYear =
+        getFiscalYearStart(today).getFullYear();
+
+    const year = Number.isInteger(fiscalStartYear)
+        ? fiscalStartYear
+        : currentFiscalStartYear;
+
+    const start = new Date(year, 3, 1);
+
+    const end = year === currentFiscalStartYear
+        ? today
+        : new Date(year + 1, 2, 31);
 
     return {
         from: dateToString(start),
-        to: dateToString(today)
+        to: dateToString(end)
     };
 }
 
@@ -258,14 +270,14 @@ function getCalendarMonthIndex(monthName) {
    GET MTD PERIOD
    ========================================================= */
 
-function getMonthPeriod(monthName) {
+function getMonthPeriod(monthName, fiscalYearStart) {
 
     const today = todayDate();
 
-    const fiscalStart = getFiscalYearStart(today);
-
     const fiscalStartYear =
-        fiscalStart.getFullYear();
+        Number.isInteger(fiscalYearStart)
+            ? fiscalYearStart
+            : getFiscalYearStart(today).getFullYear();
 
     const monthIndex =
         fiscalMonths.indexOf(monthName);
@@ -334,15 +346,14 @@ function getMonthPeriod(monthName) {
    GET QTD PERIOD
    ========================================================= */
 
-function getQuarterPeriod(quarter) {
+function getQuarterPeriod(quarter, fiscalYearStart) {
 
     const today = todayDate();
 
-    const fiscalStart =
-        getFiscalYearStart(today);
-
     const fiscalStartYear =
-        fiscalStart.getFullYear();
+        Number.isInteger(fiscalYearStart)
+            ? fiscalYearStart
+            : getFiscalYearStart(today).getFullYear();
 
     const config =
         fiscalQuarters[quarter];
@@ -424,7 +435,8 @@ function getQuarterPeriod(quarter) {
 
     if (
         quarter === currentQuarter &&
-        start <= today
+        start <= today &&
+        today <= end
     ) {
 
         end = todayDate();
@@ -683,21 +695,27 @@ function updateFormatDisplay() {
         return;
     }
 
-    let label = "YTD";
+    let label = selectedPeriodYear
+        ? `YTD ${selectedPeriodYear}`
+        : "YTD";
 
     if (
         selectedFormat === "MTD" &&
         selectedMonth
     ) {
 
-        label = selectedMonth;
+        label = selectedPeriodYear
+            ? `${selectedMonth} ${selectedPeriodYear}`
+            : selectedMonth;
 
     } else if (
         selectedFormat === "QTD" &&
         selectedQuarter
     ) {
 
-        label = selectedQuarter;
+        label = selectedPeriodYear
+            ? `${selectedQuarter} ${selectedPeriodYear}`
+            : selectedQuarter;
 
     } else if (
         selectedFormat === "CUSTOM"
@@ -718,7 +736,11 @@ function updateFormatDisplay() {
    FORMAT SELECTION
    ========================================================= */
 
-function selectYTD() {
+function selectYTD(year) {
+
+    if (Number.isInteger(year)) {
+        selectedPeriodYear = year;
+    }
 
     selectedFormat = "YTD";
 
@@ -727,7 +749,7 @@ function selectYTD() {
     selectedQuarter = null;
 
     const dates =
-        fiscalYearDates();
+        fiscalYearDates(selectedPeriodYear);
 
     fromDate.value = dates.from;
 
@@ -748,7 +770,10 @@ function selectMTD(monthName) {
     }
 
     const dates =
-        getMonthPeriod(monthName);
+        getMonthPeriod(
+            monthName,
+            selectedPeriodYear
+        );
 
     if (!dates) {
 
@@ -785,7 +810,10 @@ function selectQTD(quarter) {
     }
 
     const dates =
-        getQuarterPeriod(quarter);
+        getQuarterPeriod(
+            quarter,
+            selectedPeriodYear
+        );
 
     if (!dates) {
 
@@ -835,6 +863,52 @@ function selectCustom() {
 
 if (formatValue && formatMenu) {
 
+    const currentFiscalYear =
+        getFiscalYearStart(todayDate()).getFullYear();
+
+    selectedPeriodYear = currentFiscalYear;
+
+    formatMenu
+        .querySelectorAll(".period-year-select")
+        .forEach(select => {
+
+            for (
+                let year = currentFiscalYear;
+                year >= currentFiscalYear - 10;
+                year -= 1
+            ) {
+
+                const option = document.createElement("option");
+
+                option.value = year;
+                option.textContent = year;
+
+                select.appendChild(option);
+
+            }
+
+            select.value = selectedPeriodYear;
+
+            select.addEventListener("change", () => {
+
+                selectedPeriodYear = Number(select.value);
+
+                formatMenu
+                    .querySelectorAll(".period-year-select")
+                    .forEach(otherSelect => {
+
+                        otherSelect.value = selectedPeriodYear;
+
+                    });
+
+                if (select.classList.contains("ytd-year-select")) {
+                    selectYTD(selectedPeriodYear);
+                }
+
+            });
+
+        });
+
     /*
        Main Format button
     */
@@ -873,32 +947,6 @@ if (formatValue && formatMenu) {
             );
 
         });
-
-
-    /*
-       YTD
-    */
-
-    const ytdButton =
-        formatMenu.querySelector(
-            '.format-option[data-format="YTD"]'
-        );
-
-    if (ytdButton) {
-
-        ytdButton.addEventListener(
-            "click",
-            event => {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                selectYTD();
-
-            }
-        );
-
-    }
 
 
     /*
@@ -2982,6 +3030,9 @@ selectedFormat = "YTD";
 selectedMonth = null;
 
 selectedQuarter = null;
+
+selectedPeriodYear =
+    getFiscalYearStart(todayDate()).getFullYear();
 
 
 updateFormatDisplay();

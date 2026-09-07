@@ -3761,3 +3761,117 @@ body {
     line-height: 15px;
     white-space: nowrap;
 }
+
+/* =========================================================
+   REPORT TYPES + SAVED REPORTS RESPONSIVE TOOLBAR
+   ========================================================= */
+
+.report-type-toolbar {
+    width: 75%;
+    max-width: 1440px;
+    margin: clamp(28px, 5vw, 90px) auto 0;
+    padding: 0;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.pivot-canvas .report-type-toolbar .report-types,
+.report-type-toolbar .report-types {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0;
+    flex: 1 1 auto;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+@media (min-width: 621px) {
+    .report-type-toolbar .report-types {
+        margin-left: 50px !important;
+    }
+}
+
+.report-type-toolbar .report-types::-webkit-scrollbar {
+    display: none;
+}
+
+.report-type-toolbar .report-type {
+    flex: 0 0 auto;
+}
+
+.report-type-toolbar .pivot-saved-reports-btn {
+    position: static;
+    flex: 0 0 auto;
+    transform: none;
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid #b9cce2;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #173b67;
+    font-family: var(--pivot-font-family);
+    font-size: 14px !important;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.report-type-toolbar .pivot-saved-reports-btn:hover,
+.report-type-toolbar .pivot-saved-reports-btn:focus-visible {
+    background: #edf6fc;
+    border-color: #1d5b9f;
+    color: #0f4f8c;
+    outline: none;
+}
+
+.report-type-toolbar + .builder,
+.pivot-header-zone + .report-type-toolbar + .builder {
+    margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    .report-type-toolbar {
+        width: calc(100% - 40px);
+        margin-top: 36px;
+    }
+}
+
+@media (max-width: 1600px) and (min-width: 901px) {
+    .report-type-toolbar {
+        width: 92%;
+        max-width: none;
+    }
+}
+
+@media (max-width: 620px) {
+    .report-type-toolbar {
+        width: calc(100% - 28px);
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .report-type-toolbar .report-types {
+        width: 100% !important;
+        padding-bottom: 2px !important;
+    }
+
+    .report-type-toolbar .pivot-saved-reports-btn {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 380px) {
+    .report-type-toolbar .pivot-saved-reports-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

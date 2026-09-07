@@ -27,7 +27,7 @@ function getDefaultPeriod() {
 
     return {
         from: `${fiscalStartYear}-04-01`,
-        to: `${fiscalStartYear + 1}-03-31`
+        to: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
     };
 }
 
@@ -764,6 +764,55 @@ async function loadReport(
         }
 
 
+        if (window.salesPeriodFormatType !== "CUSTOM") {
+
+            const previousParams =
+                new URLSearchParams(params);
+
+            previousParams.set(
+                "from",
+                shiftSalesPeriodOneYear(fromDate)
+            );
+
+            previousParams.set(
+                "to",
+                shiftSalesPeriodOneYear(toDate)
+            );
+
+            const previousResponse =
+                await fetch(
+                    `/api/customer-itemwise?${previousParams.toString()}`,
+                    {
+                        headers: {
+                            "Accept": "application/json"
+                        }
+                    }
+                );
+
+            const previousData =
+                await previousResponse.json();
+
+            if (!previousResponse.ok) {
+                throw new Error(
+                    previousData.error ||
+                    "Unable to load the comparison report."
+                );
+            }
+
+            renderSalesComparison(
+                previousData,
+                data,
+                {
+                    keys: ["customer", "item"],
+                    labels: ["Customer", "Item"]
+                }
+            );
+
+            status.hidden = true;
+            return;
+        }
+
+
         /*
          * Reset sorting whenever a new
          * period/customer is loaded.
@@ -1295,6 +1344,15 @@ document.addEventListener(
 
         toDate.value =
             defaultPeriod.to;
+
+
+        initSalesPeriodFormat(() => {
+            loadReport(
+                fromDate.value,
+                toDate.value,
+                customerSelect?.value || ""
+            );
+        });
 
 
         /* ---------------------------------------------
