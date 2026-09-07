@@ -5,9 +5,11 @@
     background: #f4f7fb;
 }
 
+
 * {
     box-sizing: border-box;
 }
+
 
 body {
     margin: 0;
@@ -22,15 +24,12 @@ body {
 .customer-report {
     width: 100%;
     min-height: 100vh;
-
     padding: 16px 3.5%;
-
-    box-sizing: border-box;
 }
+
 
 /* =========================================================
    REPORT TOP
-   TITLE + FILTERS
    ========================================================= */
 
 .report-top {
@@ -41,12 +40,13 @@ body {
     gap: 30px;
 
     width: 100%;
+
     margin-bottom: 20px;
 }
 
 
 /* =========================================================
-   REPORT TITLE AREA
+   REPORT TITLE
    ========================================================= */
 
 .report-title {
@@ -56,8 +56,10 @@ body {
     gap: 18px;
 
     min-width: 0;
+
     flex: 1;
 }
+
 
 .header-content {
     min-width: 0;
@@ -86,13 +88,14 @@ body {
     white-space: nowrap;
 }
 
+
 .back-link:hover {
     color: #15487f;
 }
 
 
 /* =========================================================
-   REPORT EYEBROW
+   EYEBROW
    ========================================================= */
 
 .eyebrow {
@@ -109,7 +112,7 @@ body {
 
 
 /* =========================================================
-   REPORT TITLE
+   TITLE
    ========================================================= */
 
 h1 {
@@ -125,7 +128,7 @@ h1 {
 
 
 /* =========================================================
-   REPORT SUBTITLE
+   SUBTITLE
    ========================================================= */
 
 .subtitle {
@@ -140,7 +143,7 @@ h1 {
 
 
 /* =========================================================
-   FILTER FORM
+   PERIOD FORM
    ========================================================= */
 
 .period-form {
@@ -169,7 +172,8 @@ h1 {
    FILTER LABEL
    ========================================================= */
 
-.period-form label {
+.period-form label,
+.filter-label {
     display: grid;
 
     gap: 5px;
@@ -204,6 +208,7 @@ h1 {
     outline: none;
 }
 
+
 .period-form input:focus {
     border-color: #1d5b9f;
 
@@ -214,12 +219,223 @@ h1 {
 
 
 /* =========================================================
+   FORMAT CONTROL
+   ========================================================= */
+
+.format-control {
+    position: relative;
+
+    display: grid;
+
+    gap: 5px;
+
+    min-width: 100px;
+}
+
+
+.format-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 100px;
+
+    padding: 8px 10px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+.format-button:hover {
+    border-color: #1d5b9f;
+}
+
+
+.format-button:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.format-button i {
+    color: #64748b;
+
+    font-size: 9px;
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+.format-button[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   FORMAT MENU
+   ========================================================= */
+
+.format-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+
+    z-index: 100;
+
+    width: 160px;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #d8e2ed;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 10px 24px
+        rgb(24 48 86 / 15%);
+}
+
+
+.format-menu[hidden] {
+    display: none;
+}
+
+
+/* =========================================================
+   FORMAT OPTIONS
+   ========================================================= */
+
+.format-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 8px 10px;
+
+    color: #26364d;
+
+    background: transparent;
+
+    border: 0;
+
+    border-radius: 5px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+
+.format-option:hover {
+    background: #eef5fb;
+
+    color: #1d5b9f;
+}
+
+
+.format-parent i {
+    margin-left: 12px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   FORMAT SUBMENU
+   ========================================================= */
+
+.format-submenu-wrapper {
+    position: relative;
+}
+
+
+.format-submenu {
+    position: absolute;
+
+    top: -5px;
+    left: calc(100% + 4px);
+
+    z-index: 110;
+
+    width: 165px;
+
+    max-height: 360px;
+
+    overflow-y: auto;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #d8e2ed;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 10px 24px
+        rgb(24 48 86 / 15%);
+
+    display: none;
+
+    transform: translateX(-4px);
+
+    transition:
+        opacity 0.12s ease,
+        transform 0.12s ease;
+}
+
+
+/*
+   IMPORTANT:
+   Submenu opens only when JavaScript adds
+   .submenu-open after clicking MTD/QTD.
+*/
+
+.format-submenu.submenu-open {
+    display: block;
+
+    opacity: 1;
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
    APPLY BUTTON
    ========================================================= */
 
-.period-form button {
+.period-form > button {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
@@ -242,15 +458,18 @@ h1 {
     white-space: nowrap;
 }
 
-.period-form button:hover {
+
+.period-form > button:hover {
     background: #15487f;
 }
 
-.period-form button:active {
+
+.period-form > button:active {
     transform: translateY(1px);
 }
 
-.period-form button:disabled {
+
+.period-form > button:disabled {
     opacity: 0.65;
 
     cursor: not-allowed;
@@ -290,13 +509,14 @@ h1 {
     font-size: 13px;
 }
 
+
 .report-status.error {
     color: #b42318;
 }
 
 
 /* =========================================================
-   TABLE SCROLL AREA
+   TABLE WRAPPER
    ========================================================= */
 
 .table-wrap {
@@ -320,15 +540,12 @@ h1 {
     min-width: 1060px;
 
     border-collapse: separate;
+
     border-spacing: 0;
 
     font-size: 12px;
 }
 
-
-/* =========================================================
-   TABLE HEADER
-   ========================================================= */
 
 .customer-table th {
     padding: 10px 8px;
@@ -340,31 +557,38 @@ h1 {
     border-bottom: 1px solid #c4c4c4;
 
     font-weight: 700;
+
     white-space: nowrap;
 
     text-align: right;
 
     position: sticky;
+
     top: 0;
+
     z-index: 8;
 }
+
 
 .customer-table thead tr:first-child th {
     text-align: center;
 }
 
-/* STICKY TABLE HEADER */
+
 .customer-table thead {
     position: sticky;
+
     top: 0;
+
     z-index: 10;
+
     background: #c4c4c4;
 }
+
 
 .customer-table thead th {
     background: #c4c4c4;
 }
-
 
 
 /* =========================================================
@@ -377,6 +601,7 @@ h1 {
     user-select: none;
 }
 
+
 .customer-table th.sortable-header:hover {
     background: #a0a0a0;
 }
@@ -388,8 +613,10 @@ h1 {
 
 .customer-table thead tr:first-child th:first-child {
     position: sticky;
+
     top: 0;
     left: 0;
+
     z-index: 15;
 
     width: 250px;
@@ -397,6 +624,7 @@ h1 {
     max-width: 250px;
 
     background: #c4c4c4;
+
     text-align: center;
 }
 
@@ -421,7 +649,7 @@ h1 {
 
 
 /* =========================================================
-   FIXED CUSTOMER BODY COLUMN
+   FIXED CUSTOMER COLUMN
    ========================================================= */
 
 .customer-table tbody td:first-child {
@@ -432,7 +660,6 @@ h1 {
     z-index: 5;
 
     width: 250px;
-
     min-width: 250px;
     max-width: 250px;
 
@@ -455,21 +682,13 @@ h1 {
 
 
 /* =========================================================
-   CUSTOMER NAME TOOLTIP
-   ========================================================= */
-
-.customer-table tbody td:first-child[title] {
-    cursor: default;
-}
-
-
-/* =========================================================
    ROW HOVER
    ========================================================= */
 
 .customer-table tbody tr:hover td {
     background: #f0f8fc;
 }
+
 
 .customer-table tbody tr:hover td:first-child {
     background: #f0f8fc;
@@ -513,10 +732,6 @@ h1 {
 }
 
 
-/* =========================================================
-   FIXED CUSTOMER FOOTER
-   ========================================================= */
-
 .customer-table tfoot td:first-child {
     position: sticky;
 
@@ -525,7 +740,6 @@ h1 {
     z-index: 6;
 
     width: 250px;
-
     min-width: 250px;
     max-width: 250px;
 
@@ -538,6 +752,129 @@ h1 {
     text-overflow: ellipsis;
 
     white-space: nowrap;
+}
+
+
+/* =========================================================
+   YTD COMPARISON TABLE
+   ========================================================= */
+
+.ytd-table {
+    width: 100%;
+
+    min-width: 760px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+.ytd-table th {
+    padding: 10px 12px;
+
+    color: #132a46;
+
+    background: #c4c4c4;
+
+    border-bottom: 1px solid #c4c4c4;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-align: right;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 8;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+.ytd-table th:first-child {
+    text-align: left;
+}
+
+
+.ytd-table th:hover {
+    background: #a0a0a0;
+}
+
+
+.ytd-table td {
+    padding: 9px 12px;
+
+    color: #26364d;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e6edf4;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+.ytd-table td:first-child {
+    width: 40%;
+
+    text-align: left;
+
+    color: #17223b;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.ytd-table tbody tr:hover td {
+    background: #f0f8fc;
+}
+
+
+.ytd-table tfoot td {
+    padding: 10px 12px;
+
+    color: #132a46;
+
+    background: #ddecf4;
+
+    border-top: 2px solid #9ec5d8;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-positive {
+    color: #18794e !important;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-negative {
+    color: #b42318 !important;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-neutral {
+    color: #536174 !important;
+
+    font-weight: 600;
 }
 
 
@@ -565,9 +902,11 @@ h1 {
     height: 9px;
 }
 
+
 .table-wrap::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
+
 
 .table-wrap::-webkit-scrollbar-thumb {
     background: #b7c7d8;
@@ -575,28 +914,9 @@ h1 {
     border-radius: 10px;
 }
 
+
 .table-wrap::-webkit-scrollbar-thumb:hover {
     background: #94a9bd;
-}
-
-
-/* =========================================================
-   TABLE SORT INDICATOR
-   ========================================================= */
-
-.customer-table th.sortable-header::after {
-    content: "";
-
-    display: inline-block;
-
-    width: 0;
-    height: 0;
-
-    margin-left: 5px;
-
-    vertical-align: middle;
-
-    opacity: 0.35;
 }
 
 
@@ -612,19 +932,18 @@ h1 {
         gap: 20px;
     }
 
+
     .period-form {
         padding: 12px 14px;
     }
 
+
     .period-form input {
         width: 125px;
     }
+
 }
 
-
-/* =========================================================
-   TABLET
-   ========================================================= */
 
 @media (max-width: 900px) {
 
@@ -632,13 +951,16 @@ h1 {
         padding: 22px;
     }
 
+
     .report-top {
         flex-direction: column;
     }
 
+
     .report-title {
         width: 100%;
     }
+
 
     .period-form {
         width: 100%;
@@ -646,15 +968,13 @@ h1 {
         justify-content: flex-end;
     }
 
+
     .period-form input {
         width: 145px;
     }
+
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 700px) {
 
@@ -662,17 +982,21 @@ h1 {
         padding: 18px 14px;
     }
 
+
     .report-title {
         gap: 12px;
     }
+
 
     h1 {
         font-size: 24px;
     }
 
+
     .subtitle {
         font-size: 13px;
     }
+
 
     .period-form {
         display: grid;
@@ -684,27 +1008,77 @@ h1 {
         padding: 14px;
     }
 
+
+    .format-control {
+        grid-column: 1 / -1;
+    }
+
+
+    .format-button {
+        width: 100%;
+    }
+
+
+    .format-menu {
+        width: 100%;
+    }
+
+
+    .format-submenu {
+        position: fixed;
+
+        left: 50%;
+
+        top: 50%;
+
+        transform: translate(-50%, -50%);
+
+        max-height: 70vh;
+
+        width: 220px;
+    }
+
+
+    /*
+       Mobile submenu is also click-controlled.
+       No hover rule here.
+    */
+
+    .format-submenu.submenu-open {
+        display: block;
+
+        opacity: 1;
+
+        transform: translate(-50%, -50%);
+    }
+
+
     .period-form label {
         width: 100%;
     }
+
 
     .period-form input {
         width: 100%;
     }
 
-    .period-form button {
+
+    .period-form > button {
         grid-column: 1 / -1;
 
         width: 100%;
     }
 
+
     .table-wrap {
         max-height: calc(100vh - 300px);
     }
 
+
     .customer-table {
         min-width: 900px;
     }
+
 
     .customer-table thead tr:first-child th:first-child,
     .customer-table tbody td:first-child,
@@ -712,6 +1086,752 @@ h1 {
         width: 200px;
 
         min-width: 200px;
+
         max-width: 200px;
     }
+
+
+    .ytd-table {
+        min-width: 650px;
+    }
+
 }
+
+
+/* =========================================================
+   FORMAT CONTROL
+   ========================================================= */
+
+.format-control {
+    position: relative;
+    display: grid;
+    gap: 5px;
+    min-width: 105px;
+}
+
+
+.filter-caption {
+    color: #536174;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FORMAT BUTTON
+   ========================================================= */
+
+.format-button {
+    width: 105px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-button:hover {
+    border-color: #1d5b9f;
+}
+
+
+.format-button i {
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   FORMAT MENU
+   ========================================================= */
+
+.format-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+
+    width: 145px;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 8px;
+
+    box-shadow:
+        0 10px 25px
+        rgb(24 48 86 / 15%);
+
+    z-index: 100;
+}
+
+
+.format-menu[hidden] {
+    display: none;
+}
+
+
+/* =========================================================
+   FORMAT OPTIONS
+   ========================================================= */
+
+.format-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 9px;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #26364d;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-option:hover {
+    background: #f0f6fb;
+    color: #1d5b9f;
+}
+
+
+/* =========================================================
+   SUBMENU GROUP
+   ========================================================= */
+
+.format-menu-group {
+    position: relative;
+}
+
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.format-submenu {
+    position: absolute;
+
+    top: -5px;
+    left: calc(100% + 5px);
+
+    width: 155px;
+
+    display: none;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 8px;
+
+    box-shadow:
+        0 10px 25px
+        rgb(24 48 86 / 15%);
+
+    z-index: 110;
+}
+
+
+/*
+   CLICK STATE
+*/
+
+.format-submenu.submenu-open {
+    display: block;
+}
+
+
+/* =========================================================
+   SUBMENU OPTIONS
+   ========================================================= */
+
+.format-submenu button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 9px;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #26364d;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-submenu button:hover {
+    background: #f0f6fb;
+    color: #1d5b9f;
+}
+
+
+.format-submenu button span {
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   COMPARISON TABLE
+   ========================================================= */
+
+.comparison-table {
+    min-width: 760px;
+}
+
+
+.comparison-table th,
+.comparison-table td {
+    padding: 10px 12px;
+}
+
+
+.comparison-table thead tr:first-child th:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+.comparison-table tbody td:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+/* =========================================================
+   GROWTH
+   ========================================================= */
+
+.growth-positive {
+    color: #16803c;
+    font-weight: 600;
+}
+
+
+.growth-negative {
+    color: #c62828;
+    font-weight: 600;
+}
+
+
+.growth-neutral {
+    color: #64748b;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   COMPARISON HEADER
+   ========================================================= */
+
+.comparison-table thead th {
+    text-align: center;
+}
+
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE FORMAT CONTROL
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .format-control {
+        min-width: 145px;
+    }
+
+
+    .format-button {
+        width: 145px;
+    }
+
+
+    .format-menu {
+        width: 145px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .format-control {
+        width: 100%;
+    }
+
+
+    .format-button {
+        width: 100%;
+    }
+
+
+    .format-menu {
+        width: 100%;
+    }
+
+
+    .format-submenu {
+        position: static;
+
+        width: 100%;
+
+        margin-top: 2px;
+
+        box-shadow: none;
+
+        border: 0;
+
+        background: #f8fafc;
+    }
+
+
+    /*
+       Only JavaScript click opens the submenu.
+    */
+
+    .format-submenu.submenu-open {
+        display: block;
+    }
+
+}
+/* =========================================================
+   COMPARISON TABLE - 3 METRICS
+   ========================================================= */
+
+.comparison-table {
+    width: 100%;
+    min-width: 1200px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   YEAR GROUP HEADERS
+   ========================================================= */
+
+.comparison-table .comparison-year-header {
+    text-align: center;
+
+    vertical-align: middle;
+
+    font-weight: 700;
+
+    background: #c4c4c4;
+}
+
+
+.comparison-table .comparison-customer-header {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+.comparison-table .comparison-growth-header {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   ALL COMPARISON HEADERS
+   ========================================================= */
+
+.comparison-table thead th {
+    text-align: center;
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOMER COLUMN
+   ========================================================= */
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   ALL NUMERIC VALUES CENTER
+   ========================================================= */
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RUNNING SALES %
+   ========================================================= */
+
+.comparison-table .running {
+    text-align: center;
+}
+
+
+/* =========================================================
+   GROWTH
+   ========================================================= */
+
+.comparison-table .growth-positive,
+.comparison-table .growth-negative,
+.comparison-table .growth-neutral {
+    text-align: center;
+}
+
+
+/* =========================================================
+   SUBHEADER
+   ========================================================= */
+
+.comparison-table thead tr:nth-child(2) th {
+    font-size: 11px;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.comparison-table tfoot td {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .comparison-table {
+        min-width: 1100px;
+    }
+
+}
+/* =========================================================
+   COMPARISON TABLE - GROUP SEPARATORS
+   ========================================================= */
+
+/* Line after CUSTOMER */
+.comparison-table thead th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Line after LAST YEAR APRIL group */
+.comparison-table thead tr:first-child th:nth-child(2) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Line after CURRENT YEAR APRIL group */
+.comparison-table thead tr:first-child th:nth-child(3) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Continue separator through body */
+.comparison-table tbody td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Continue separator through footer */
+.comparison-table tfoot td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* =========================================================
+   FINAL COMPARISON TABLE FIX
+   ========================================================= */
+
+/*
+   Keep Customer wide.
+   Do NOT apply the Customer width to the first Sales
+   header in the second header row.
+*/
+
+.comparison-table {
+    width: 100%;
+    min-width: 1200px;
+    table-layout: fixed;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   CUSTOMER COLUMN
+   ========================================================= */
+
+.comparison-table thead tr:first-child th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+/* Customer alignment */
+
+.comparison-table thead tr:first-child th:first-child {
+    text-align: center;
+}
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   YEAR GROUP HEADERS
+   ========================================================= */
+
+.comparison-table thead tr:first-child th {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SECOND HEADER ROW
+   ========================================================= */
+
+/*
+   Important:
+   The first Sales column must NOT inherit
+   the 300px Customer width.
+*/
+
+.comparison-table thead tr:nth-child(2) th {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+
+    padding: 10px 8px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+/* Last Year Sales */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(1) {
+    width: 115px;
+}
+
+
+/* Last Year Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(2) {
+    width: 105px;
+}
+
+
+/* Last Year Running Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(3) {
+    width: 125px;
+}
+
+
+/* Current Year Sales */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(4) {
+    width: 115px;
+}
+
+
+/* Current Year Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(5) {
+    width: 105px;
+}
+
+
+/* Current Year Running Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(6) {
+    width: 125px;
+}
+
+
+/* =========================================================
+   GROWTH COLUMN
+   ========================================================= */
+
+.comparison-table thead tr:first-child th:last-child {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE VALUES
+   ========================================================= */
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* Customer text */
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   GROUP SEPARATORS
+   ========================================================= */
+
+/* After Customer */
+
+.comparison-table thead tr:first-child th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* After Last Year group */
+
+.comparison-table thead tr:first-child th:nth-child(2),
+.comparison-table tbody td:nth-child(4),
+.comparison-table tfoot td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* After Current Year group */
+
+.comparison-table thead tr:first-child th:nth-child(3),
+.comparison-table tbody td:nth-child(7),
+.comparison-table tfoot td:nth-child(7) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* =========================================================
+   RUNNING SALES %
+   ========================================================= */
+
+.comparison-table .running {
+    text-align: center;
+}
+
+
+/* =========================================================
+   GROWTH %
+   ========================================================= */
+
+.comparison-table .growth-positive,
+.comparison-table .growth-negative,
+.comparison-table .growth-neutral {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .comparison-table {
+        min-width: 1100px;
+    }
+
+}
+

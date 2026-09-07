@@ -14,7 +14,6 @@
 
 
     <!-- Google Font -->
-
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -33,7 +32,6 @@
 
 
     <!-- Font Awesome -->
-
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -41,7 +39,6 @@
 
 
     <!-- Common Header CSS -->
-
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/header.css') }}"
@@ -49,7 +46,6 @@
 
 
     <!-- Customer Level CSS -->
-
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/customer-level.css') }}"
@@ -60,22 +56,14 @@
 
 <body>
 
-    <!-- =====================================================
-         COMMON APPLICATION HEADER
-         ===================================================== -->
-
-    
-
-
-    <!-- =====================================================
-         CUSTOMER LEVEL REPORT
-         ===================================================== -->
-
     <main class="customer-report">
 
         {% include 'header.html' %}
 
-        <!-- Report title + filters -->
+
+        <!-- =====================================================
+             REPORT TOP
+             ===================================================== -->
 
         <section class="report-top">
 
@@ -102,7 +90,7 @@
                     </h1>
 
                     <p class="subtitle">
-                        Customer-wise sales, contribution and running percentage.
+                        Customer-wise sales comparison and growth.
                     </p>
 
                 </div>
@@ -110,12 +98,198 @@
             </div>
 
 
-            <!-- Period Filter -->
+            <!-- =================================================
+                 PERIOD FILTER
+                 ================================================= -->
 
             <form
                 id="periodForm"
                 class="period-form"
             >
+
+                <!-- FORMAT -->
+
+                <div class="format-control">
+
+                    <span class="filter-caption">
+                        Format
+                    </span>
+
+                    <button
+                        type="button"
+                        id="formatValue"
+                        class="format-button"
+                    >
+                        YTD
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+
+                    <div
+                        id="formatMenu"
+                        class="format-menu"
+                        hidden
+                    >
+
+                        <!-- YTD -->
+
+                        <button
+                            type="button"
+                            class="format-option"
+                            data-format="YTD"
+                        >
+                            YTD
+                        </button>
+
+
+                        <!-- MTD -->
+
+                        <div class="format-menu-group">
+
+                            <button
+                                type="button"
+                                class="format-option format-parent"
+                                data-parent="MTD"
+                            >
+                                MTD
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+
+                            <div
+                                class="format-submenu"
+                                data-submenu="MTD"
+                            >
+
+                                <button type="button" data-format="MTD" data-month="April">
+                                    April
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="May">
+                                    May
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="June">
+                                    June
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="July">
+                                    July
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="August">
+                                    August
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="September">
+                                    September
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="October">
+                                    October
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="November">
+                                    November
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="December">
+                                    December
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="January">
+                                    January
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="February">
+                                    February
+                                </button>
+
+                                <button type="button" data-format="MTD" data-month="March">
+                                    March
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- QTD -->
+
+                        <div class="format-menu-group">
+
+                            <button
+                                type="button"
+                                class="format-option format-parent"
+                                data-parent="QTD"
+                            >
+                                QTD
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+
+                            <div
+                                class="format-submenu"
+                                data-submenu="QTD"
+                            >
+
+                                <button
+                                    type="button"
+                                    data-format="QTD"
+                                    data-quarter="Q1"
+                                >
+                                    Q1
+                                    <span>Apr - Jun</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-format="QTD"
+                                    data-quarter="Q2"
+                                >
+                                    Q2
+                                    <span>Jul - Sep</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-format="QTD"
+                                    data-quarter="Q3"
+                                >
+                                    Q3
+                                    <span>Oct - Dec</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-format="QTD"
+                                    data-quarter="Q4"
+                                >
+                                    Q4
+                                    <span>Jan - Mar</span>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CUSTOM -->
+
+                        <button
+                            type="button"
+                            class="format-option"
+                            data-format="CUSTOM"
+                        >
+                            Custom
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FROM -->
 
                 <label for="fromDate">
 
@@ -130,6 +304,8 @@
                 </label>
 
 
+                <!-- TO -->
+
                 <label for="toDate">
 
                     To
@@ -143,15 +319,13 @@
                 </label>
 
 
+                <!-- APPLY -->
+
                 <button
                     type="submit"
                     id="applyPeriodBtn"
                 >
-
-                    <!-- <i class="fa-solid fa-rotate"></i> -->
-
                     Apply period
-
                 </button>
 
             </form>
@@ -159,9 +333,9 @@
         </section>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              REPORT TABLE
-             ================================================= -->
+             ===================================================== -->
 
         <section
             class="report-table-card"
@@ -187,10 +361,15 @@
     </main>
 
 
-    <!-- Customer Level JavaScript -->
+    <!-- Common Header JavaScript -->
+
     <script
-    src="{{ url_for('static', filename='js/header.js') }}"
+        src="{{ url_for('static', filename='js/header.js') }}"
     ></script>
+
+
+    <!-- Customer Level JavaScript -->
+
     <script
         src="{{ url_for('static', filename='js/customer-level.js') }}"
     ></script>
