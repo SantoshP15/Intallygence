@@ -28,8 +28,8 @@ def get_db_connection():
 # =========================================================
 
 ALLOWED_REPORT_SOURCES = {
-    "SalesInventory",
-    "PurchaseInventory"
+    "view_SalesInventory",
+    "view_Purchase"
 }
 
 
@@ -47,11 +47,11 @@ CUSTOMER_LEVEL_COLUMNS = {
 
 
 def customer_level_columns():
-    """Validate and return the fixed SalesInventory fields for this report."""
+    """Validate and return the fixed view_SalesInventory fields for this report."""
     db = get_db_connection()
     cursor = db.cursor()
     try:
-        cursor.execute("SHOW COLUMNS FROM SalesInventory")
+        cursor.execute("SHOW COLUMNS FROM view_SalesInventory")
         available = {str(column[0]).lower(): str(column[0]) for column in cursor.fetchall()}
     finally:
         cursor.close()
@@ -63,7 +63,7 @@ def customer_level_columns():
     }
     if not all(selected.values()):
         raise ValueError(
-            "Customer Level needs VoucherDate, PartyLedgerName, and Amount in SalesInventory."
+            "Customer Level needs VoucherDate, PartyLedgerName, and Amount in view_SalesInventory."
         )
     return selected
 
@@ -71,6 +71,13 @@ def item_level_columns():
     return {
         "date": "VoucherDate",
         "item": "StockItemName",
+        "amount": "Amount"
+    }
+
+def p_customer_level_columns():
+    return {
+        "date": "VoucherDate",
+        "customer": "PartyLedgerName",
         "amount": "Amount"
     }
 
@@ -128,6 +135,43 @@ def report_dashboard():
         "report-dashboard.html"
     )
 
+@app.context_processor
+def inject_company_name():
+
+    company_name = "Company"
+
+    db = None
+    cursor = None
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT CompanyName
+            FROM view_SalesInventory
+            WHERE CompanyName IS NOT NULL
+              AND TRIM(CompanyName) <> ''
+            LIMIT 1
+        """)
+
+        row = cursor.fetchone()
+
+        if row and row.get("CompanyName"):
+            company_name = str(row["CompanyName"]).strip()
+
+    except Exception as e:
+        print("Company name error:", e)
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
+
+    return {
+        "company_name": company_name
+    }
 @app.route("/")
 def splash():
     error = request.args.get("error")
@@ -191,7 +235,7 @@ def home():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT COUNT(*) AS total FROM SalesInventory")
+    cursor.execute("SELECT COUNT(*) AS total FROM view_SalesInventory")
     total = cursor.fetchone()["total"]
 
     if get_dbms() == "sqlserver":
@@ -199,7 +243,7 @@ def home():
         cursor.execute(
             """
             SELECT *
-            FROM SalesInventory
+            FROM view_SalesInventory
             ORDER BY (SELECT NULL)
             OFFSET ? ROWS
             FETCH NEXT ? ROWS ONLY
@@ -215,7 +259,7 @@ def home():
         cursor.execute(
             """
             SELECT *
-            FROM SalesInventory
+            FROM view_SalesInventory
             LIMIT %s OFFSET %s
             """,
             (
@@ -276,7 +320,7 @@ def customer_level_data():
                 f"""
                 SELECT {customer_column} AS customer, {date_column} AS transaction_date,
                        SUM({amount_column}) AS sales
-                FROM SalesInventory
+                FROM view_SalesInventory
                 WHERE {date_column} >= %s AND {date_column} <= %s
                 GROUP BY {customer_column}, {date_column}
                 """,
@@ -394,7 +438,7 @@ def item_level_data():
                     {item_column} AS item,
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
-                FROM SalesInventory
+                FROM view_SalesInventory
                 WHERE {date_column} >= %s
                   AND {date_column} <= %s
                 GROUP BY {item_column}, {date_column}
@@ -688,7 +732,7 @@ def customer_itemwise_data():
                 SELECT DISTINCT
                     {customer_column} AS customer
 
-                FROM SalesInventory
+                FROM view_SalesInventory
 
                 WHERE
                     {date_column} >= %s
@@ -730,7 +774,7 @@ def customer_itemwise_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM SalesInventory
+                FROM view_SalesInventory
 
                 WHERE
                     {date_column} >= %s
@@ -1212,7 +1256,7 @@ def itemwise_customer_data():
                 SELECT DISTINCT
                     {item_column} AS item
 
-                FROM SalesInventory
+                FROM view_SalesInventory
 
                 WHERE
                     {date_column} >= %s
@@ -1254,7 +1298,7 @@ def itemwise_customer_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM SalesInventory
+                FROM view_SalesInventory
 
                 WHERE
                     {date_column} >= %s
@@ -1746,7 +1790,7 @@ def customer_growth_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM SalesInventory
+                FROM view_SalesInventory
 
                 WHERE
                     {date_column} >= %s
@@ -2032,6 +2076,107 @@ def customer_growth_data():
             "error": str(error)
         }), 500
 
+
+@app.route("/purchase-customer-level")
+def purchase_customer_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+    return render_template("purchase-customer-level.html")
+
+@app.route("/api/purchase-customer-level")
+def purchase_customer_level_data():
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    today = date.today()
+    fiscal_start_year = today.year if today.month >= 4 else today.year - 1
+    default_from = date(fiscal_start_year, 4, 1)
+    default_to = date(fiscal_start_year + 1, 3, 31)
+    try:
+        from_date = datetime.strptime(request.args.get("from", default_from.isoformat()), "%Y-%m-%d").date()
+        to_date = datetime.strptime(request.args.get("to", default_to.isoformat()), "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"error": "Use YYYY-MM-DD for the period."}), 400
+
+    if from_date > to_date:
+        return jsonify({"error": "The start date must be before the end date."}), 400
+
+    try:
+        columns = p_customer_level_columns()
+        date_column = quote_identifier(columns["date"])
+        customer_column = quote_identifier(columns["customer"])
+        amount_column = quote_identifier(columns["amount"])
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                f"""
+                SELECT {customer_column} AS customer, {date_column} AS transaction_date,
+                       SUM({amount_column}) AS purchase
+                FROM view_Purchase 
+                WHERE {date_column} >= %s AND {date_column} <= %s
+                GROUP BY {customer_column}, {date_column}
+                """,
+                (from_date, to_date),
+            )
+            source_rows = cursor.fetchall()
+        finally:
+            cursor.close()
+            db.close()
+
+        months = []
+        current_month = date(from_date.year, from_date.month, 1)
+        while current_month <= to_date:
+            months.append(current_month.strftime("%b-%y"))
+            current_month = date(
+                current_month.year + (current_month.month == 12),
+                1 if current_month.month == 12 else current_month.month + 1,
+                1,
+            )
+
+        values = defaultdict(lambda: defaultdict(float))
+        for row in source_rows:
+            transaction_date = parse_report_date(row["transaction_date"])
+            customer = str(row["customer"] or "Unspecified customer").strip()
+            if transaction_date and customer:
+                month_key = transaction_date.strftime("%b-%y")
+                if month_key in months:
+                    values[customer][month_key] += float(row["purchase"] or 0)
+
+        month_totals = {month: sum(customer[month] for customer in values.values()) for month in months}
+        grand_total = sum(month_totals.values())
+        customers = sorted(values, key=lambda customer: sum(values[customer].values()), reverse=True)
+        running_by_month = defaultdict(float)
+        rows = []
+        for customer in customers:
+            monthly = []
+            total = sum(values[customer][month] for month in months)
+            for month in months:
+                purchase = values[customer][month]
+                running_by_month[month] += purchase
+                monthly.append({
+                    "purchase": purchase,
+                    "percent": purchase / month_totals[month] * 100 if month_totals[month] else 0,
+                    "running_percent": running_by_month[month] / month_totals[month] * 100 if month_totals[month] else 0,
+                })
+            rows.append({
+                "customer": customer,
+                "months": monthly,
+                "total": total,
+                "total_percent": total / grand_total * 100 if grand_total else 0,
+            })
+
+        return jsonify({
+            "months": months,
+            "rows": rows,
+            "grand_total": grand_total,
+            "period": {"from": from_date.isoformat(), "to": to_date.isoformat()},
+        })
+    except Exception as error:
+        print(f"CUSTOMER LEVEL REPORT ERROR: {error}")
+        return jsonify({"error": str(error)}), 500
+
+
 @app.route("/pivot")
 def pivot():
 
@@ -2041,7 +2186,7 @@ def pivot():
     db = get_db_connection()
     cursor = db.cursor()
 
-    cursor.execute("SHOW COLUMNS FROM SalesInventory")
+    cursor.execute("SHOW COLUMNS FROM view_SalesInventory")
 
     column_info = cursor.fetchall()
 
@@ -2096,7 +2241,7 @@ def generate_pivot():
         # ============================================
 
         data_source = validate_data_source(
-            config.get("dataSource", "SalesInventory")
+            config.get("dataSource", "view_SalesInventory")
         )
         config["dataSource"] = data_source
 
@@ -2513,7 +2658,7 @@ def filter_values(column):
 
     try:
         data_source = validate_data_source(
-            request.args.get("table", "SalesInventory")
+            request.args.get("table", "view_SalesInventory")
         )
     except ValueError:
         return jsonify([])
@@ -2590,7 +2735,7 @@ def date_hierarchy(column):
 
     try:
         data_source = validate_data_source(
-            request.args.get("table", "SalesInventory")
+            request.args.get("table", "view_SalesInventory")
         )
     except ValueError:
         return jsonify({})

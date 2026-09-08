@@ -1,0 +1,2867 @@
+:root {
+    color-scheme: light;
+    font-family: Inter, Arial, sans-serif;
+    color: #17223b;
+    background: #f4f7fb;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+}
+
+
+/* =========================================================
+   REPORT CONTAINER
+   ========================================================= */
+
+.customer-report {
+    width: 100%;
+    min-height: 100vh;
+    padding: 16px 3.5%;
+}
+
+
+/* =========================================================
+   REPORT TOP
+   ========================================================= */
+
+.report-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   REPORT TITLE
+   ========================================================= */
+
+.report-title {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 18px;
+
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.header-content {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   BACK LINK
+   ========================================================= */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding-top: 6px;
+
+    color: #1e4f91;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.back-link:hover {
+    color: #15487f;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.eyebrow {
+    margin: 0 0 4px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+h1 {
+    margin: 0;
+
+    color: #17223b;
+
+    font-size: 26px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.subtitle {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   PERIOD FORM
+   ========================================================= */
+
+.period-form {
+    display: flex;
+    align-items: flex-end;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    padding: 14px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 18px
+        rgb(24 48 86 / 7%);
+}
+
+
+/* =========================================================
+   FILTER LABEL
+   ========================================================= */
+
+.period-form label,
+.filter-label {
+    display: grid;
+
+    gap: 5px;
+
+    color: #536174;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DATE INPUT
+   ========================================================= */
+
+.period-form input {
+    width: 138px;
+
+    padding: 8px 9px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: inherit;
+    font-size: 12px;
+
+    outline: none;
+}
+
+
+.period-form input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   FORMAT CONTROL
+   ========================================================= */
+
+.format-control {
+    position: relative;
+
+    display: grid;
+
+    gap: 5px;
+
+    min-width: 100px;
+}
+
+
+.format-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 100px;
+
+    padding: 8px 10px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+.format-button:hover {
+    border-color: #1d5b9f;
+}
+
+
+.format-button:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.format-button i {
+    color: #64748b;
+
+    font-size: 9px;
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+.format-button[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   FORMAT MENU
+   ========================================================= */
+
+.format-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+
+    z-index: 100;
+
+    width: 160px;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #d8e2ed;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 10px 24px
+        rgb(24 48 86 / 15%);
+}
+
+
+.format-menu[hidden] {
+    display: none;
+}
+
+
+/* =========================================================
+   FORMAT OPTIONS
+   ========================================================= */
+
+.format-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 8px 10px;
+
+    color: #26364d;
+
+    background: transparent;
+
+    border: 0;
+
+    border-radius: 5px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+
+.format-option:hover {
+    background: #eef5fb;
+
+    color: #1d5b9f;
+}
+
+
+.format-parent i {
+    margin-left: 12px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   FORMAT SUBMENU
+   ========================================================= */
+
+.format-submenu-wrapper {
+    position: relative;
+}
+
+
+.format-submenu {
+    position: absolute;
+
+    top: -5px;
+    left: calc(100% + 4px);
+
+    z-index: 110;
+
+    width: 165px;
+
+    max-height: 360px;
+
+    overflow-y: auto;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #d8e2ed;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 10px 24px
+        rgb(24 48 86 / 15%);
+
+    display: none;
+
+    transform: translateX(-4px);
+
+    transition:
+        opacity 0.12s ease,
+        transform 0.12s ease;
+}
+
+
+/*
+   IMPORTANT:
+   Submenu opens only when JavaScript adds
+   .submenu-open after clicking MTD/QTD.
+*/
+
+.format-submenu.submenu-open {
+    display: block;
+
+    opacity: 1;
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   APPLY BUTTON
+   ========================================================= */
+
+.period-form > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 9px 14px;
+
+    color: #ffffff;
+
+    background: #1d5b9f;
+
+    border: 0;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font: 600 12px Inter, Arial, sans-serif;
+
+    white-space: nowrap;
+}
+
+
+.period-form > button:hover {
+    background: #15487f;
+}
+
+
+.period-form > button:active {
+    transform: translateY(1px);
+}
+
+
+.period-form > button:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.report-table-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 5px 18px
+        rgb(24 48 86 / 7%);
+}
+
+
+/* =========================================================
+   REPORT STATUS
+   ========================================================= */
+
+.report-status {
+    padding: 28px;
+
+    color: #66758a;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+.report-status.error {
+    color: #b42318;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.table-wrap {
+    position: relative;
+
+    width: 100%;
+
+    max-height: calc(100vh - 250px);
+
+    overflow: auto;
+}
+
+
+/* =========================================================
+   CUSTOMER TABLE
+   ========================================================= */
+
+.customer-table {
+    width: 100%;
+
+    min-width: 1060px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+.customer-table th {
+    padding: 10px 8px;
+
+    color: #132a46;
+
+    background: #c4c4c4;
+
+    border-bottom: 1px solid #c4c4c4;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-align: right;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 8;
+}
+
+
+.customer-table thead tr:first-child th {
+    text-align: center;
+}
+
+
+.customer-table thead {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: #c4c4c4;
+}
+
+
+.customer-table thead th {
+    background: #c4c4c4;
+}
+
+
+/* =========================================================
+   SORTABLE HEADERS
+   ========================================================= */
+
+.customer-table th.sortable-header {
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+.customer-table th.sortable-header:hover {
+    background: #a0a0a0;
+}
+
+
+/* =========================================================
+   FIXED CUSTOMER HEADER
+   ========================================================= */
+
+.customer-table thead tr:first-child th:first-child {
+    position: sticky;
+
+    top: 0;
+    left: 0;
+
+    z-index: 15;
+
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+
+    background: #c4c4c4;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.customer-table td {
+    padding: 9px 8px;
+
+    color: #26364d;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e6edf4;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FIXED CUSTOMER COLUMN
+   ========================================================= */
+
+.customer-table tbody td:first-child {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 5;
+
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+
+    padding: 9px 8px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    text-align: left;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ROW HOVER
+   ========================================================= */
+
+.customer-table tbody tr:hover td {
+    background: #f0f8fc;
+}
+
+
+.customer-table tbody tr:hover td:first-child {
+    background: #f0f8fc;
+}
+
+
+/* =========================================================
+   RUNNING %
+   ========================================================= */
+
+.customer-table .running {
+    color: #385879;
+}
+
+
+/* =========================================================
+   TOTAL CELLS
+   ========================================================= */
+
+.customer-table .total {
+    background: #f6fbfd;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.customer-table tfoot td {
+    padding: 10px 8px;
+
+    color: #132a46;
+
+    background: #ddecf4;
+
+    border-top: 2px solid #9ec5d8;
+
+    font-weight: 700;
+}
+
+
+.customer-table tfoot td:first-child {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 6;
+
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+
+    background: #ddecf4;
+
+    text-align: left;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   YTD COMPARISON TABLE
+   ========================================================= */
+
+.ytd-table {
+    width: 100%;
+
+    min-width: 760px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+.ytd-table th {
+    padding: 10px 12px;
+
+    color: #132a46;
+
+    background: #c4c4c4;
+
+    border-bottom: 1px solid #c4c4c4;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-align: right;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 8;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+.ytd-table th:first-child {
+    text-align: left;
+}
+
+
+.ytd-table th:hover {
+    background: #a0a0a0;
+}
+
+
+.ytd-table td {
+    padding: 9px 12px;
+
+    color: #26364d;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e6edf4;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+.ytd-table td:first-child {
+    width: 40%;
+
+    text-align: left;
+
+    color: #17223b;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.ytd-table tbody tr:hover td {
+    background: #f0f8fc;
+}
+
+
+.ytd-table tfoot td {
+    padding: 10px 12px;
+
+    color: #132a46;
+
+    background: #ddecf4;
+
+    border-top: 2px solid #9ec5d8;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-positive {
+    color: #18794e !important;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-negative {
+    color: #b42318 !important;
+
+    font-weight: 700;
+}
+
+
+.ytd-growth-neutral {
+    color: #536174 !important;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 32px;
+
+    color: #66758a;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.table-wrap::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+
+.table-wrap::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: #b7c7d8;
+
+    border-radius: 10px;
+}
+
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #94a9bd;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .report-top {
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+
+    .period-form {
+        padding: 12px 14px;
+    }
+
+
+    .period-form input {
+        width: 125px;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .customer-report {
+        padding: 22px;
+    }
+
+
+    .report-top {
+        flex-direction: column;
+    }
+
+
+    .report-title {
+        width: 100%;
+    }
+
+
+    .period-form {
+        width: 100%;
+
+        justify-content: flex-end;
+    }
+
+
+    .period-form input {
+        width: 145px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .customer-report {
+        padding: 18px 14px;
+    }
+
+
+    .report-title {
+        gap: 12px;
+    }
+
+
+    h1 {
+        font-size: 24px;
+    }
+
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+
+    .period-form {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        width: 100%;
+
+        padding: 14px;
+    }
+
+
+    .format-control {
+        grid-column: 1 / -1;
+    }
+
+
+    .format-button {
+        width: 100%;
+    }
+
+
+    .format-menu {
+        width: 100%;
+    }
+
+
+    .format-submenu {
+        position: fixed;
+
+        left: 50%;
+
+        top: 50%;
+
+        transform: translate(-50%, -50%);
+
+        max-height: 70vh;
+
+        width: 220px;
+    }
+
+
+    /*
+       Mobile submenu is also click-controlled.
+       No hover rule here.
+    */
+
+    .format-submenu.submenu-open {
+        display: block;
+
+        opacity: 1;
+
+        transform: translate(-50%, -50%);
+    }
+
+
+    .period-form label {
+        width: 100%;
+    }
+
+
+    .period-form input {
+        width: 100%;
+    }
+
+
+    .period-form > button {
+        grid-column: 1 / -1;
+
+        width: 100%;
+    }
+
+
+    .table-wrap {
+        max-height: calc(100vh - 300px);
+    }
+
+
+    .customer-table {
+        min-width: 900px;
+    }
+
+
+    .customer-table thead tr:first-child th:first-child,
+    .customer-table tbody td:first-child,
+    .customer-table tfoot td:first-child {
+        width: 200px;
+
+        min-width: 200px;
+
+        max-width: 200px;
+    }
+
+
+    .ytd-table {
+        min-width: 650px;
+    }
+
+}
+
+
+/* =========================================================
+   FORMAT CONTROL
+   ========================================================= */
+
+.format-control {
+    position: relative;
+    display: grid;
+    gap: 5px;
+    min-width: 105px;
+}
+
+
+.filter-caption {
+    color: #536174;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FORMAT BUTTON
+   ========================================================= */
+
+.format-button {
+    width: 105px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-button:hover {
+    border-color: #1d5b9f;
+}
+
+
+.format-button i {
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   FORMAT MENU
+   ========================================================= */
+
+.format-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+
+    width: 145px;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 8px;
+
+    box-shadow:
+        0 10px 25px
+        rgb(24 48 86 / 15%);
+
+    z-index: 100;
+}
+
+
+.format-menu[hidden] {
+    display: none;
+}
+
+
+/* =========================================================
+   FORMAT OPTIONS
+   ========================================================= */
+
+.format-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 9px;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #26364d;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-option:hover {
+    background: #f0f6fb;
+    color: #1d5b9f;
+}
+
+
+/* =========================================================
+   SUBMENU GROUP
+   ========================================================= */
+
+.format-menu-group {
+    position: relative;
+}
+
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.format-submenu {
+    position: absolute;
+
+    top: -5px;
+    left: calc(100% + 5px);
+
+    width: 155px;
+
+    display: none;
+
+    padding: 5px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 8px;
+
+    box-shadow:
+        0 10px 25px
+        rgb(24 48 86 / 15%);
+
+    z-index: 110;
+}
+
+
+/*
+   CLICK STATE
+*/
+
+.format-submenu.submenu-open {
+    display: block;
+}
+
+
+/* =========================================================
+   SUBMENU OPTIONS
+   ========================================================= */
+
+.format-submenu button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 9px;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #26364d;
+
+    cursor: pointer;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    text-align: left;
+}
+
+
+.format-submenu button:hover {
+    background: #f0f6fb;
+    color: #1d5b9f;
+}
+
+
+.period-year-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 7px 9px;
+    margin-bottom: 4px;
+
+    color: #64748b;
+    font: 500 11px Inter, Arial, sans-serif;
+}
+
+
+.period-year-select {
+    min-width: 72px;
+    padding: 4px 6px;
+
+    color: #26364d;
+    background: #ffffff;
+    border: 1px solid #dce5f0;
+    border-radius: 4px;
+    font: 500 11px Inter, Arial, sans-serif;
+}
+
+
+.format-submenu button span {
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   COMPARISON TABLE
+   ========================================================= */
+
+.comparison-table {
+    min-width: 760px;
+}
+
+
+.comparison-table th,
+.comparison-table td {
+    padding: 10px 12px;
+}
+
+
+.comparison-table thead tr:first-child th:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+.comparison-table tbody td:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+/* =========================================================
+   GROWTH
+   ========================================================= */
+
+.growth-positive {
+    color: #16803c;
+    font-weight: 600;
+}
+
+
+.growth-negative {
+    color: #c62828;
+    font-weight: 600;
+}
+
+
+.growth-neutral {
+    color: #64748b;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   COMPARISON HEADER
+   ========================================================= */
+
+.comparison-table thead th {
+    text-align: center;
+}
+
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE FORMAT CONTROL
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .format-control {
+        min-width: 145px;
+    }
+
+
+    .format-button {
+        width: 145px;
+    }
+
+
+    .format-menu {
+        width: 145px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .format-control {
+        width: 100%;
+    }
+
+
+    .format-button {
+        width: 100%;
+    }
+
+
+    .format-menu {
+        width: 100%;
+    }
+
+
+    .format-submenu {
+        position: static;
+
+        width: 100%;
+
+        margin-top: 2px;
+
+        box-shadow: none;
+
+        border: 0;
+
+        background: #f8fafc;
+    }
+
+
+    /*
+       Only JavaScript click opens the submenu.
+    */
+
+    .format-submenu.submenu-open {
+        display: block;
+    }
+
+}
+/* =========================================================
+   COMPARISON TABLE - 3 METRICS
+   ========================================================= */
+
+.comparison-table {
+    width: 100%;
+    min-width: 1200px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   YEAR GROUP HEADERS
+   ========================================================= */
+
+.comparison-table .comparison-year-header {
+    text-align: center;
+
+    vertical-align: middle;
+
+    font-weight: 700;
+
+    background: #c4c4c4;
+}
+
+
+.comparison-table .comparison-customer-header {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+.comparison-table .comparison-growth-header {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   ALL COMPARISON HEADERS
+   ========================================================= */
+
+.comparison-table thead th {
+    text-align: center;
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOMER COLUMN
+   ========================================================= */
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   ALL NUMERIC VALUES CENTER
+   ========================================================= */
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RUNNING SALES %
+   ========================================================= */
+
+.comparison-table .running {
+    text-align: center;
+}
+
+
+/* =========================================================
+   GROWTH
+   ========================================================= */
+
+.comparison-table .growth-positive,
+.comparison-table .growth-negative,
+.comparison-table .growth-neutral {
+    text-align: center;
+}
+
+
+/* =========================================================
+   SUBHEADER
+   ========================================================= */
+
+.comparison-table thead tr:nth-child(2) th {
+    font-size: 11px;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.comparison-table tfoot td {
+    text-align: center;
+
+    vertical-align: middle;
+}
+
+
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .comparison-table {
+        min-width: 1100px;
+    }
+
+}
+/* =========================================================
+   COMPARISON TABLE - GROUP SEPARATORS
+   ========================================================= */
+
+/* Line after CUSTOMER */
+.comparison-table thead th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Line after LAST YEAR APRIL group */
+.comparison-table thead tr:first-child th:nth-child(2) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Line after CURRENT YEAR APRIL group */
+.comparison-table thead tr:first-child th:nth-child(3) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Continue separator through body */
+.comparison-table tbody td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* Continue separator through footer */
+.comparison-table tfoot td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* =========================================================
+   FINAL COMPARISON TABLE FIX
+   ========================================================= */
+
+/*
+   Keep Customer wide.
+   Do NOT apply the Customer width to the first Sales
+   header in the second header row.
+*/
+
+.comparison-table {
+    width: 100%;
+    min-width: 1200px;
+    table-layout: fixed;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   CUSTOMER COLUMN
+   ========================================================= */
+
+.comparison-table thead tr:first-child th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+
+/* Customer alignment */
+
+.comparison-table thead tr:first-child th:first-child {
+    text-align: center;
+}
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+}
+
+
+/* =========================================================
+   YEAR GROUP HEADERS
+   ========================================================= */
+
+.comparison-table thead tr:first-child th {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SECOND HEADER ROW
+   ========================================================= */
+
+/*
+   Important:
+   The first Sales column must NOT inherit
+   the 300px Customer width.
+*/
+
+.comparison-table thead tr:nth-child(2) th {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+
+    padding: 10px 8px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+/* Last Year Sales */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(1) {
+    width: 115px;
+}
+
+
+/* Last Year Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(2) {
+    width: 105px;
+}
+
+
+/* Last Year Running Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(3) {
+    width: 125px;
+}
+
+
+/* Current Year Sales */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(4) {
+    width: 115px;
+}
+
+
+/* Current Year Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(5) {
+    width: 105px;
+}
+
+
+/* Current Year Running Sales % */
+
+.comparison-table thead tr:nth-child(2) th:nth-child(6) {
+    width: 125px;
+}
+
+
+/* =========================================================
+   GROWTH COLUMN
+   ========================================================= */
+
+.comparison-table thead tr:first-child th:last-child {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE VALUES
+   ========================================================= */
+
+.comparison-table tbody td:not(:first-child),
+.comparison-table tfoot td:not(:first-child) {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* Customer text */
+
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    text-align: left;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   GROUP SEPARATORS
+   ========================================================= */
+
+/* After Customer */
+
+.comparison-table thead tr:first-child th:first-child,
+.comparison-table tbody td:first-child,
+.comparison-table tfoot td:first-child {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* After Last Year group */
+
+.comparison-table thead tr:first-child th:nth-child(2),
+.comparison-table tbody td:nth-child(4),
+.comparison-table tfoot td:nth-child(4) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* After Current Year group */
+
+.comparison-table thead tr:first-child th:nth-child(3),
+.comparison-table tbody td:nth-child(7),
+.comparison-table tfoot td:nth-child(7) {
+    border-right: 1px solid #b8c4d1;
+}
+
+
+/* =========================================================
+   RUNNING SALES %
+   ========================================================= */
+
+.comparison-table .running {
+    text-align: center;
+}
+
+
+/* =========================================================
+   GROWTH %
+   ========================================================= */
+
+.comparison-table .growth-positive,
+.comparison-table .growth-negative,
+.comparison-table .growth-neutral {
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .comparison-table {
+        min-width: 1100px;
+    }
+
+}
+
+
+
+/* =========================================================
+   SALES TREND KPI - FILTER + CHART LAYOUT
+   ========================================================= */
+
+.report-top {
+    display: grid;
+    grid-template-columns: minmax(560px, 1fr) minmax(360px, 440px);
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+
+/* Back link sits above the two cards */
+
+.report-back {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+
+/* Filter card */
+
+.period-form {
+    grid-column: 1;
+    width: 100%;
+    min-height: 92px;
+}
+
+
+/* KPI card */
+
+.sales-kpi-card {
+    grid-column: 2;
+    grid-row: 2;
+
+    min-height: 170px;
+    width: 100%;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 18px
+        rgb(24 48 86 / 7%);
+
+    overflow: hidden;
+}
+
+
+.sales-kpi-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+
+.sales-kpi-label {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+
+.sales-kpi-value {
+    margin-top: 3px;
+    color: #17223b;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+
+.sales-kpi-growth {
+    padding: 4px 7px;
+    color: #1d5b9f;
+    background: #f0f6fb;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+.sales-kpi-chart {
+    position: relative;
+    width: 100%;
+    height: 86px;
+    margin-top: 4px;
+}
+
+
+.sales-kpi-chart canvas {
+    display: block;
+    width: 100% !important;
+    height: 86px !important;
+}
+
+
+@media (max-width: 900px) {
+
+    .report-top {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .report-back {
+        width: 100%;
+    }
+
+    .period-form,
+    .sales-kpi-card {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .sales-kpi-card {
+        min-height: 145px;
+    }
+
+    .sales-kpi-chart {
+        height: 80px;
+    }
+
+    .sales-kpi-chart canvas {
+        height: 80px !important;
+    }
+}
+
+
+/* =========================================================
+   CUSTOM DATE SUBMENU
+   ========================================================= */
+
+.custom-submenu {
+    width: 205px;
+    padding: 9px;
+}
+
+
+.custom-date-control {
+    display: grid;
+
+    gap: 5px;
+
+    width: 100%;
+
+    margin-bottom: 8px;
+
+    color: #536174;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.custom-date-control input {
+    width: 100%;
+
+    padding: 7px 8px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.custom-apply-btn {
+    width: 100% !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center !important;
+
+    padding: 8px 10px !important;
+
+    color: #ffffff !important;
+
+    background: #1d5b9f !important;
+
+    border: 0 !important;
+    border-radius: 6px !important;
+
+    font: 600 12px Inter, Arial, sans-serif !important;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-btn:hover {
+    background: #15487f !important;
+}
+
+
+@media (max-width: 700px) {
+
+    .custom-submenu {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .custom-date-control input {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   CUSTOM DATE RANGE - INSIDE FORMAT MENU
+   ========================================================= */
+
+.custom-submenu {
+    width: 205px;
+    padding: 10px;
+}
+
+
+.custom-date-control {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 5px;
+
+    width: 100% !important;
+
+    margin: 0 0 9px;
+
+    color: #536174;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.custom-date-control input {
+    width: 100% !important;
+
+    padding: 7px 8px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.custom-apply-btn {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center !important;
+
+    padding: 8px 10px !important;
+
+    color: #ffffff !important;
+
+    background: #1d5b9f !important;
+
+    border: 0 !important;
+    border-radius: 6px !important;
+
+    font: 600 12px Inter, Arial, sans-serif !important;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-btn:hover {
+    background: #15487f !important;
+}
+
+
+/* =========================================================
+   COMPACT FILTER CARD
+   ========================================================= */
+
+.period-form {
+    min-height: 92px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+/* No visible date controls in the main card */
+
+.period-form > label,
+.period-form > #applyPeriodBtn {
+    display: none !important;
+}
+
+
+/* =========================================================
+   CUSTOM SUBMENU RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .custom-submenu {
+        width: 205px;
+        max-width: calc(100vw - 40px);
+    }
+
+    .custom-date-control input {
+        width: 100% !important;
+    }
+}
+
+
+/* CUSTOM DATE RANGE INSIDE FORMAT MENU */
+.custom-submenu { width: 205px; padding: 10px; }
+.custom-date-control { display: grid !important; grid-template-columns: 1fr !important; gap: 5px; width: 100% !important; margin: 0 0 9px; color: #536174; font-size: 11px; font-weight: 700; }
+.custom-date-control input { width: 100% !important; padding: 7px 8px; color: #17223b; background: #fff; border: 1px solid #bccadd; border-radius: 6px; font: 500 12px Inter, Arial, sans-serif; outline: none; }
+.custom-date-control input:focus { border-color: #1d5b9f; box-shadow: 0 0 0 2px rgb(29 91 159 / 10%); }
+.custom-apply-btn { width: 100% !important; display: flex !important; align-items: center; justify-content: center !important; padding: 8px 10px !important; color: #fff !important; background: #1d5b9f !important; border: 0 !important; border-radius: 6px !important; font: 600 12px Inter, Arial, sans-serif !important; cursor: pointer; }
+.custom-apply-btn:hover { background: #15487f !important; }
+.period-form { min-height: 92px; align-items: center; justify-content: flex-start; }
+.period-form > label, .period-form > #applyPeriodBtn { display: none !important; }
+@media (max-width:700px) { .custom-submenu { width: 205px; max-width: calc(100vw - 40px); } .custom-date-control input { width: 100% !important; } }
+
+
+/* =========================================================
+   CUSTOMER FILTER
+   ========================================================= */
+
+.customer-filter-control {
+    position: relative;
+
+    display: grid;
+    gap: 5px;
+
+    min-width: 210px;
+}
+
+
+.customer-filter-select {
+    width: 210px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.customer-filter-select:hover,
+.customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+@media (max-width: 700px) {
+
+    .customer-filter-control {
+        min-width: 100%;
+    }
+
+    .customer-filter-select {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   STANDALONE CUSTOMER FILTER
+   ========================================================= */
+
+.customer-filter-section {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 12px;
+}
+
+
+.customer-filter-section .customer-filter-control {
+    display: grid;
+    gap: 5px;
+
+    width: 230px;
+    min-width: 230px;
+}
+
+
+.customer-filter-section .customer-filter-select {
+    width: 230px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.customer-filter-section .customer-filter-select:hover,
+.customer-filter-section .customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.customer-filter-section .customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+/* Keep the Format area clean and independent. */
+.period-form .customer-filter-control {
+    display: none !important;
+}
+
+
+@media (max-width: 700px) {
+
+    .customer-filter-section {
+        margin-bottom: 10px;
+    }
+
+    .customer-filter-section .customer-filter-control,
+    .customer-filter-section .customer-filter-select {
+        width: 100%;
+        min-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   FINAL COMPACT SINGLE-SCREEN LAYOUT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+}
+
+
+body {
+    min-height: 100vh;
+}
+
+
+.customer-report {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+}
+
+
+/*
+   Header is fixed to its natural height.
+   The report content uses the remaining viewport.
+*/
+
+.customer-report > .report-header,
+.customer-report > header {
+    flex: 0 0 auto;
+}
+
+
+.report-top {
+    flex: 0 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 34%);
+
+    grid-template-rows: auto auto;
+
+    column-gap: 16px;
+    row-gap: 8px;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 10px;
+    padding: 10px 0 0;
+
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+
+.report-back {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    margin: 0;
+    padding: 0 0 0 0;
+
+    width: 100%;
+}
+
+
+/*
+   This is NOT a card.
+   It only arranges Format and Customer.
+*/
+
+.report-filter-area {
+    grid-column: 1;
+    grid-row: 2;
+
+    display: flex;
+    align-items: flex-end;
+    gap: 22px;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 0;
+}
+
+
+/*
+   Remove the large white box that used to sit
+   behind the Format control.
+*/
+
+.report-filter-area .period-form {
+    display: flex;
+    align-items: flex-end;
+
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+    padding: 0;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    gap: 0;
+}
+
+
+/*
+   Format itself remains a small control.
+*/
+
+.report-filter-area .format-control {
+    min-width: 105px;
+}
+
+
+/*
+   Customer is a separate filter, but sits beside Format.
+*/
+
+.report-filter-area .customer-filter-control {
+    display: grid;
+    gap: 5px;
+
+    width: 230px;
+    min-width: 230px;
+}
+
+
+.report-filter-area .customer-filter-select {
+    width: 230px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.report-filter-area .customer-filter-select:hover,
+.report-filter-area .customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.report-filter-area .customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+/*
+   KPI card is compact and aligned with filters.
+*/
+
+.report-top .sales-kpi-card {
+    grid-column: 2;
+    grid-row: 2;
+
+    align-self: center;
+    transform: translateY(-40px);
+    width: 100%;
+    min-width: 0;
+
+    min-height: 112px;
+    height: 112px;
+
+    box-sizing: border-box;
+
+    padding: 10px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 9px;
+
+    box-shadow:
+        0 4px 14px
+        rgb(24 48 86 / 6%);
+
+    overflow: hidden;
+}
+
+
+.report-top .sales-kpi-header {
+    margin-bottom: 0px;
+}
+
+
+.report-top .sales-kpi-label {
+    font-size: 9px;
+}
+
+
+.report-top .sales-kpi-value {
+    margin-top: 1px;
+    font-size: 18px;
+}
+
+
+.report-top .sales-kpi-growth {
+    padding: 3px 6px;
+    font-size: 10px;
+}
+
+
+.report-top .sales-kpi-chart {
+    height: 120px;
+    margin-top: 1px;
+}
+
+
+.report-top .sales-kpi-chart canvas {
+    height: 120px !important;
+}
+
+
+/*
+   Table fills the remaining viewport.
+   Scrolling happens inside the table only.
+*/
+
+.customer-report > .report-table-card {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    width: 100%;
+
+    margin: 0;
+
+    overflow: hidden;
+}
+
+
+.customer-report > .report-table-card .table-wrap {
+    height: 100%;
+    max-height: 100%;
+
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+
+/*
+   Keep the table header visible while the table body scrolls.
+*/
+
+.sales-comparison-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+
+/*
+   On smaller screens, stack only when necessary.
+   The page itself still never scrolls.
+*/
+
+@media (max-width: 900px) {
+
+    .report-top {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .report-back {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .report-filter-area {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .report-top .sales-kpi-card {
+        grid-column: 1;
+        grid-row: 3;
+
+        width: min(100%, 440px);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .report-filter-area {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .report-filter-area .customer-filter-control,
+    .report-filter-area .customer-filter-select {
+        width: 200px;
+        min-width: 200px;
+    }
+}
+
+
+/* =========================================================
+   FINAL: FILTERS BESIDE KPI, NO PAGE SCROLL
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+}
+
+.customer-report {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden !important;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.report-top {
+    flex: 0 0 auto;
+
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 34%) !important;
+    grid-template-rows: auto auto !important;
+
+    column-gap: 16px;
+    row-gap: 6px;
+
+    width: 100%;
+    margin: 0 0 10px !important;
+    padding: 8px 0 0 !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.report-back {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.report-filter-area {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 20px !important;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 0 !important;
+}
+
+.report-filter-area .period-form {
+    display: block !important;
+
+    width: auto !important;
+    min-width: 105px !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.report-filter-area .format-control {
+    width: 105px;
+    min-width: 105px;
+}
+
+.report-filter-area .customer-filter-control {
+    display: grid !important;
+    gap: 5px;
+
+    width: 220px;
+    min-width: 220px;
+}
+
+.report-filter-area .customer-filter-select {
+    width: 220px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #fff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+}
+
+.report-top .sales-kpi-card {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+
+    align-self: center;
+
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 130px !important;
+    min-height: 130px !important;
+
+    box-sizing: border-box;
+
+    padding: 9px 13px !important;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+}
+
+.report-top .sales-kpi-label {
+    font-size: 9px;
+}
+
+.report-top .sales-kpi-value {
+    font-size: 17px;
+}
+
+.report-top .sales-kpi-chart {
+    height: 70px !important;
+    margin-top: 0 !important;
+}
+
+.report-top .sales-kpi-chart canvas {
+    height: 70px !important;
+}
+
+.customer-report > .report-table-card {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.customer-report > .report-table-card .table-wrap {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
+@media (max-width: 900px) {
+    .report-top {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto auto !important;
+    }
+
+    .report-filter-area {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+    }
+
+    .report-top .sales-kpi-card {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+        width: min(100%, 420px) !important;
+    }
+}

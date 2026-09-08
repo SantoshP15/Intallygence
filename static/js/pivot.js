@@ -10,20 +10,20 @@ let pivotConfig = {
     period: null,   
     filters: [],
     layout: null,
-    dataSource: "SalesInventory"
+    dataSource: "view_SalesInventory"
 };
 
 // =======================================
 // CURRENT REPORT DATA SOURCE
 // =======================================
 
-let currentDataSource = "SalesInventory";
+let currentDataSource = "view_SalesInventory";
 let currentDateColumns = [...DATE_COLUMNS];
 let currentColumnTypes = { ...COLUMN_TYPES };
 
 const REPORT_DATA_SOURCES = {
-    sales: "SalesInventory",
-    purchase: "PurchaseInventory"
+    sales: "view_SalesInventory",
+    purchase: "view_Purchase"
 };
 
 
@@ -4107,7 +4107,7 @@ function openSavedReport(reportId) {
 
             // Backward compatibility for older saved reports
             currentDataSource =
-                pivotConfig.dataSource || "SalesInventory";
+                pivotConfig.dataSource || "view_SalesInventory";
 
             pivotConfig.dataSource = currentDataSource;
 

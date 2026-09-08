@@ -16,7 +16,7 @@
 
     <!-- Active Company -->
         <div class="active-company">
-            <strong id="activeCompanyName">ACHP Pvt. Ltd.</strong>
+            <strong id="activeCompanyName">{{ company_name }}</strong>
         </div>
 
     <div class="dashboard-user">
@@ -84,7 +84,7 @@
 
                         <div class="profile-item">
                             <label>Organisation</label>
-                            <span>ACHP Pvt. Ltd.</span>
+                            <span>{{ company_name }}</span>
                         </div>
 
                         <div class="profile-item">
@@ -202,29 +202,12 @@
                         <input
                             type="checkbox"
                             name="active-company"
-                            value="ACHP Pvt. Ltd."
+                            value="{{ company_name }}"
                             checked
                         >
-                        <span>ACHP Pvt. Ltd.</span>
+                        <span>{{ company_name }}</span>
                     </label>
 
-                    <label class="company-option">
-                        <input
-                            type="checkbox"
-                            name="active-company"
-                            value="InTallygence Pvt. Ltd."
-                        >
-                        <span>InTallygence Pvt. Ltd.</span>
-                    </label>
-
-                    <label class="company-option">
-                        <input
-                            type="checkbox"
-                            name="active-company"
-                            value="Demo Company Pvt. Ltd."
-                        >
-                        <span>Demo Company Pvt. Ltd.</span>
-                    </label>
 
                 </fieldset>
 

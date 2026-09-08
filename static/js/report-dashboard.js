@@ -55,13 +55,13 @@ const reportData = {
 
         items: [
             "Entity",
-            "Customer-Itemwise",
-            "Customer Level",
-            "Itemwise-Customer",
             "Customer Growth",
+            "Customer Level",
+            "Customer-Itemwise",
             "Inventory Level",
+            "Itemwise-Customer",
             "Register",
-            "Register Margin"
+            "Sales v/s Sales Return",
         ]
     },
 
@@ -200,9 +200,10 @@ function openReportModal(categoryKey) {
             
             const customerGrowthLink =
                 categoryKey === "sales" && item === "Customer Growth";
-
+            const PurchaseCustomerLevelLink =
+                categoryKey === "purchase" && item === "Customer Level";
             const reportLink =
-                customerLevelLink
+                    customerLevelLink
                     ? "/customer-level"
                     : inventoryLevelLink
                     ? "/item-level"
@@ -212,10 +213,12 @@ function openReportModal(categoryKey) {
                     ? "/itemwise-customer"
                     : customerGrowthLink
                     ? "/customer-growth"
+                    : PurchaseCustomerLevelLink
+                    ? "/purchase-customer-level"
                     : "#";
 
             const isClickable =
-                customerLevelLink || inventoryLevelLink || customerItemwiseLink || itemwiseCustomerLink || customerGrowthLink;
+                customerLevelLink || inventoryLevelLink || customerItemwiseLink || itemwiseCustomerLink || customerGrowthLink || PurchaseCustomerLevelLink;
 
             return `
 

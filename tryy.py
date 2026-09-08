@@ -1,13 +1,9 @@
-import sqlite3
+import json
 
-conn = sqlite3.connect("tally.db")
-cursor = conn.cursor()
-cursor.execute("SELECT * FROM Ledger LIMIT 10")
-columns = [col[0] for col in cursor.description]
-rows = cursor.fetchall()
-for row in rows:
-    print("---------------------")
-    for col, value in zip(columns, row):
-        print(f"{col}: {value}")
+file_path = r"D:\XboxGames\sales_details_list.json"
 
-conn.close()
+with open(file_path, "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+print("JSON is valid")
+print("Records:", len(data))
