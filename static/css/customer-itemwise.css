@@ -511,7 +511,7 @@ body {
     min-width: 220px;
     width: 220px;
 
-    background: #c9e8f5;
+    background: #c4c4c4;
 }
 
 
@@ -547,7 +547,7 @@ body {
     width: 220px;
     max-width: 220px;
 
-    background: #ddecf4;
+    background: #c4c4c4;
 }
 
 
@@ -656,7 +656,7 @@ body {
 
 
 .customer-itemwise-table .total td {
-    background: #f6fbfd;
+    background: #c4c4c4;
 
     font-weight: 700;
 }
