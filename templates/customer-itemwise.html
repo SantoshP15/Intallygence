@@ -129,7 +129,61 @@
                                 <button type="button" data-quarter="Q1">Q1 <span>Apr - Jun</span></button><button type="button" data-quarter="Q2">Q2 <span>Jul - Sep</span></button><button type="button" data-quarter="Q3">Q3 <span>Oct - Dec</span></button><button type="button" data-quarter="Q4">Q4 <span>Jan - Mar</span></button>
                             </div>
                         </div>
-                        <button type="button" class="format-option" data-format="CUSTOM">Custom</button>
+                        <div class="format-menu-group">
+
+                            <button
+                                type="button"
+                                class="format-option format-parent"
+                                data-parent="CUSTOM"
+                            >
+                                Custom
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            <div
+                                class="format-submenu custom-submenu"
+                                data-submenu="CUSTOM"
+                            >
+
+                                <label class="custom-date-control">
+
+                                    From
+
+                                    <input
+                                        id="fromDate"
+                                        name="from"
+                                        type="date"
+                                        required
+                                    >
+
+                                </label>
+
+
+                                <label class="custom-date-control">
+
+                                    To
+
+                                    <input
+                                        id="toDate"
+                                        name="to"
+                                        type="date"
+                                        required
+                                    >
+
+                                </label>
+
+
+                                <button
+                                    type="submit"
+                                    id="applyPeriodBtn"
+                                    class="custom-apply-button"
+                                >
+                                    Apply
+                                </button>
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
@@ -151,52 +205,6 @@
                     </select>
 
                 </label>
-
-
-                <!-- From -->
-
-                <label for="fromDate">
-
-                    From
-
-                    <input
-                        id="fromDate"
-                        name="from"
-                        type="date"
-                        required
-                    >
-
-                </label>
-
-
-                <!-- To -->
-
-                <label for="toDate">
-
-                    To
-
-                    <input
-                        id="toDate"
-                        name="to"
-                        type="date"
-                        required
-                    >
-
-                </label>
-
-
-                <!-- Apply -->
-
-                <button
-                    type="submit"
-                    id="applyPeriodBtn"
-                >
-
-                    <i class="fa-solid fa-rotate"></i>
-
-                    Apply period
-
-                </button>
 
             </form>
 

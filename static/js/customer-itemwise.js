@@ -1452,3 +1452,33 @@ document.addEventListener(
 
     }
 );
+/*
+   CUSTOM PARENT
+*/
+
+const customParent =
+    formatMenu.querySelector(
+        '.format-parent[data-parent="CUSTOM"]'
+    );
+
+if (customParent) {
+
+    customParent.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            toggleSubmenu(customParent);
+
+            selectedFormat = "CUSTOM";
+            selectedMonth = null;
+            selectedQuarter = null;
+
+            updateDisplay();
+
+        }
+    );
+
+}

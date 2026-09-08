@@ -79,57 +79,104 @@ function escapeHtml(value) {
    POPULATE ITEM DROPDOWN
    ========================================================= */
 
+/* =========================================================
+   ITEM DROPDOWN
+========================================================= */
+
 function populateItemDropdown(items, selectedItem = "") {
 
-    const fromDate =
-    document.getElementById(
-        "fromDate"
-    );
-
-
-    const toDate =
-    document.getElementById(
-        "toDate"
-    );
-
-
     const itemSelect =
-    document.getElementById(
-        "itemSelect"
-    );
+        document.getElementById("itemSelect");
+
+
+    /* ---------------------------------------------
+       Make sure dropdown exists
+    --------------------------------------------- */
 
     if (!itemSelect) {
         return;
     }
 
+
+    /* ---------------------------------------------
+       Clear existing options
+    --------------------------------------------- */
+
     itemSelect.innerHTML = `
-        <option value="">All Items</option>
+        <option value="">
+            All Items
+        </option>
     `;
+
+
+    /* ---------------------------------------------
+       Make sure items is an array
+    --------------------------------------------- */
 
     if (!Array.isArray(items)) {
         return;
     }
 
+
+    /* ---------------------------------------------
+       Add items
+    --------------------------------------------- */
+
     items.forEach(item => {
 
-        const value = String(item || "").trim();
+        const value =
+            String(item || "").trim();
+
 
         if (!value) {
             return;
         }
 
+
         const option =
             document.createElement("option");
 
-        option.value = value;
-        option.textContent = value;
 
-        itemSelect.appendChild(option);
+        option.value =
+            value;
+
+
+        option.textContent =
+            value;
+
+
+        itemSelect.appendChild(
+            option
+        );
+
     });
 
-    itemSelect.value = selectedItem || "";
-}
 
+    /* ---------------------------------------------
+       Restore selected item
+    --------------------------------------------- */
+
+    if (
+        selectedItem &&
+        Array.from(
+            itemSelect.options
+        ).some(
+            option =>
+                option.value === selectedItem
+        )
+    ) {
+
+        itemSelect.value =
+            selectedItem;
+
+    } else {
+
+        itemSelect.value =
+            "";
+
+    }
+
+}
 /* =========================================================
    3-CLICK SORTING
    =========================================================
@@ -1156,9 +1203,15 @@ document.addEventListener(
             );
 
 
+        const itemSelect =
+            document.getElementById(
+                "itemSelect"
+            );
+
+
         /* ---------------------------------------------
            Default financial year
-           --------------------------------------------- */
+        --------------------------------------------- */
 
         const defaultPeriod =
             getDefaultPeriod();
@@ -1172,18 +1225,24 @@ document.addEventListener(
             defaultPeriod.to;
 
 
+        /* ---------------------------------------------
+           SALES PERIOD FORMAT
+        --------------------------------------------- */
+
         initSalesPeriodFormat(() => {
+
             loadReport(
                 fromDate.value,
                 toDate.value,
-                document.getElementById("itemSelect")?.value || ""
+                itemSelect?.value || ""
             );
+
         });
 
 
         /* ---------------------------------------------
-           Initial report
-           --------------------------------------------- */
+           INITIAL REPORT
+        --------------------------------------------- */
 
         loadReport(
             defaultPeriod.from,
@@ -1192,64 +1251,154 @@ document.addEventListener(
         );
 
 
+        /* =================================================
+           ITEM FILTER
+           
+           IMPORTANT:
+           There is NO Apply button for Item.
+
+           As soon as the user selects an item,
+           reload the report automatically.
+        ================================================= */
+
+        if (itemSelect) {
+
+            itemSelect.addEventListener(
+                "change",
+                () => {
+
+                    const selectedItem =
+                        itemSelect.value || "";
+
+
+                    /* -------------------------------------
+                       Reset sorting when filter changes
+                    ------------------------------------- */
+
+                    currentSort = {
+                        column: "item",
+                        monthIndex: null,
+                        metric: null,
+                        direction: "asc"
+                    };
+
+
+                    /* -------------------------------------
+                       Reload report immediately
+                    ------------------------------------- */
+
+                    loadReport(
+                        fromDate.value,
+                        toDate.value,
+                        selectedItem
+                    );
+
+                }
+            );
+
+        }
+
+
         /* ---------------------------------------------
-           Apply period
-           --------------------------------------------- */
+           Apply PERIOD
+           
+           This button is only for From / To dates.
+           Item selection does NOT depend on this.
+        --------------------------------------------- */
 
-        periodForm.addEventListener(
-            "submit",
-            event => {
+        if (periodForm) {
 
-                event.preventDefault();
+            periodForm.addEventListener(
+                "submit",
+                event => {
 
-
-                const from =
-                    fromDate.value;
-
-
-                const to =
-                    toDate.value;
-
-                const selectedItem =
-                    itemSelect
-                        ? itemSelect.value
-                        : "";
+                    event.preventDefault();
 
 
-                if (!from || !to) {
-                    return;
+                    const from =
+                        fromDate.value;
+
+
+                    const to =
+                        toDate.value;
+
+
+                    const selectedItem =
+                        itemSelect?.value || "";
+
+
+                    /* -------------------------------------
+                       Validate dates
+                    ------------------------------------- */
+
+                    if (!from || !to) {
+                        return;
+                    }
+
+
+                    if (from > to) {
+
+                        const status =
+                            document.getElementById(
+                                "reportStatus"
+                            );
+
+
+                        status.hidden = false;
+
+                        status.className =
+                            "report-status error";
+
+
+                        status.textContent =
+                            "The start date must be before the end date.";
+
+
+                        return;
+                    }
+
+
+                    /* -------------------------------------
+                       Reload report with current item
+                    ------------------------------------- */
+
+                    loadReport(
+                        from,
+                        to,
+                        selectedItem
+                    );
+
                 }
+            );
 
-
-                if (from > to) {
-
-                    const status =
-                        document.getElementById(
-                            "reportStatus"
-                        );
-
-
-                    status.hidden = false;
-
-                    status.className =
-                        "report-status error";
-
-
-                    status.textContent =
-                        "The start date must be before the end date.";
-
-
-                    return;
-                }
-
-
-                loadReport(
-                    from,
-                    to,
-                    selectedItem
-                );
-            }
-        );
+        }
 
     }
 );
+
+const customParent =
+    formatMenu.querySelector(
+        '.format-parent[data-parent="CUSTOM"]'
+    );
+
+if (customParent) {
+
+    customParent.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            toggleSubmenu(customParent);
+
+            selectedFormat = "CUSTOM";
+            selectedMonth = null;
+            selectedQuarter = null;
+
+            updateDisplay();
+
+        }
+    );
+
+}

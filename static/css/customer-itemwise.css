@@ -947,3 +947,81 @@ body {
         min-width: 720px;
     }
 }
+/* =========================================================
+   CUSTOM DATE SUBMENU
+========================================================= */
+
+.custom-submenu {
+    padding: 10px;
+    min-width: 230px;
+}
+
+
+.custom-date-control {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-bottom: 10px;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.custom-date-control input {
+    width: 100%;
+    height: 36px;
+
+    padding: 0 9px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #b9cce2;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+.custom-apply-button {
+    width: 100%;
+
+    height: 36px;
+
+    margin-top: 4px;
+
+    border: 1px solid #2462a3;
+    border-radius: 7px;
+
+    background: #2462a3;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-button:hover {
+    background: #1d568f;
+    border-color: #1d568f;
+}

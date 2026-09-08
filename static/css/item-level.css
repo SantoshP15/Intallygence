@@ -838,3 +838,264 @@ body {
         min-width: 800px;
     }
 }
+/* =========================================================
+   CUSTOM DATE SUBMENU
+   Opens to the LEFT of the Format menu
+========================================================= */
+
+.custom-submenu {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    /*
+     * Move the Custom panel completely
+     * to the LEFT of the main Format menu
+     */
+    right: calc(100% + 8px) !important;
+    left: auto !important;
+
+    width: 230px;
+    min-width: 230px;
+
+    padding: 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+
+    box-shadow:
+        0 8px 24px rgb(24 48 86 / 12%);
+
+    z-index: 1000;
+}
+
+
+/* =========================================================
+   CUSTOM DATE LABEL
+========================================================= */
+
+.custom-date-control {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOM DATE INPUT
+========================================================= */
+
+.custom-date-control input {
+    width: 100%;
+
+    height: 36px;
+
+    padding: 0 9px;
+
+    border: 1px solid #b9cce2;
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #17223b;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   CUSTOM APPLY BUTTON
+========================================================= */
+
+.custom-apply-button {
+    width: 100%;
+
+    height: 36px;
+
+    margin-top: 4px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #2462a3;
+    border-radius: 7px;
+
+    background: #2462a3;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-button:hover {
+    background: #1d568f;
+    border-color: #1d568f;
+}
+/* =========================================================
+   FORMAT SUBMENUS
+   All YTD / MTD / QTD / CUSTOM menus open to LEFT
+========================================================= */
+
+.format-menu-group {
+    position: relative;
+}
+
+
+/*
+ * Every submenu opens to the LEFT
+ */
+.format-menu .format-submenu {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: auto !important;
+    right: calc(100% + 6px) !important;
+
+    z-index: 2000;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 8px;
+
+    box-shadow:
+        0 8px 24px rgb(24 48 86 / 12%);
+}
+
+
+/* =========================================================
+   CUSTOM SUBMENU
+========================================================= */
+
+.format-menu .custom-submenu {
+    width: 230px;
+    min-width: 230px;
+
+    padding: 12px;
+}
+
+
+/* =========================================================
+   CUSTOM DATE LABEL
+========================================================= */
+
+.custom-date-control {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOM DATE INPUT
+========================================================= */
+
+.custom-date-control input {
+    width: 100%;
+
+    height: 36px;
+
+    padding: 0 9px;
+
+    border: 1px solid #b9cce2;
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #17223b;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px rgb(29 91 159 / 10%);
+}
+
+
+/* =========================================================
+   APPLY BUTTON
+========================================================= */
+
+.custom-apply-button {
+    width: 100%;
+
+    height: 36px;
+
+    margin-top: 4px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #2462a3;
+    border-radius: 7px;
+
+    background: #2462a3;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-button:hover {
+    background: #1d568f;
+    border-color: #1d568f;
+}

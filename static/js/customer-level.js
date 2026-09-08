@@ -4,6 +4,10 @@
 
 let currentReport = null;
 
+let salesTrendChart = null;
+
+let selectedCustomerFilter = "";
+
 let selectedFormat = "YTD";
 let selectedMonth = null;
 let selectedQuarter = null;
@@ -947,32 +951,78 @@ if (formatValue && formatMenu) {
             );
 
         });
-
-
     /*
        CUSTOM
+       ----------------
+       From / To and Apply are inside the Custom submenu.
     */
 
-    const customButton =
-        formatMenu.querySelector(
-            '.format-option[data-format="CUSTOM"]'
+    /* =====================================================
+       CUSTOM DATE RANGE
+       ===================================================== */
+
+    const customApplyButton =
+        document.getElementById(
+            "applyCustomPeriodBtn"
         );
 
-    if (customButton) {
 
-        customButton.addEventListener(
-            "click",
-            event => {
+    customApplyButton?.addEventListener(
+        "click",
+        event => {
 
-                event.preventDefault();
-                event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
-                selectCustom();
+            const from =
+                fromDate?.value;
 
+            const to =
+                toDate?.value;
+
+
+            if (!from || !to) {
+
+                reportStatus.hidden = false;
+
+                reportStatus.className =
+                    "report-status error";
+
+                reportStatus.textContent =
+                    "Please select both From and To dates.";
+
+                return;
             }
-        );
 
-    }
+
+            if (from > to) {
+
+                reportStatus.hidden = false;
+
+                reportStatus.className =
+                    "report-status error";
+
+                reportStatus.textContent =
+                    "The start date must be before the end date.";
+
+                return;
+            }
+
+
+            selectedFormat = "CUSTOM";
+
+            selectedMonth = null;
+
+            selectedQuarter = null;
+
+            updateFormatDisplay();
+
+            closeFormatMenu();
+
+            loadReport();
+        }
+    );
+
 
 
     /*
@@ -1106,47 +1156,13 @@ if (formatValue && formatMenu) {
 
 
 /* =========================================================
-   MANUAL DATE CHANGE
+   CUSTOM DATE INPUTS
    ========================================================= */
 
-if (fromDate) {
-
-    fromDate.addEventListener(
-        "change",
-        () => {
-
-            selectedFormat = "CUSTOM";
-
-            selectedMonth = null;
-
-            selectedQuarter = null;
-
-            updateFormatDisplay();
-
-        }
-    );
-
-}
-
-
-if (toDate) {
-
-    toDate.addEventListener(
-        "change",
-        () => {
-
-            selectedFormat = "CUSTOM";
-
-            selectedMonth = null;
-
-            selectedQuarter = null;
-
-            updateFormatDisplay();
-
-        }
-    );
-
-}
+/*
+   From/To now belong to the Custom submenu.
+   They are applied only after clicking Apply.
+*/
 
 
 /* =========================================================
@@ -1579,8 +1595,355 @@ async function fetchCustomerReport(
 
 
 /* =========================================================
+   SALES TREND KPI - CURRENT YEAR MONTH WISE
+   ========================================================= */
+
+function getMonthlyCurrentYearSales(report) {
+
+    const months =
+        Array.isArray(report?.months)
+            ? report.months
+            : fiscalMonths;
+
+    const values =
+        months.map((_, monthIndex) => {
+
+            return (report?.rows || [])
+                .reduce(
+                    (total, row) => {
+
+                        return total +
+                            (
+                                Number(
+                                    row.months?.[
+                                        monthIndex
+                                    ]?.sales
+                                ) || 0
+                            );
+
+                    },
+                    0
+                );
+
+        });
+
+    return {
+        months,
+        values
+    };
+}
+
+
+function updateSalesKPI(
+    currentYearReport,
+    previousYearReport = null
+) {
+
+    const canvas =
+        document.getElementById(
+            "salesTrendChart"
+        );
+
+    const valueElement =
+        document.getElementById(
+            "salesKpiValue"
+        );
+
+    const growthElement =
+        document.getElementById(
+            "salesKpiGrowth"
+        );
+
+    if (!canvas || !currentYearReport) {
+        return;
+    }
+
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js is not loaded.");
+        return;
+    }
+
+
+    const {
+        months,
+        values
+    } =
+        getMonthlyCurrentYearSales(
+            currentYearReport
+        );
+
+
+    /*
+       YTD = April through the selected "To" month.
+       MTD = selected month.
+       QTD = the three months in the selected quarter.
+       Custom = months returned by the API.
+    */
+
+    let displayMonths = [...months];
+    let displayValues = [...values];
+
+
+    if (selectedFormat === "YTD") {
+
+        const selectedTo =
+            parseLocalDate(toDate.value);
+
+        const fiscalMonthIndex =
+            selectedTo
+                ? (
+                    selectedTo.getMonth() >= 3
+                        ? selectedTo.getMonth() - 3
+                        : selectedTo.getMonth() + 9
+                )
+                : 11;
+
+        const endIndex =
+            Math.max(
+                0,
+                Math.min(
+                    11,
+                    fiscalMonthIndex
+                )
+            );
+
+        displayMonths =
+            months.slice(0, endIndex + 1);
+
+        displayValues =
+            values.slice(0, endIndex + 1);
+
+    } else if (
+        selectedFormat === "MTD" &&
+        selectedMonth
+    ) {
+
+        const monthIndex =
+            fiscalMonths.indexOf(selectedMonth);
+
+        if (monthIndex >= 0) {
+            displayMonths =
+                [months[monthIndex] || selectedMonth];
+
+            displayValues =
+                [values[monthIndex] || 0];
+        }
+
+    } else if (
+        selectedFormat === "QTD" &&
+        selectedQuarter
+    ) {
+
+        const quarterStart = {
+            Q1: 0,
+            Q2: 3,
+            Q3: 6,
+            Q4: 9
+        }[selectedQuarter];
+
+        displayMonths =
+            months.slice(
+                quarterStart,
+                quarterStart + 3
+            );
+
+        displayValues =
+            values.slice(
+                quarterStart,
+                quarterStart + 3
+            );
+    }
+
+
+    const currentTotal =
+        displayValues.reduce(
+            (total, value) =>
+                total + (Number(value) || 0),
+            0
+        );
+
+
+    if (valueElement) {
+        valueElement.textContent =
+            amount(currentTotal);
+    }
+
+
+    /*
+       Growth is calculated against the same
+       selected period in the previous year.
+    */
+
+    if (growthElement) {
+
+        let previousTotal = 0;
+
+        if (previousYearReport) {
+
+            const previousTrend =
+                getMonthlyCurrentYearSales(
+                    previousYearReport
+                );
+
+            previousTotal =
+                previousTrend.values
+                    .slice(
+                        0,
+                        displayValues.length
+                    )
+                    .reduce(
+                        (total, value) =>
+                            total + (Number(value) || 0),
+                        0
+                    );
+        }
+
+
+        const growth =
+            calculateGrowth(
+                previousTotal,
+                currentTotal
+            );
+
+
+        if (growth === null) {
+            growthElement.textContent = "—";
+        } else {
+            growthElement.textContent =
+                `${
+                    growth > 0 ? "+" : ""
+                }${growth.toFixed(2)}%`;
+        }
+    }
+
+
+    if (salesTrendChart) {
+        salesTrendChart.destroy();
+        salesTrendChart = null;
+    }
+
+
+    salesTrendChart =
+        new Chart(
+            canvas.getContext("2d"),
+            {
+                type: "line",
+
+                data: {
+
+                    labels: displayMonths,
+
+                    datasets: [
+                        {
+                            data: displayValues,
+
+                            borderWidth: 2,
+
+                            pointRadius:
+                                displayValues.length <= 1
+                                    ? 3
+                                    : 2,
+
+                            pointHoverRadius: 4,
+
+                            tension: 0.35,
+
+                            fill:
+                                displayValues.length > 1,
+
+                            borderColor: "#2585d8",
+
+                            backgroundColor:
+                                "rgba(37, 133, 216, 0.12)",
+
+                            pointBackgroundColor:
+                                "#2585d8",
+
+                            pointBorderColor:
+                                "#ffffff",
+
+                            pointBorderWidth: 1.5
+                        }
+                    ]
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    animation: {
+                        duration: 250
+                    },
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+
+                            displayColors: false,
+
+                            callbacks: {
+
+                                label:
+                                    tooltipContext =>
+                                        amount(
+                                            tooltipContext.raw
+                                        )
+                            }
+                        }
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            },
+
+                            border: {
+                                display: false
+                            },
+
+                            ticks: {
+                                color: "#64748b",
+                                font: {
+                                    size: 9
+                                },
+                                maxRotation: 0,
+                                autoSkip: false
+                            }
+                        },
+
+                        y: {
+
+                            display: false,
+
+                            grid: {
+                                display: false
+                            },
+
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            }
+        );
+}
+
+
+/* =========================================================
    LOAD COMPARISON
    ========================================================= */
+
+
 
 async function loadComparisonReport() {
 
@@ -1642,7 +2005,13 @@ async function loadComparisonReport() {
             merged.grand_last_year,
 
         grand_current_year:
-            merged.grand_current_year
+            merged.grand_current_year,
+
+        current_year_report:
+            currentReportData,
+
+        previous_year_report:
+            previousReport
 
     };
 
@@ -2490,6 +2859,11 @@ function renderComparisonReport(report) {
 
     tableWrap.hidden = false;
 
+    updateSalesKPI(
+        report.current_year_report,
+        report.previous_year_report
+    );
+
 }
 
 
@@ -2953,6 +3327,11 @@ function renderReport(report) {
 
     tableWrap.hidden = false;
 
+    updateSalesKPI(
+        report,
+        null
+    );
+
 }
 
 
@@ -2960,54 +3339,13 @@ function renderReport(report) {
    APPLY PERIOD
    ========================================================= */
 
-if (periodForm) {
-
-    periodForm.addEventListener(
-        "submit",
-        event => {
-
-            event.preventDefault();
-
-            const from =
-                fromDate.value;
-
-            const to =
-                toDate.value;
-
-
-            if (!from || !to) {
-
-                return;
-
-            }
-
-
-            if (from > to) {
-
-                reportStatus.hidden = false;
-
-                reportStatus.className =
-                    "report-status error";
-
-                reportStatus.textContent =
-                    "The start date must be before the end date.";
-
-                return;
-
-            }
-
-
-            /*
-               Apply uses the currently
-               selected format.
-            */
-
-            loadReport();
-
-        }
-    );
-
-}
+/*
+   Periods are now applied directly from:
+   - YTD
+   - MTD
+   - QTD
+   - Custom submenu
+*/
 
 
 /* =========================================================
@@ -3043,3 +3381,15 @@ updateFormatDisplay();
    ========================================================= */
 
 loadReport();
+
+
+/* =========================================================
+   INITIALIZE CUSTOMER FILTER
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+        initCustomerFilter();
+    }
+);

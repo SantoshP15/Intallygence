@@ -1860,3 +1860,1008 @@ h1 {
 
 }
 
+
+
+/* =========================================================
+   SALES TREND KPI - FILTER + CHART LAYOUT
+   ========================================================= */
+
+.report-top {
+    display: grid;
+    grid-template-columns: minmax(560px, 1fr) minmax(360px, 440px);
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+
+/* Back link sits above the two cards */
+
+.report-back {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+
+/* Filter card */
+
+.period-form {
+    grid-column: 1;
+    width: 100%;
+    min-height: 92px;
+}
+
+
+/* KPI card */
+
+.sales-kpi-card {
+    grid-column: 2;
+    grid-row: 2;
+
+    min-height: 170px;
+    width: 100%;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 18px
+        rgb(24 48 86 / 7%);
+
+    overflow: hidden;
+}
+
+
+.sales-kpi-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+
+.sales-kpi-label {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+
+.sales-kpi-value {
+    margin-top: 3px;
+    color: #17223b;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+
+.sales-kpi-growth {
+    padding: 4px 7px;
+    color: #1d5b9f;
+    background: #f0f6fb;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+.sales-kpi-chart {
+    position: relative;
+    width: 100%;
+    height: 86px;
+    margin-top: 4px;
+}
+
+
+.sales-kpi-chart canvas {
+    display: block;
+    width: 100% !important;
+    height: 86px !important;
+}
+
+
+@media (max-width: 900px) {
+
+    .report-top {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .report-back {
+        width: 100%;
+    }
+
+    .period-form,
+    .sales-kpi-card {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .sales-kpi-card {
+        min-height: 145px;
+    }
+
+    .sales-kpi-chart {
+        height: 80px;
+    }
+
+    .sales-kpi-chart canvas {
+        height: 80px !important;
+    }
+}
+
+
+/* =========================================================
+   CUSTOM DATE SUBMENU
+   ========================================================= */
+
+.custom-submenu {
+    width: 205px;
+    padding: 9px;
+}
+
+
+.custom-date-control {
+    display: grid;
+
+    gap: 5px;
+
+    width: 100%;
+
+    margin-bottom: 8px;
+
+    color: #536174;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.custom-date-control input {
+    width: 100%;
+
+    padding: 7px 8px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.custom-apply-btn {
+    width: 100% !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center !important;
+
+    padding: 8px 10px !important;
+
+    color: #ffffff !important;
+
+    background: #1d5b9f !important;
+
+    border: 0 !important;
+    border-radius: 6px !important;
+
+    font: 600 12px Inter, Arial, sans-serif !important;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-btn:hover {
+    background: #15487f !important;
+}
+
+
+@media (max-width: 700px) {
+
+    .custom-submenu {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .custom-date-control input {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   CUSTOM DATE RANGE - INSIDE FORMAT MENU
+   ========================================================= */
+
+.custom-submenu {
+    width: 205px;
+    padding: 10px;
+}
+
+
+.custom-date-control {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 5px;
+
+    width: 100% !important;
+
+    margin: 0 0 9px;
+
+    color: #536174;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.custom-date-control input {
+    width: 100% !important;
+
+    padding: 7px 8px;
+
+    color: #17223b;
+
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    outline: none;
+}
+
+
+.custom-date-control input:focus {
+    border-color: #1d5b9f;
+
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+.custom-apply-btn {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center !important;
+
+    padding: 8px 10px !important;
+
+    color: #ffffff !important;
+
+    background: #1d5b9f !important;
+
+    border: 0 !important;
+    border-radius: 6px !important;
+
+    font: 600 12px Inter, Arial, sans-serif !important;
+
+    cursor: pointer;
+}
+
+
+.custom-apply-btn:hover {
+    background: #15487f !important;
+}
+
+
+/* =========================================================
+   COMPACT FILTER CARD
+   ========================================================= */
+
+.period-form {
+    min-height: 92px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+/* No visible date controls in the main card */
+
+.period-form > label,
+.period-form > #applyPeriodBtn {
+    display: none !important;
+}
+
+
+/* =========================================================
+   CUSTOM SUBMENU RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .custom-submenu {
+        width: 205px;
+        max-width: calc(100vw - 40px);
+    }
+
+    .custom-date-control input {
+        width: 100% !important;
+    }
+}
+
+
+/* CUSTOM DATE RANGE INSIDE FORMAT MENU */
+.custom-submenu { width: 205px; padding: 10px; }
+.custom-date-control { display: grid !important; grid-template-columns: 1fr !important; gap: 5px; width: 100% !important; margin: 0 0 9px; color: #536174; font-size: 11px; font-weight: 700; }
+.custom-date-control input { width: 100% !important; padding: 7px 8px; color: #17223b; background: #fff; border: 1px solid #bccadd; border-radius: 6px; font: 500 12px Inter, Arial, sans-serif; outline: none; }
+.custom-date-control input:focus { border-color: #1d5b9f; box-shadow: 0 0 0 2px rgb(29 91 159 / 10%); }
+.custom-apply-btn { width: 100% !important; display: flex !important; align-items: center; justify-content: center !important; padding: 8px 10px !important; color: #fff !important; background: #1d5b9f !important; border: 0 !important; border-radius: 6px !important; font: 600 12px Inter, Arial, sans-serif !important; cursor: pointer; }
+.custom-apply-btn:hover { background: #15487f !important; }
+.period-form { min-height: 92px; align-items: center; justify-content: flex-start; }
+.period-form > label, .period-form > #applyPeriodBtn { display: none !important; }
+@media (max-width:700px) { .custom-submenu { width: 205px; max-width: calc(100vw - 40px); } .custom-date-control input { width: 100% !important; } }
+
+
+/* =========================================================
+   CUSTOMER FILTER
+   ========================================================= */
+
+.customer-filter-control {
+    position: relative;
+
+    display: grid;
+    gap: 5px;
+
+    min-width: 210px;
+}
+
+
+.customer-filter-select {
+    width: 210px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.customer-filter-select:hover,
+.customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+@media (max-width: 700px) {
+
+    .customer-filter-control {
+        min-width: 100%;
+    }
+
+    .customer-filter-select {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   STANDALONE CUSTOMER FILTER
+   ========================================================= */
+
+.customer-filter-section {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 12px;
+}
+
+
+.customer-filter-section .customer-filter-control {
+    display: grid;
+    gap: 5px;
+
+    width: 230px;
+    min-width: 230px;
+}
+
+
+.customer-filter-section .customer-filter-select {
+    width: 230px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.customer-filter-section .customer-filter-select:hover,
+.customer-filter-section .customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.customer-filter-section .customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+/* Keep the Format area clean and independent. */
+.period-form .customer-filter-control {
+    display: none !important;
+}
+
+
+@media (max-width: 700px) {
+
+    .customer-filter-section {
+        margin-bottom: 10px;
+    }
+
+    .customer-filter-section .customer-filter-control,
+    .customer-filter-section .customer-filter-select {
+        width: 100%;
+        min-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   FINAL COMPACT SINGLE-SCREEN LAYOUT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+}
+
+
+body {
+    min-height: 100vh;
+}
+
+
+.customer-report {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+}
+
+
+/*
+   Header is fixed to its natural height.
+   The report content uses the remaining viewport.
+*/
+
+.customer-report > .report-header,
+.customer-report > header {
+    flex: 0 0 auto;
+}
+
+
+.report-top {
+    flex: 0 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 34%);
+
+    grid-template-rows: auto auto;
+
+    column-gap: 16px;
+    row-gap: 8px;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 10px;
+    padding: 10px 0 0;
+
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+
+.report-back {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    margin: 0;
+    padding: 0 0 0 0;
+
+    width: 100%;
+}
+
+
+/*
+   This is NOT a card.
+   It only arranges Format and Customer.
+*/
+
+.report-filter-area {
+    grid-column: 1;
+    grid-row: 2;
+
+    display: flex;
+    align-items: flex-end;
+    gap: 22px;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 0;
+}
+
+
+/*
+   Remove the large white box that used to sit
+   behind the Format control.
+*/
+
+.report-filter-area .period-form {
+    display: flex;
+    align-items: flex-end;
+
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+    padding: 0;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    gap: 0;
+}
+
+
+/*
+   Format itself remains a small control.
+*/
+
+.report-filter-area .format-control {
+    min-width: 105px;
+}
+
+
+/*
+   Customer is a separate filter, but sits beside Format.
+*/
+
+.report-filter-area .customer-filter-control {
+    display: grid;
+    gap: 5px;
+
+    width: 230px;
+    min-width: 230px;
+}
+
+
+.report-filter-area .customer-filter-select {
+    width: 230px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #ffffff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+
+    cursor: pointer;
+    outline: none;
+}
+
+
+.report-filter-area .customer-filter-select:hover,
+.report-filter-area .customer-filter-select:focus {
+    border-color: #1d5b9f;
+}
+
+
+.report-filter-area .customer-filter-select:focus {
+    box-shadow:
+        0 0 0 2px
+        rgb(29 91 159 / 10%);
+}
+
+
+/*
+   KPI card is compact and aligned with filters.
+*/
+
+.report-top .sales-kpi-card {
+    grid-column: 2;
+    grid-row: 2;
+
+    align-self: center;
+    transform: translateY(-40px);
+    width: 100%;
+    min-width: 0;
+
+    min-height: 112px;
+    height: 112px;
+
+    box-sizing: border-box;
+
+    padding: 10px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce5f0;
+    border-radius: 9px;
+
+    box-shadow:
+        0 4px 14px
+        rgb(24 48 86 / 6%);
+
+    overflow: hidden;
+}
+
+
+.report-top .sales-kpi-header {
+    margin-bottom: 0px;
+}
+
+
+.report-top .sales-kpi-label {
+    font-size: 9px;
+}
+
+
+.report-top .sales-kpi-value {
+    margin-top: 1px;
+    font-size: 18px;
+}
+
+
+.report-top .sales-kpi-growth {
+    padding: 3px 6px;
+    font-size: 10px;
+}
+
+
+.report-top .sales-kpi-chart {
+    height: 120px;
+    margin-top: 1px;
+}
+
+
+.report-top .sales-kpi-chart canvas {
+    height: 120px !important;
+}
+
+
+/*
+   Table fills the remaining viewport.
+   Scrolling happens inside the table only.
+*/
+
+.customer-report > .report-table-card {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    width: 100%;
+
+    margin: 0;
+
+    overflow: hidden;
+}
+
+
+.customer-report > .report-table-card .table-wrap {
+    height: 100%;
+    max-height: 100%;
+
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+
+/*
+   Keep the table header visible while the table body scrolls.
+*/
+
+.sales-comparison-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+
+/*
+   On smaller screens, stack only when necessary.
+   The page itself still never scrolls.
+*/
+
+@media (max-width: 900px) {
+
+    .report-top {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .report-back {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .report-filter-area {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .report-top .sales-kpi-card {
+        grid-column: 1;
+        grid-row: 3;
+
+        width: min(100%, 440px);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .report-filter-area {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .report-filter-area .customer-filter-control,
+    .report-filter-area .customer-filter-select {
+        width: 200px;
+        min-width: 200px;
+    }
+}
+
+
+/* =========================================================
+   FINAL: FILTERS BESIDE KPI, NO PAGE SCROLL
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+}
+
+.customer-report {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden !important;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.report-top {
+    flex: 0 0 auto;
+
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 34%) !important;
+    grid-template-rows: auto auto !important;
+
+    column-gap: 16px;
+    row-gap: 6px;
+
+    width: 100%;
+    margin: 0 0 10px !important;
+    padding: 8px 0 0 !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.report-back {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.report-filter-area {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 20px !important;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 0 !important;
+}
+
+.report-filter-area .period-form {
+    display: block !important;
+
+    width: auto !important;
+    min-width: 105px !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.report-filter-area .format-control {
+    width: 105px;
+    min-width: 105px;
+}
+
+.report-filter-area .customer-filter-control {
+    display: grid !important;
+    gap: 5px;
+
+    width: 220px;
+    min-width: 220px;
+}
+
+.report-filter-area .customer-filter-select {
+    width: 220px;
+    height: 34px;
+
+    padding: 7px 30px 7px 10px;
+
+    color: #17223b;
+    background: #fff;
+
+    border: 1px solid #bccadd;
+    border-radius: 6px;
+
+    font: 500 12px Inter, Arial, sans-serif;
+}
+
+.report-top .sales-kpi-card {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+
+    align-self: center;
+
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 130px !important;
+    min-height: 130px !important;
+
+    box-sizing: border-box;
+
+    padding: 9px 13px !important;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+}
+
+.report-top .sales-kpi-label {
+    font-size: 9px;
+}
+
+.report-top .sales-kpi-value {
+    font-size: 17px;
+}
+
+.report-top .sales-kpi-chart {
+    height: 70px !important;
+    margin-top: 0 !important;
+}
+
+.report-top .sales-kpi-chart canvas {
+    height: 70px !important;
+}
+
+.customer-report > .report-table-card {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+.customer-report > .report-table-card .table-wrap {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
+@media (max-width: 900px) {
+    .report-top {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto auto !important;
+    }
+
+    .report-filter-area {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+    }
+
+    .report-top .sales-kpi-card {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+        width: min(100%, 420px) !important;
+    }
+}

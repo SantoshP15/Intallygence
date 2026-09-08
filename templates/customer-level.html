@@ -66,9 +66,7 @@
              ===================================================== -->
 
         <section class="report-top">
-
-            <div class="report-title">
-
+<div class="report-back">
                 <a
                     class="back-link"
                     href="{{ url_for('report_dashboard') }}"
@@ -77,32 +75,11 @@
                     <i class="fa-solid fa-arrow-left"></i>
                     Reports
                 </a>
-
-
-                <div class="header-content">
-
-                    <p class="eyebrow">
-                        Sales Reports
-                    </p>
-
-                    <h1>
-                        Customer Level
-                    </h1>
-
-                    <p class="subtitle">
-                        Customer-wise sales comparison and growth.
-                    </p>
-
-                </div>
-
             </div>
 
+            <div class="report-filter-area">
 
-            <!-- =================================================
-                 PERIOD FILTER
-                 ================================================= -->
-
-            <form
+<form
                 id="periodForm"
                 class="period-form"
             >
@@ -153,9 +130,7 @@
                                 </label>
                             </div>
                         </div>
-
-
-                        <!-- MTD -->
+<!-- MTD -->
 
                         <div class="format-menu-group">
 
@@ -299,13 +274,62 @@
 
                         <!-- CUSTOM -->
 
-                        <button
-                            type="button"
-                            class="format-option"
-                            data-format="CUSTOM"
-                        >
-                            Custom
-                        </button>
+                        <div class="format-menu-group">
+
+                            <button
+                                type="button"
+                                class="format-option format-parent"
+                                data-parent="CUSTOM"
+                            >
+                                Custom
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+
+                            <div
+                                class="format-submenu custom-submenu"
+                                data-submenu="CUSTOM"
+                            >
+
+                                <label
+                                    class="custom-date-control"
+                                    for="fromDate"
+                                >
+                                    From
+
+                                    <input
+                                        id="fromDate"
+                                        type="date"
+                                        required
+                                    >
+                                </label>
+
+
+                                <label
+                                    class="custom-date-control"
+                                    for="toDate"
+                                >
+                                    To
+
+                                    <input
+                                        id="toDate"
+                                        type="date"
+                                        required
+                                    >
+                                </label>
+
+
+                                <button
+                                    type="button"
+                                    id="applyCustomPeriodBtn"
+                                    class="custom-apply-btn"
+                                >
+                                    Apply
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -344,19 +368,72 @@
 
                 <!-- APPLY -->
 
-                <button
-                    type="submit"
-                    id="applyPeriodBtn"
-                >
-                    Apply period
-                </button>
-
             </form>
 
+
+                <div class="customer-filter-control">
+
+                    <span class="filter-caption">
+                        Customer
+                    </span>
+
+                    <select
+                        id="customerFilter"
+                        class="customer-filter-select"
+                        aria-label="Filter customer"
+                    >
+                        <option value="">All Customers</option>
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+<section
+                class="sales-kpi-card"
+                aria-label="Current year monthly sales trend"
+            >
+
+                <div class="sales-kpi-header">
+
+                    <div>
+                        <span class="sales-kpi-label">
+                            Sales Trend
+                        </span>
+
+                        <div
+                            id="salesKpiValue"
+                            class="sales-kpi-value"
+                        >
+                            —
+                        </div>
+                    </div>
+
+                    <div
+                        id="salesKpiGrowth"
+                        class="sales-kpi-growth"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="sales-kpi-chart">
+
+                    <canvas
+                        id="salesTrendChart"
+                    ></canvas>
+
+                </div>
+
+            </section>
+
         </section>
-
-
-        <!-- =====================================================
+</section>
+<!-- =====================================================
              REPORT TABLE
              ===================================================== -->
 
@@ -388,6 +465,13 @@
 
     <script
         src="{{ url_for('static', filename='js/header.js') }}"
+    ></script>
+
+
+    <!-- Chart.js -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
     ></script>
 
 
