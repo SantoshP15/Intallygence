@@ -1,25 +1,92 @@
-.export-excel-btn {
-    align-items: center;
-    background: #217346;
-    border: 0;
-    border-radius: 6px;
-    color: #ffffff;
-    cursor: pointer;
-    display: inline-flex;
-    font: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    gap: 8px;
-    margin-left: auto;
-    padding: 10px 14px;
+.export-menu {
+    position: relative;
 }
 
 .export-excel-row {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
+}
+
+.export-menu-toggle {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #b8cadb;
+    border-radius: 6px;
+    color: #34516e;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    height: 32px;
+    justify-content: center;
+    width: 36px;
+}
+
+.export-menu-toggle:hover,
+.export-menu-toggle[aria-expanded="true"] {
+    background: #eef5fb;
+    border-color: #7f9fbb;
+}
+
+.export-menu-panel {
+    background: #ffffff;
+    border: 1px solid #d5e0eb;
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgb(24 48 86 / 14%);
+    min-width: 150px;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 5px);
+    z-index: 30;
+}
+
+.export-menu-panel[hidden] {
+    display: none;
+}
+
+.export-excel-btn {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    color: #217346;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: 12px;
+    gap: 8px;
+    padding: 8px 10px;
+    width: 100%;
 }
 
 .export-excel-btn:hover {
-    background: #185c37;
+    background: #eef7f1;
+}
+
+/* Keep report filters compact so the table gets the larger viewport area. */
+.report-top {
+    gap: 16px !important;
+    margin-bottom: 10px !important;
+}
+
+.period-form,
+.report-filter-area {
+    gap: 10px !important;
+    padding: 8px !important;
+}
+
+.period-form label,
+.filter-caption {
+    font-size: 11px !important;
+}
+
+.period-form input,
+.period-form select,
+.period-form button:not(.format-button),
+.report-filter-area input,
+.report-filter-area select,
+.report-filter-area button:not(.format-button) {
+    min-height: 30px !important;
+    padding: 6px 9px !important;
 }

@@ -119,10 +119,17 @@
     </section>
 
     <div class="export-excel-row">
-        <button type="button" class="export-excel-btn" data-export-excel data-sheet="Customer Growth" data-filename="customer-growth">
-            <i class="fa-solid fa-file-excel"></i>
-            Export Excel
-        </button>
+        <div class="export-menu" data-export-menu>
+            <button type="button" class="export-menu-toggle" aria-label="More report actions" aria-expanded="false">
+                <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <div class="export-menu-panel" hidden>
+                <button type="button" class="export-excel-btn" data-export-excel data-sheet="Customer Growth" data-filename="customer-growth">
+                    <i class="fa-solid fa-file-excel"></i>
+                    Export Excel
+                </button>
+            </div>
+        </div>
     </div>
 
 
