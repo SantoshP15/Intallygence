@@ -397,8 +397,7 @@ function formatDashboardAmount(amount, format, includeUnit = true) {
     };
     const value = amount / divisors[format];
     const formatted = new Intl.NumberFormat("en-IN", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 0
     }).format(value);
 
     return `₹${formatted}${includeUnit ? suffixes[format] : ""}`;
@@ -439,7 +438,7 @@ const ytdPnlRows = [
     ["Less: Cost of Goods Sold", "55.90 Cr", "59.80 Cr", "7.0%", ""],
     ["Gross Profit", "32.50 Cr", "36.40 Cr", "12.0%", "highlight"],
     ["Gross Profit %", "36.8%", "37.8%", "1.0%", "percent"],
-    ["Less: Operating Expenses", "23.30 Cr", "24.50 Cr", "5.2%", ""],
+    ["Less: Operating Expenses", "23 Cr", "25 Cr", "5%", ""],
     ["Operating Profit", "9.20 Cr", "11.90 Cr", "29.3%", "highlight"],
     ["Operating Profit %", "10.4%", "12.4%", "2.0%", "percent"],
     ["Other Income", "1.30 Cr", "1.60 Cr", "23.1%", ""],

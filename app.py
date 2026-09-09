@@ -471,7 +471,7 @@ def sales_vs_sales_return():
 
     try:
         cursor.execute(
-            """
+                        f"""
             SELECT VoucherDate, PartyLedgerName, Amount, VoucherType
             FROM view_SalesInventory
             WHERE VoucherDate IS NOT NULL

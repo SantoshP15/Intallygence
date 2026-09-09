@@ -57,12 +57,12 @@ function fiscalYearDates() {
 
 function amount(value) {
     return new Intl.NumberFormat("en-IN", {
-        maximumFractionDigits: 2
+        maximumFractionDigits: 0
     }).format(value || 0);
 }
 
 function percent(value) {
-    return `${(value || 0).toFixed(2)}%`;
+    return `${(Number(value) || 0).toFixed(2)}%`;
 }
 
 function escapeHtml(text) {

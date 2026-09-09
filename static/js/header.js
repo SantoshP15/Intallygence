@@ -71,6 +71,25 @@ function updateCompanyNameDisplays(company) {
 }
 
 
+function updateActiveCompanyLabel() {
+    const selected = companyInputs
+        .filter(input => input.checked)
+        .map(input => input.value);
+
+    if (!selected.length) {
+        return;
+    }
+
+    if (activeCompanyName) {
+        activeCompanyName.textContent = selected.length > 1
+            ? `${selected[0]}+${selected.length - 1}`
+            : selected[0];
+    }
+
+    updateCompanyNameDisplays(selected[0]);
+}
+
+
 function updateCompanyOptionStates() {
     companyInputs.forEach(input => {
         input.closest(".company-option")?.classList.toggle(
@@ -377,13 +396,10 @@ companyInputs.forEach(function (input) {
              */
             if (activeCompanyName) {
 
-                activeCompanyName.textContent =
-                    this.value;
-
-
-            updateCompanyNameDisplays(this.value);
-            updateCompanyOptionStates();
+                updateActiveCompanyLabel();
             }
+
+            updateCompanyOptionStates();
 
 
             /*
@@ -480,10 +496,7 @@ if (selectAllCompanies) {
 
                 if (firstChecked) {
 
-                    activeCompanyName.textContent =
-                        firstChecked.value;
-
-                    updateCompanyNameDisplays(firstChecked.value);
+                    updateActiveCompanyLabel();
 
                 }
 
@@ -531,6 +544,9 @@ if (selectAllCompanies) {
     );
 
 }
+
+
+updateActiveCompanyLabel();
 
 
 /* =========================================================

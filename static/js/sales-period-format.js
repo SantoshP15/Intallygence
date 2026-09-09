@@ -659,8 +659,7 @@ function renderSalesComparison(
         (Number(value) || 0).toLocaleString(
             "en-IN",
             {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                maximumFractionDigits: 0
             }
         );
 

@@ -141,8 +141,8 @@
                             <tr>
                                 <td>{{ row.customer }}</td>
                                 {% for value in row.years %}
-                                    <td>{{ '%.2f'|format(value.sales) }}</td>
-                                    <td>{{ '%.2f'|format(value.returns) }}</td>
+                                    <td>{{ value.sales|round|int }}</td>
+                                    <td>{{ value.returns|round|int }}</td>
                                     <td>{{ '%.2f'|format(value.return_percent) }}%</td>
                                 {% endfor %}
                             </tr>
@@ -152,8 +152,8 @@
                         <tr>
                             <th>Grand Total</th>
                             {% for value in totals %}
-                                <th>{{ '%.2f'|format(value.sales) }}</th>
-                                <th>{{ '%.2f'|format(value.returns) }}</th>
+                                <th>{{ value.sales|round|int }}</th>
+                                <th>{{ value.returns|round|int }}</th>
                                 <th>{{ '%.2f'|format(value.return_percent) }}%</th>
                             {% endfor %}
                         </tr>
