@@ -70,7 +70,7 @@ def customer_level_columns():
 def item_level_columns():
     return {
         "date": "VoucherDate",
-        "item": "StockItemName",
+        "item": "ItemName",
         "amount": "Amount"
     }
 
@@ -85,22 +85,28 @@ def customer_itemwise_columns():
     return {
         "date": "VoucherDate",
         "customer": "PartyLedgerName",
-        "item": "StockItemName",
+        "item": "ItemName",
         "amount": "Amount"
     }
 
 def itemwise_customer_columns():
     return {
         "date": "VoucherDate",
-        "item": "StockItemName",
+        "item": "ItemName",
         "customer": "PartyLedgerName",
         "amount": "Amount"
     }
 
-def customer_growth_columns():
+def customer_growth_columns(group_by="customer"):
+    group_column = (
+        "CompanyName"
+        if group_by == "company"
+        else "PartyLedgerName"
+    )
+
     return {
         "date": "VoucherDate",
-        "customer": "PartyLedgerName",
+        "customer": group_column,
         "amount": "Amount"
     }
 
@@ -283,6 +289,180 @@ def home():
         total=total
     )
 
+
+def render_register_report(data_source, title, route_name):
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(f"SELECT COUNT(*) AS total FROM {data_source}")
+        total = cursor.fetchone()["total"]
+
+        page = request.args.get("page", 1, type=int)
+        page = max(page, 1)
+        per_page = 50
+        offset = (page - 1) * per_page
+
+        if get_dbms() == "sqlserver":
+            cursor.execute(
+                f"""
+                SELECT *
+                FROM {data_source}
+                ORDER BY (SELECT NULL)
+                OFFSET ? ROWS
+                FETCH NEXT ? ROWS ONLY
+                """,
+                (offset, per_page)
+            )
+        else:
+            cursor.execute(
+                f"""
+                SELECT *
+                FROM {data_source}
+                LIMIT %s OFFSET %s
+                """,
+                (per_page, offset)
+            )
+
+        data = cursor.fetchall()
+        columns = [description[0] for description in cursor.description]
+    finally:
+        cursor.close()
+        db.close()
+
+    total_pages = max((total + per_page - 1) // per_page, 1)
+
+    return render_template(
+        "register.html",
+        title=title,
+        data_source=data_source,
+        columns=columns,
+        data=data,
+        page=page,
+        total_pages=total_pages,
+        total=total,
+        route_name=route_name
+    )
+
+
+@app.route("/sales-register")
+def sales_register():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+    return render_register_report(
+        "view_SalesInventory",
+        "Sales Register",
+        "sales_register"
+    )
+
+
+@app.route("/purchase-register")
+def purchase_register():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+    return render_register_report(
+        "view_Purchase",
+        "Purchase Register",
+        "purchase_register"
+    )
+
+
+@app.route("/sales-vs-sales-return")
+def sales_vs_sales_return():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    selected_year = request.args.get("year", "").strip()
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """
+            SELECT VoucherDate, PartyLedgerName, Amount, VoucherType
+            FROM view_SalesInventory
+            WHERE VoucherDate IS NOT NULL
+              AND PartyLedgerName IS NOT NULL
+            ORDER BY VoucherDate, PartyLedgerName
+            """
+        )
+        source_rows = cursor.fetchall()
+    finally:
+        cursor.close()
+        db.close()
+
+    year_values = defaultdict(
+        lambda: defaultdict(lambda: {"sales": 0.0, "returns": 0.0})
+    )
+
+    for row in source_rows:
+        transaction_date = parse_report_date(row["VoucherDate"])
+        customer = str(row["PartyLedgerName"] or "").strip()
+
+        if not transaction_date or not customer:
+            continue
+
+        fiscal_year_start = (
+            transaction_date.year
+            if transaction_date.month >= 4
+            else transaction_date.year - 1
+        )
+        year_key = f"FY {fiscal_year_start}-{str(fiscal_year_start + 1)[-2:]}"
+        amount = float(row["Amount"] or 0)
+
+        if str(row["VoucherType"] or "").strip().lower() == "credit note":
+            year_values[customer][year_key]["returns"] += abs(amount)
+        elif str(row["VoucherType"] or "").strip().lower().startswith("sales"):
+            year_values[customer][year_key]["sales"] += amount
+
+    years = sorted(
+        {year for customer_data in year_values.values() for year in customer_data},
+        key=lambda year: int(year[3:7])
+    )
+
+    if selected_year and selected_year in years:
+        years = [selected_year]
+    else:
+        selected_year = ""
+
+    rows = []
+
+    for customer in sorted(year_values, key=str.casefold):
+        customer_years = []
+        for year in years:
+            values = year_values[customer][year]
+            sales = values["sales"]
+            returns = values["returns"]
+            customer_years.append({
+                "sales": sales,
+                "returns": returns,
+                "return_percent": returns / sales * 100 if sales else 0,
+            })
+        rows.append({"customer": customer, "years": customer_years})
+
+    totals = []
+    for year in years:
+        sales = sum(row["years"][years.index(year)]["sales"] for row in rows)
+        returns = sum(row["years"][years.index(year)]["returns"] for row in rows)
+        totals.append({
+            "sales": sales,
+            "returns": returns,
+            "return_percent": returns / sales * 100 if sales else 0,
+        })
+
+    return render_template(
+        "sales-vs-sales-return.html",
+        years=years,
+        available_years=sorted(
+            {year for customer_data in year_values.values() for year in customer_data},
+            key=lambda year: int(year[3:7])
+        ),
+        selected_year=selected_year,
+        rows=rows,
+        totals=totals,
+    )
+
 @app.route("/customer-level")
 def customer_level():
     if "user" not in session:
@@ -387,7 +567,13 @@ def customer_level_data():
 def item_level():
     if "user" not in session:
         return redirect(url_for("splash"))
-    return render_template("item-level.html")
+    return render_template("item-level.html", report_mode="sales")
+
+@app.route("/purchase-item-level")
+def purchase_item_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+    return render_template("item-level.html", report_mode="purchase")
 
 
 @app.route("/api/item-level")
@@ -422,6 +608,9 @@ def item_level_data():
         }), 400
 
     try:
+        source_table = validate_data_source(
+            request.args.get("source", "view_SalesInventory")
+        )
         columns = item_level_columns()
 
         date_column = quote_identifier(columns["date"])
@@ -438,7 +627,7 @@ def item_level_data():
                     {item_column} AS item,
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
-                FROM view_SalesInventory
+                FROM {source_table}
                 WHERE {date_column} >= %s
                   AND {date_column} <= %s
                 GROUP BY {item_column}, {date_column}
@@ -614,7 +803,14 @@ def customer_itemwise():
     if "user" not in session:
         return redirect(url_for("splash"))
 
-    return render_template("customer-itemwise.html")
+    return render_template("customer-itemwise.html", report_mode="sales")
+
+@app.route("/purchase-customer-itemwise")
+def purchase_customer_itemwise():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("customer-itemwise.html", report_mode="purchase")
 
 @app.route("/api/customer-itemwise")
 def customer_itemwise_data():
@@ -695,6 +891,9 @@ def customer_itemwise_data():
 
     try:
 
+        source_table = validate_data_source(
+            request.args.get("source", "view_SalesInventory")
+        )
         columns = customer_itemwise_columns()
 
         date_column = quote_identifier(
@@ -732,7 +931,7 @@ def customer_itemwise_data():
                 SELECT DISTINCT
                     {customer_column} AS customer
 
-                FROM view_SalesInventory
+                FROM {source_table}
 
                 WHERE
                     {date_column} >= %s
@@ -774,7 +973,7 @@ def customer_itemwise_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM view_SalesInventory
+                FROM {source_table}
 
                 WHERE
                     {date_column} >= %s
@@ -1139,7 +1338,14 @@ def itemwise_customer():
     if "user" not in session:
         return redirect(url_for("splash"))
 
-    return render_template("itemwise-customer.html")
+    return render_template("itemwise-customer.html", report_mode="sales")
+
+@app.route("/purchase-itemwise-customer")
+def purchase_itemwise_customer():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("itemwise-customer.html", report_mode="purchase")
 
 @app.route("/api/itemwise-customer")
 def itemwise_customer_data():
@@ -1219,6 +1425,9 @@ def itemwise_customer_data():
 
     try:
 
+        source_table = validate_data_source(
+            request.args.get("source", "view_SalesInventory")
+        )
         columns = itemwise_customer_columns()
 
         date_column = quote_identifier(
@@ -1256,7 +1465,7 @@ def itemwise_customer_data():
                 SELECT DISTINCT
                     {item_column} AS item
 
-                FROM view_SalesInventory
+                FROM {source_table}
 
                 WHERE
                     {date_column} >= %s
@@ -1298,7 +1507,7 @@ def itemwise_customer_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM view_SalesInventory
+                FROM {source_table}
 
                 WHERE
                     {date_column} >= %s
@@ -1665,7 +1874,40 @@ def customer_growth():
     if "user" not in session:
         return redirect(url_for("splash"))
 
-    return render_template("customer-growth.html")
+    return render_template(
+        "customer-growth.html",
+        report_mode="sales"
+    )
+
+@app.route("/purchase-customer-growth")
+def purchase_customer_growth():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template(
+        "customer-growth.html",
+        report_mode="purchase"
+    )
+
+@app.route("/entity-level")
+def entity_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template(
+        "entity-level.html",
+        report_mode="sales"
+    )
+
+@app.route("/purchase-entity-level")
+def purchase_entity_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template(
+        "entity-level.html",
+        report_mode="purchase"
+    )
 
 @app.route("/api/customer-growth")
 def customer_growth_data():
@@ -1735,7 +1977,31 @@ def customer_growth_data():
 
     try:
 
-        columns = customer_growth_columns()
+        group_by = request.args.get("group_by", "customer")
+        report_source = request.args.get("source", "sales")
+
+        source_table = {
+            "sales": "view_SalesInventory",
+            "purchase": "view_Purchase"
+        }.get(report_source)
+
+        if not source_table:
+            return jsonify({
+                "error": "Invalid report source."
+            }), 400
+
+        if group_by not in {"customer", "company"}:
+            return jsonify({
+                "error": "Invalid grouping."
+            }), 400
+
+        entity_label = (
+            "company"
+            if group_by == "company"
+            else "customer"
+        )
+
+        columns = customer_growth_columns(group_by)
 
         date_column = quote_identifier(
             columns["date"]
@@ -1790,7 +2056,7 @@ def customer_growth_data():
                     {date_column} AS transaction_date,
                     SUM({amount_column}) AS sales
 
-                FROM view_SalesInventory
+                FROM {source_table}
 
                 WHERE
                     {date_column} >= %s
@@ -1836,12 +2102,12 @@ def customer_growth_data():
 
             customer = str(
                 row["customer"] or
-                "Unspecified customer"
+                f"Unspecified {entity_label}"
             ).strip()
 
 
             if not customer:
-                customer = "Unspecified customer"
+                customer = f"Unspecified {entity_label}"
 
 
             sales = float(

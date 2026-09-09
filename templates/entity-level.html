@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Customer Growth | InTallygence</title>
+    <title>Entity Level | InTallygence</title>
 
     <!-- Common Header CSS -->
     <link rel="stylesheet"
@@ -13,7 +13,7 @@
 
     <!-- Customer Growth CSS -->
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/customer-growth.css') }}">
+          href="{{ url_for('static', filename='css/entity-level.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,8 +29,7 @@
 
 <body>
 
-<main class="customer-growth-report"
-    data-report-source="{{ report_mode|default('sales') }}">
+<main class="customer-growth-report">
 
     <!-- =========================================
          COMMON HEADER
@@ -44,6 +43,7 @@
     ========================================== -->
 
     <section class="report-top">
+
         <div class="report-title">
 
             <a href="{{ url_for('report_dashboard') }}"
@@ -58,15 +58,15 @@
             <div class="header-content">
 
                 <p class="eyebrow">
-                    {{ 'Purchase Reports' if report_mode == 'purchase' else 'Sales Reports' }}
+                    Sales Reports
                 </p>
 
                 <h1>
-                    Customer Growth
+                    Entity Level
                 </h1>
 
                 <p class="subtitle">
-                    {{ 'Customer-wise purchase growth compared with previous financial year.' if report_mode == 'purchase' else 'Customer-wise sales growth compared with previous financial year.' }}
+                    Company-wise sales growth compared with the previous financial year.
                 </p>
 
             </div>
@@ -119,7 +119,7 @@
     </section>
 
     <div class="export-excel-row">
-        <button type="button" class="export-excel-btn" data-export-excel data-sheet="Customer Growth" data-filename="customer-growth">
+        <button type="button" class="export-excel-btn" data-export-excel data-sheet="Entity Level" data-filename="entity-level">
             <i class="fa-solid fa-file-excel"></i>
             Export Excel
         </button>
@@ -136,7 +136,7 @@
         <div id="reportStatus"
              class="report-status">
 
-            Loading customer growth…
+            Loading entity report…
 
         </div>
 
@@ -154,7 +154,7 @@
 <script
     src="{{ url_for('static', filename='js/header.js') }}"
     ></script>
-<script src="{{ url_for('static', filename='js/customer-growth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/entity-level.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>

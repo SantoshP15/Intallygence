@@ -50,6 +50,7 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/customer-level.css') }}"
     >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
 
 </head>
 
@@ -433,6 +434,18 @@
 
         </section>
 </section>
+
+        <div class="export-excel-row">
+            <button
+                type="button"
+                id="exportExcelBtn"
+                class="export-excel-btn"
+                title="Export report to Excel"
+            >
+                <i class="fa-solid fa-file-excel"></i>
+                Export Excel
+            </button>
+        </div>
 <!-- =====================================================
              REPORT TABLE
              ===================================================== -->
@@ -472,6 +485,11 @@
 
     <script
         src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+
+    <!-- Excel export -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
     ></script>
 
 

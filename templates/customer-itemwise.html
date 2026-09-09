@@ -37,11 +37,14 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/sales-period-format.css') }}"
     >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
 </head>
 
 <body>
 
-    <main class="customer-itemwise-report">
+        <main class="customer-itemwise-report"
+            data-report-source="{{ report_mode|default('sales') }}">
 
         <!-- =========================================
              COMMON HEADER
@@ -55,7 +58,6 @@
         ========================================== -->
 
         <section class="report-top">
-
             <!-- =====================================
                  REPORT TITLE
             ====================================== -->
@@ -78,7 +80,7 @@
                 <div class="header-content">
 
                     <p class="eyebrow">
-                        Sales Reports
+                        {{ 'Purchase Reports' if report_mode == 'purchase' else 'Sales Reports' }}
                     </p>
 
                     <h1>
@@ -86,7 +88,7 @@
                     </h1>
 
                     <p class="subtitle">
-                        Customer-wise item sales, contribution and running percentage.
+                        {{ 'Customer-wise item purchase, contribution and running percentage.' if report_mode == 'purchase' else 'Customer-wise item sales, contribution and running percentage.' }}
                     </p>
 
                 </div>
@@ -210,6 +212,13 @@
 
         </section>
 
+        <div class="export-excel-row">
+            <button type="button" class="export-excel-btn" data-export-excel data-sheet="Customer Itemwise" data-filename="customer-itemwise">
+                <i class="fa-solid fa-file-excel"></i>
+                Export Excel
+            </button>
+        </div>
+
 
         <!-- =========================================
              REPORT TABLE
@@ -250,6 +259,8 @@
         src="{{ url_for('static', filename='js/customer-itemwise.js') }}"
     ></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
 </body>
 
 </html>

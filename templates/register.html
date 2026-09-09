@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | InTallygence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-itemwise.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .register-report {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            min-height: 0;
+        }
+
+        .register-report .report-top {
+            flex: 0 0 auto;
+        }
+
+        .register-report .report-table-card {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .register-report .table-wrap {
+            flex: 1 1 auto;
+            max-height: none;
+        }
+
+        .register-report .customer-itemwise-table {
+            min-width: max-content;
+        }
+
+        .register-report .register-pagination {
+            align-items: center;
+            display: flex;
+            flex: 0 0 auto;
+            justify-content: center;
+            gap: 18px;
+            padding: 12px 0 0;
+        }
+
+        .register-report .register-pagination a {
+            color: #1558a6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="customer-itemwise-report register-report">
+        {% include 'header.html' %}
+
+        <section class="report-top">
+            <div class="report-title">
+                <a class="back-link" href="{{ url_for('report_dashboard') }}" aria-label="Back to Reports">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+                <div class="header-content">
+                    <p class="eyebrow">{{ 'Purchase Reports' if data_source == 'view_Purchase' else 'Sales Reports' }}</p>
+                    <h1>{{ title }}</h1>
+                    <p class="subtitle">{{ total }} transactions</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="export-excel-row">
+            <button type="button" class="export-excel-btn" data-export-excel data-sheet="{{ title }}" data-filename="{{ title|lower|replace(' ', '-') }}">
+                <i class="fa-solid fa-file-excel"></i>
+                Export Excel
+            </button>
+        </div>
+
+        <section class="report-table-card" aria-live="polite">
+            {% if columns %}
+                <div class="table-wrap">
+                    <table class="customer-itemwise-table">
+                        <thead>
+                            <tr>
+                                {% for column in columns %}
+                                    <th>{{ column.replace('_', ' ') }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                                <tr>
+                                    {% for column in columns %}
+                                        <td>{{ row[column] }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="report-status">No transactions found.</div>
+            {% endif %}
+        </section>
+
+        <nav class="register-pagination" aria-label="Register pages">
+            {% if page > 1 %}
+                <a href="{{ url_for(route_name, page=page - 1) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ total_pages }}</span>
+            {% if page < total_pages %}
+                <a href="{{ url_for(route_name, page=page + 1) }}">Next</a>
+            {% endif %}
+        </nav>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
+</body>
+</html>

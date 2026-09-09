@@ -2015,7 +2015,7 @@ async function loadComparisonReport() {
 
     };
 
-
+    initCustomerFilter();
     resetSort();
 
     renderComparisonReport(
@@ -2301,7 +2301,7 @@ async function loadReport() {
                 );
 
             currentReport = report;
-
+                initCustomerFilter();
             resetSort();
 
             renderReport(report);
@@ -2338,9 +2338,6 @@ async function loadReport() {
    RENDER COMPARISON REPORT
    ========================================================= */
 
-/* =========================================================
-   RENDER COMPARISON REPORT
-   ========================================================= */
 
 function renderComparisonReport(report) {
 
@@ -2387,20 +2384,30 @@ function renderComparisonReport(report) {
         );
 
 
-    /*
-       Recalculate Running Sales %
-       after sorting.
-    */
+    const percentageGrandLastYear =
+    Number(
+        report.original_grand_last_year ??
+        report.grand_last_year
+    ) || 0;
+
+    const percentageGrandCurrentYear =
+    Number(
+        report.original_grand_current_year ??
+        report.grand_current_year
+    ) || 0;
+
 
     const grandLastYear =
-        Number(
-            report.grand_last_year
-        ) || 0;
+    Number(
+        report.filtered_grand_last_year ??
+        report.grand_last_year
+    ) || 0;
 
     const grandCurrentYear =
-        Number(
-            report.grand_current_year
-        ) || 0;
+    Number(
+        report.filtered_grand_current_year ??
+        report.grand_current_year
+    ) || 0;
 
 
     let lastRunningSales = 0;
@@ -2422,44 +2429,40 @@ function renderComparisonReport(report) {
 
 
         row.last_year_percent =
-            grandLastYear
+            percentageGrandLastYear
                 ? (
                     lastYearSales /
-                    grandLastYear
+                    percentageGrandLastYear
                 ) * 100
                 : 0;
 
 
         row.current_year_percent =
-            grandCurrentYear
+            percentageGrandCurrentYear
                 ? (
                     currentYearSales /
-                    grandCurrentYear
+                    percentageGrandCurrentYear
                 ) * 100
                 : 0;
 
 
-        lastRunningSales +=
-            lastYearSales;
+        lastRunningSales += lastYearSales;
 
-        currentRunningSales +=
-            currentYearSales;
-
+        currentRunningSales += currentYearSales;
 
         row.last_year_running_percent =
-            grandLastYear
+            percentageGrandLastYear
                 ? (
                     lastRunningSales /
-                    grandLastYear
+                    percentageGrandLastYear
                 ) * 100
                 : 0;
 
-
         row.current_year_running_percent =
-            grandCurrentYear
+            percentageGrandCurrentYear
                 ? (
                     currentRunningSales /
-                    grandCurrentYear
+                    percentageGrandCurrentYear
                 ) * 100
                 : 0;
 
@@ -2745,93 +2748,121 @@ function renderComparisonReport(report) {
             .join("");
 
 
-    /*
-       GRAND TOTAL
-    */
+    /* =========================================================
+   GRAND TOTAL
+   ========================================================= */
 
-    const grandGrowth =
-        formatGrowth(
-            grandLastYear,
-            grandCurrentYear
-        );
-
-
-    const grandTotalRow = `
-
-        <tfoot>
-
-            <tr>
-
-                <td>
-                    Grand Total
-                </td>
+const grandGrowth =
+    formatGrowth(
+        grandLastYear,
+        grandCurrentYear
+    );
 
 
-                <!-- LAST YEAR -->
+/*
+   Grand Total Sales % and Running Sales %
 
-                <td>
-                    ${amount(
-                        grandLastYear
-                    )}
-                </td>
+   IMPORTANT:
+   The amount uses the SELECTED CUSTOMER total.
 
+   The percentage uses the ORIGINAL
+   ALL-CUSTOMER grand total.
+*/
 
-                <td>
-                    ${percent(
-                        grandLastYear
-                            ? 100
-                            : 0
-                    )}
-                </td>
-
-
-                <td class="running">
-                    ${percent(
-                        grandLastYear
-                            ? 100
-                            : 0
-                    )}
-                </td>
+const grandLastYearPercent =
+    percentageGrandLastYear
+        ? (
+            grandLastYear /
+            percentageGrandLastYear
+        ) * 100
+        : 0;
 
 
-                <!-- CURRENT YEAR -->
-
-                <td>
-                    ${amount(
-                        grandCurrentYear
-                    )}
-                </td>
-
-
-                <td>
-                    ${percent(
-                        grandCurrentYear
-                            ? 100
-                            : 0
-                    )}
-                </td>
+const grandCurrentYearPercent =
+    percentageGrandCurrentYear
+        ? (
+            grandCurrentYear /
+            percentageGrandCurrentYear
+        ) * 100
+        : 0;
 
 
-                <td class="running">
-                    ${percent(
-                        grandCurrentYear
-                            ? 100
-                            : 0
-                    )}
-                </td>
+const grandTotalRow = `
+
+    <tfoot>
+
+        <tr>
+
+            <td>
+                Grand Total
+            </td>
 
 
-                <!-- GROWTH -->
+            <!-- LAST YEAR SALES -->
 
-                <td>
-                    ${grandGrowth}
-                </td>
+            <td>
+                ${amount(
+                    grandLastYear
+                )}
+            </td>
 
-            </tr>
 
-        </tfoot>
+            <!-- LAST YEAR SALES % -->
 
-    `;
+            <td>
+                ${percent(
+                    grandLastYearPercent
+                )}
+            </td>
+
+
+            <!-- LAST YEAR RUNNING SALES % -->
+
+            <td class="running">
+                ${percent(
+                    grandLastYearPercent
+                )}
+            </td>
+
+
+            <!-- CURRENT YEAR SALES -->
+
+            <td>
+                ${amount(
+                    grandCurrentYear
+                )}
+            </td>
+
+
+            <!-- CURRENT YEAR SALES % -->
+
+            <td>
+                ${percent(
+                    grandCurrentYearPercent
+                )}
+            </td>
+
+
+            <!-- CURRENT YEAR RUNNING SALES % -->
+
+            <td class="running">
+                ${percent(
+                    grandCurrentYearPercent
+                )}
+            </td>
+
+
+            <!-- GROWTH -->
+
+            <td>
+                ${grandGrowth}
+            </td>
+
+        </tr>
+
+    </tfoot>
+
+`;
 
 
     /*
@@ -3382,7 +3413,410 @@ updateFormatDisplay();
 
 loadReport();
 
+/* =========================================================
+   CUSTOMER FILTER
+   ========================================================= */
 
+function initCustomerFilter() {
+
+    const customerFilter =
+        document.getElementById("customerFilter");
+
+    if (!customerFilter) {
+        console.warn("Customer filter element not found.");
+        return;
+    }
+
+    /*
+       Get customers from the currently loaded report.
+    */
+    const customers = new Set();
+
+    if (currentReport?.rows && Array.isArray(currentReport.rows)) {
+
+        currentReport.rows.forEach(row => {
+
+            const customer =
+                String(
+                    row.customer || ""
+                ).trim();
+
+            if (customer) {
+                customers.add(customer);
+            }
+
+        });
+
+    }
+
+    /*
+       Sort customers alphabetically.
+    */
+    const sortedCustomers =
+        Array.from(customers).sort(
+            (a, b) =>
+                a.localeCompare(
+                    b,
+                    undefined,
+                    {
+                        numeric: true,
+                        sensitivity: "base"
+                    }
+                )
+        );
+
+    /*
+       Keep current selection if possible.
+    */
+    const currentValue =
+        selectedCustomerFilter || "";
+
+    customerFilter.innerHTML = `
+        <option value="">All Customers</option>
+    `;
+
+    sortedCustomers.forEach(customer => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = customer;
+        option.textContent = customer;
+
+        customerFilter.appendChild(option);
+
+    });
+
+    /*
+       Restore selected customer.
+    */
+    if (
+        currentValue &&
+        sortedCustomers.includes(currentValue)
+    ) {
+        customerFilter.value =
+            currentValue;
+    } else {
+        customerFilter.value = "";
+        selectedCustomerFilter = "";
+    }
+
+    /*
+       Change customer immediately.
+    */
+    customerFilter.onchange = function () {
+
+        selectedCustomerFilter =
+            this.value || "";
+
+        applyCustomerFilter();
+    };
+}
+
+
+/* =========================================================
+   APPLY CUSTOMER FILTER
+   ========================================================= */
+
+function applyCustomerFilter() {
+
+    if (!currentReport) {
+        return;
+    }
+
+    /*
+       =====================================================
+       NO CUSTOMER SELECTED
+       =====================================================
+    */
+
+    if (!selectedCustomerFilter) {
+
+        if (currentReport.type === "COMPARISON") {
+
+            renderComparisonReport(currentReport);
+
+        } else {
+
+            renderReport(currentReport);
+        }
+
+        return;
+    }
+
+
+    /*
+       =====================================================
+       FILTER SELECTED CUSTOMER
+       =====================================================
+    */
+
+    const filteredRows =
+        (currentReport.rows || []).filter(row => {
+
+            const customer =
+                String(
+                    row.customer || ""
+                ).trim();
+
+            return customer.toLowerCase() ===
+                selectedCustomerFilter
+                    .trim()
+                    .toLowerCase();
+        });
+
+
+    /*
+       =====================================================
+       COMPARISON REPORT
+       =====================================================
+    */
+
+    if (currentReport.type === "COMPARISON") {
+
+        /*
+           Keep the ORIGINAL grand totals.
+
+           These are required for calculating:
+           - Sales %
+           - Running Sales %
+        */
+
+        const originalGrandLastYear =
+            Number(
+                currentReport.grand_last_year
+            ) || 0;
+
+        const originalGrandCurrentYear =
+            Number(
+                currentReport.grand_current_year
+            ) || 0;
+
+
+        /*
+           Selected customer's sales.
+        */
+
+        const selectedLastYear =
+            filteredRows.reduce(
+                (total, row) => {
+
+                    return total +
+                        (
+                            Number(
+                                row.last_year
+                            ) || 0
+                        );
+
+                },
+                0
+            );
+
+
+        const selectedCurrentYear =
+            filteredRows.reduce(
+                (total, row) => {
+
+                    return total +
+                        (
+                            Number(
+                                row.current_year
+                            ) || 0
+                        );
+
+                },
+                0
+            );
+
+
+        /*
+           =================================================
+           IMPORTANT
+           =================================================
+
+           Calculate the customer's percentage against
+           the ORIGINAL all-customer grand total.
+
+           Do NOT use selectedLastYear /
+           selectedCurrentYear as the denominator.
+        */
+
+        filteredRows.forEach(row => {
+
+            const lastYear =
+                Number(row.last_year) || 0;
+
+            const currentYear =
+                Number(row.current_year) || 0;
+
+
+            row.last_year_percent =
+                originalGrandLastYear
+                    ? (
+                        lastYear /
+                        originalGrandLastYear
+                    ) * 100
+                    : 0;
+
+
+            row.current_year_percent =
+                originalGrandCurrentYear
+                    ? (
+                        currentYear /
+                        originalGrandCurrentYear
+                    ) * 100
+                    : 0;
+
+
+            /*
+               Running % for the selected customer
+               is its contribution to the ORIGINAL
+               grand total.
+            */
+
+            row.last_year_running_percent =
+                originalGrandLastYear
+                    ? (
+                        lastYear /
+                        originalGrandLastYear
+                    ) * 100
+                    : 0;
+
+
+            row.current_year_running_percent =
+                originalGrandCurrentYear
+                    ? (
+                        currentYear /
+                        originalGrandCurrentYear
+                    ) * 100
+                    : 0;
+
+        });
+
+
+        /*
+           Create filtered report.
+
+           IMPORTANT:
+           grand_last_year / grand_current_year
+           are NOT changed.
+
+           This keeps the percentage denominator
+           as the original all-customer total.
+        */
+
+        const filteredReport = {
+
+            ...currentReport,
+
+            rows: filteredRows,
+
+            /*
+               These are ONLY the displayed sales totals.
+               Percentages continue using the original
+               grand totals above.
+            */
+
+            filtered_grand_last_year:
+                selectedLastYear,
+
+            filtered_grand_current_year:
+                selectedCurrentYear,
+
+            original_grand_last_year:
+                originalGrandLastYear,
+
+            original_grand_current_year:
+                originalGrandCurrentYear
+
+        };
+
+
+        /*
+           Render selected customer.
+        */
+
+        renderComparisonReport(
+            filteredReport
+        );
+
+        return;
+    }
+
+
+    /*
+       =====================================================
+       NORMAL / CUSTOM REPORT
+       =====================================================
+    */
+
+    const originalGrandTotal =
+        Number(
+            currentReport.grand_total
+        ) || 0;
+
+
+    const selectedTotal =
+        filteredRows.reduce(
+            (total, row) => {
+
+                return total +
+                    (
+                        Number(
+                            row.total
+                        ) || 0
+                    );
+
+            },
+            0
+        );
+
+
+    /*
+       Preserve percentage against original
+       all-customer total.
+    */
+
+    filteredRows.forEach(row => {
+
+        const total =
+            Number(row.total) || 0;
+
+        row.total_percent =
+            originalGrandTotal
+                ? (
+                    total /
+                    originalGrandTotal
+                ) * 100
+                : 0;
+
+    });
+
+
+    const filteredReport = {
+
+        ...currentReport,
+
+        rows: filteredRows,
+
+        /*
+           Keep original grand_total so the
+           percentage denominator is unchanged.
+        */
+
+        grand_total:
+            originalGrandTotal,
+
+        filtered_grand_total:
+            selectedTotal
+
+    };
+
+
+    renderReport(
+        filteredReport
+    );
+}
 /* =========================================================
    INITIALIZE CUSTOMER FILTER
    ========================================================= */

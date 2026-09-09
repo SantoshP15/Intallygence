@@ -3523,11 +3523,11 @@ body {
 
 .report-title {
     position: absolute;
-    left: 248px;
+    left: 213px;
     top: 24px;
 
     height: 32px;
-    padding-left: 24px;
+    padding-left: 15px;
 
     display: flex;
     align-items: center;
@@ -3536,7 +3536,7 @@ body {
 
     color: #111111;
     font-family: var(--pivot-font-family);
-    font-size: 21px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1;
 

@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tableWrap.innerHTML = `
                 <div class="empty-report">
-                    No customer sales data found
+                    No company sales data found
                     for the selected period.
                 </div>
             `;
@@ -369,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         headerRow.appendChild(
             createSortableHeader(
-                "Customer",
+                "Company",
                 "customer"
             )
         );
@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             customerTd.textContent =
                 row.customer ||
-                "Unspecified customer";
+                "Unspecified company";
 
             tr.appendChild(customerTd);
 
@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
         reportStatus.hidden = false;
 
         reportStatus.textContent =
-            "Loading customer growth…";
+            "Loading entity report…";
 
 
         /*
@@ -729,12 +729,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
-            params.set("source", reportSource);
-
 
             const response =
                 await fetch(
-                    `/api/customer-growth?${params.toString()}`,
+                    `/api/customer-growth?${params.toString()}&group_by=company&source=${reportSource}`,
                     {
                         method: "GET",
                         headers: {
@@ -752,7 +750,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 throw new Error(
                     data.error ||
-                    "Unable to load customer growth report."
+                    "Unable to load entity report."
                 );
             }
 
@@ -787,7 +785,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             reportStatus.textContent =
-                `${data.rows?.length || 0} customers found`;
+                `${data.rows?.length || 0} companies found`;
 
 
             renderTable();
@@ -796,13 +794,13 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
 
             console.error(
-                "Customer Growth Error:",
+                "Entity Report Error:",
                 error
             );
 
 
             reportStatus.textContent =
-                "Unable to load customer growth report.";
+                "Unable to load entity report.";
 
 
             tableWrap.innerHTML = `

@@ -1,0 +1,33 @@
+html,
+body {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.customer-report,
+.item-report,
+.customer-growth-report,
+.customer-itemwise-report,
+.itemwise-customer-report {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.report-table-card {
+    min-height: 0;
+}
+
+.table-wrap {
+    max-height: calc(100vh - 250px);
+    overflow: auto;
+}
+
+.format-menu,
+.format-submenu,
+.settings-popup,
+.modal-overlay {
+    overscroll-behavior: contain;
+}

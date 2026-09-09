@@ -323,9 +323,9 @@ h1 {
     padding: 10px 8px;
 
     color: #132a46;
-    background: #c9e8f5;
+    background: #c4c4c4;
 
-    border-bottom: 1px solid #a9cede;
+    border-bottom: 1px solid #b0b0b0;
 
     font-weight: 700;
 
@@ -352,7 +352,7 @@ h1 {
 }
 
 .itemwise-customer-table th.sortable-header:hover {
-    background: #b9deed;
+    background: #b0b0b0;
 }
 
 

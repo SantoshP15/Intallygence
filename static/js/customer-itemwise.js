@@ -4,6 +4,11 @@
 
 let currentReport = null;
 
+const reportSource = document.querySelector("main")?.dataset.reportSource || "sales";
+const sourceView = reportSource === "purchase"
+    ? "view_Purchase"
+    : "view_SalesInventory";
+
 let currentSort = {
     column: "customer",
     monthIndex: null,
@@ -550,6 +555,8 @@ async function loadCustomers() {
         const params =
             new URLSearchParams();
 
+        params.set("source", sourceView);
+
 
         if (fromDate) {
 
@@ -664,6 +671,8 @@ async function loadReport(
 
         const params =
             new URLSearchParams();
+
+        params.set("source", sourceView);
 
 
         params.set(
@@ -1440,12 +1449,15 @@ document.addEventListener(
             customerSelect.addEventListener(
                 "change",
                 () => {
+                    if (!fromDate.value || !toDate.value) {
+                        return;
+                    }
 
-                    /*
-                     * No automatic API call here.
-                     * The user applies both filters
-                     * together using Apply period.
-                     */
+                    loadReport(
+                        fromDate.value,
+                        toDate.value,
+                        customerSelect.value
+                    );
                 }
             );
         }

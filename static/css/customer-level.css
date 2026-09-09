@@ -44,6 +44,25 @@ body {
     margin-bottom: 20px;
 }
 
+.export-excel-btn {
+    align-items: center;
+    background: #217346;
+    border: 0;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 10px 14px;
+}
+
+.export-excel-btn:hover {
+    background: #185c37;
+}
+
 
 /* =========================================================
    REPORT TITLE

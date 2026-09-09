@@ -3,6 +3,10 @@ const fromDate = document.getElementById("fromDate");
 const toDate = document.getElementById("toDate");
 const reportStatus = document.getElementById("reportStatus");
 const tableWrap = document.getElementById("tableWrap");
+const reportSource = document.querySelector("main")?.dataset.reportSource || "sales";
+const sourceView = reportSource === "purchase"
+    ? "view_Purchase"
+    : "view_SalesInventory";
 
 let currentReport = null;
 
@@ -520,7 +524,8 @@ async function loadReport() {
             await fetch(
                 `/api/item-level?${new URLSearchParams({
                     from: fromDate.value,
-                    to: toDate.value
+                    to: toDate.value,
+                    source: sourceView
                 })}`
             );
 
@@ -552,7 +557,8 @@ async function loadReport() {
                 await fetch(
                     `/api/item-level?${new URLSearchParams({
                         from: shiftSalesPeriodOneYear(fromDate.value),
-                        to: shiftSalesPeriodOneYear(toDate.value)
+                        to: shiftSalesPeriodOneYear(toDate.value),
+                        source: sourceView
                     })}`
                 );
 

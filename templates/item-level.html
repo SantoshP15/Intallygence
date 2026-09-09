@@ -37,12 +37,14 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='css/sales-period-format.css') }}"
     >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
 </head>
 
 <body>
 
-    <main class="item-report">
-
+        <main class="item-report"
+            data-report-source="{{ report_mode|default('sales') }}">
         <!-- =========================================
              COMMON HEADER
         ========================================== -->
@@ -78,7 +80,7 @@
                 <div class="header-content">
 
                     <p class="eyebrow">
-                        Sales Reports
+                        {{ 'Purchase Reports' if report_mode == 'purchase' else 'Sales Reports' }}
                     </p>
 
                     <h1>
@@ -86,7 +88,7 @@
                     </h1>
 
                     <p class="subtitle">
-                        Item-wise sales, contribution and running percentage.
+                        {{ 'Item-wise purchase, contribution and running percentage.' if report_mode == 'purchase' else 'Item-wise sales, contribution and running percentage.' }}
                     </p>
 
                 </div>
@@ -167,6 +169,13 @@
 
         </section>
 
+        <div class="export-excel-row">
+            <button type="button" class="export-excel-btn" data-export-excel data-sheet="Item Level" data-filename="item-level">
+                <i class="fa-solid fa-file-excel"></i>
+                Export Excel
+            </button>
+        </div>
+
 
         <!-- =========================================
              REPORT TABLE
@@ -207,6 +216,8 @@
         src="{{ url_for('static', filename='js/item-level.js') }}"
     ></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
 </body>
 
 </html>

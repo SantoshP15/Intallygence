@@ -4,6 +4,11 @@
 
 let currentReport = null;
 
+const reportSource = document.querySelector("main")?.dataset.reportSource || "sales";
+const sourceView = reportSource === "purchase"
+    ? "view_Purchase"
+    : "view_SalesInventory";
+
 let currentSort = {
     column: "item",
     monthIndex: null,
@@ -571,6 +576,8 @@ async function loadReport(
            ------------------------------------------------- */
 
         const params = new URLSearchParams();
+
+        params.set("source", sourceView);
 
         params.set("from", fromDate);
         params.set("to", toDate);

@@ -46,6 +46,31 @@ const formatValue = document.getElementById("formatValue");
 
 const formatMenu = document.getElementById("formatMenu");
 
+const exportExcelBtn = document.getElementById("exportExcelBtn");
+
+
+function exportCustomerLevelExcel() {
+    const table = tableWrap.querySelector("table");
+
+    if (!table || typeof XLSX === "undefined") {
+        return;
+    }
+
+    const workbook = XLSX.utils.table_to_book(table, {
+        sheet: "Customer Level"
+    });
+
+    XLSX.writeFile(workbook, "customer-level.xlsx");
+}
+
+
+if (exportExcelBtn) {
+    exportExcelBtn.addEventListener(
+        "click",
+        exportCustomerLevelExcel
+    );
+}
+
 
 /* =========================================================
    MONTH NAMES
@@ -2015,6 +2040,7 @@ async function loadComparisonReport() {
 
     };
 
+    initCustomerFilter();
 
     resetSort();
 
@@ -2301,7 +2327,7 @@ async function loadReport() {
                 );
 
             currentReport = report;
-
+                initCustomerFilter();
             resetSort();
 
             renderReport(report);
@@ -3382,6 +3408,178 @@ updateFormatDisplay();
 
 loadReport();
 
+/* =========================================================
+   CUSTOMER FILTER
+   ========================================================= */
+
+function initCustomerFilter() {
+
+    const customerFilter =
+        document.getElementById("customerFilter");
+
+    if (!customerFilter) {
+        console.warn("Customer filter element not found.");
+        return;
+    }
+
+    /*
+       Get customers from the currently loaded report.
+    */
+    const customers = new Set();
+
+    if (currentReport?.rows && Array.isArray(currentReport.rows)) {
+
+        currentReport.rows.forEach(row => {
+
+            const customer =
+                String(
+                    row.customer || ""
+                ).trim();
+
+            if (customer) {
+                customers.add(customer);
+            }
+
+        });
+
+    }
+
+    /*
+       Sort customers alphabetically.
+    */
+    const sortedCustomers =
+        Array.from(customers).sort(
+            (a, b) =>
+                a.localeCompare(
+                    b,
+                    undefined,
+                    {
+                        numeric: true,
+                        sensitivity: "base"
+                    }
+                )
+        );
+
+    /*
+       Keep current selection if possible.
+    */
+    const currentValue =
+        selectedCustomerFilter || "";
+
+    customerFilter.innerHTML = `
+        <option value="">All Customers</option>
+    `;
+
+    sortedCustomers.forEach(customer => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = customer;
+        option.textContent = customer;
+
+        customerFilter.appendChild(option);
+
+    });
+
+    /*
+       Restore selected customer.
+    */
+    if (
+        currentValue &&
+        sortedCustomers.includes(currentValue)
+    ) {
+        customerFilter.value =
+            currentValue;
+    } else {
+        customerFilter.value = "";
+        selectedCustomerFilter = "";
+    }
+
+    /*
+       Change customer immediately.
+    */
+    customerFilter.onchange = function () {
+
+        selectedCustomerFilter =
+            this.value || "";
+
+        applyCustomerFilter();
+    };
+}
+
+
+/* =========================================================
+   APPLY CUSTOMER FILTER
+   ========================================================= */
+
+function applyCustomerFilter() {
+
+    if (!currentReport) {
+        return;
+    }
+
+    /*
+       No customer selected:
+       show complete report.
+    */
+    if (!selectedCustomerFilter) {
+
+        if (
+            currentReport.type === "COMPARISON"
+        ) {
+            renderComparisonReport(
+                currentReport
+            );
+        } else {
+            renderReport(
+                currentReport
+            );
+        }
+
+        return;
+    }
+
+    /*
+       Filter the rows.
+    */
+    const filteredRows =
+        (currentReport.rows || [])
+            .filter(row => {
+
+                const customer =
+                    String(
+                        row.customer || ""
+                    ).trim();
+
+                return customer ===
+                    selectedCustomerFilter;
+            });
+
+    /*
+       Don't modify original report.
+       Create a copy.
+    */
+    const filteredReport = {
+        ...currentReport,
+        rows: filteredRows
+    };
+
+    if (
+        currentReport.type === "COMPARISON"
+    ) {
+
+        renderComparisonReport(
+            filteredReport
+        );
+
+    } else {
+
+        renderReport(
+            filteredReport
+        );
+    }
+}
 
 /* =========================================================
    INITIALIZE CUSTOMER FILTER

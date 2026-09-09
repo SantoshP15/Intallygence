@@ -60,7 +60,7 @@ const reportData = {
             "Customer-Itemwise",
             "Inventory Level",
             "Itemwise-Customer",
-            "Register",
+            "Sales Register",
             "Sales v/s Sales Return",
         ]
     },
@@ -72,11 +72,11 @@ const reportData = {
 
         items: [
             "Entity",
-            "Customer Type",
+            "Customer Growth",
             "Customer Level",
-            "Open Purchase Order",
-            "Bill Pending",
-            "Purchase Inventory Level",
+            "Customer-Itemwise",
+            "Inventory Level",
+            "Itemwise-Customer",
             "Purchase Register"
         ]
     },
@@ -192,33 +192,79 @@ function openReportModal(categoryKey) {
             const inventoryLevelLink =
                 categoryKey === "sales" && item === "Inventory Level";
 
+            const purchaseInventoryLevelLink =
+                categoryKey === "purchase" && item === "Inventory Level";
+
             const customerItemwiseLink =
                 categoryKey === "sales" && item === "Customer-Itemwise";
 
+            const purchaseCustomerItemwiseLink =
+                categoryKey === "purchase" && item === "Customer-Itemwise";
+
             const itemwiseCustomerLink =
                 categoryKey === "sales" && item === "Itemwise-Customer";
+
+            const purchaseItemwiseCustomerLink =
+                categoryKey === "purchase" && item === "Itemwise-Customer";
+
+            const salesRegisterLink =
+                categoryKey === "sales" && item === "Sales Register";
+
+            const purchaseRegisterLink =
+                categoryKey === "purchase" && item === "Purchase Register";
+
+            const salesReturnLink =
+                categoryKey === "sales" && item === "Sales v/s Sales Return";
             
             const customerGrowthLink =
                 categoryKey === "sales" && item === "Customer Growth";
+            const purchaseCustomerGrowthLink =
+                categoryKey === "purchase" && item === "Customer Growth";
+            const entityLevelLink =
+                categoryKey === "sales" && item === "Entity";
+            const purchaseEntityLevelLink =
+                categoryKey === "purchase" && item === "Entity";
             const PurchaseCustomerLevelLink =
                 categoryKey === "purchase" && item === "Customer Level";
-            const reportLink =
-                    customerLevelLink
-                    ? "/customer-level"
-                    : inventoryLevelLink
-                    ? "/item-level"
-                    : customerItemwiseLink
-                    ? "/customer-itemwise"
-                    : itemwiseCustomerLink
-                    ? "/itemwise-customer"
-                    : customerGrowthLink
-                    ? "/customer-growth"
-                    : PurchaseCustomerLevelLink
-                    ? "/purchase-customer-level"
-                    : "#";
+            const reportLink = customerLevelLink
+                ? "/customer-level"
+                : inventoryLevelLink
+                ? "/item-level"
+                : purchaseInventoryLevelLink
+                ? "/purchase-item-level"
+                : customerItemwiseLink
+                ? "/customer-itemwise"
+                : purchaseCustomerItemwiseLink
+                ? "/purchase-customer-itemwise"
+                : itemwiseCustomerLink
+                ? "/itemwise-customer"
+                : purchaseItemwiseCustomerLink
+                ? "/purchase-itemwise-customer"
+                : salesRegisterLink
+                ? "/sales-register"
+                : purchaseRegisterLink
+                ? "/purchase-register"
+                : salesReturnLink
+                ? "/sales-vs-sales-return"
+                : customerGrowthLink
+                ? "/customer-growth"
+                : purchaseCustomerGrowthLink
+                ? "/purchase-customer-growth"
+                : entityLevelLink
+                ? "/entity-level"
+                : purchaseEntityLevelLink
+                ? "/purchase-entity-level"
+                : PurchaseCustomerLevelLink
+                ? "/purchase-customer-level"
+                : "#";
 
             const isClickable =
-                customerLevelLink || inventoryLevelLink || customerItemwiseLink || itemwiseCustomerLink || customerGrowthLink || PurchaseCustomerLevelLink;
+                customerLevelLink || inventoryLevelLink || purchaseInventoryLevelLink ||
+                customerItemwiseLink || purchaseCustomerItemwiseLink ||
+                itemwiseCustomerLink || purchaseItemwiseCustomerLink ||
+                salesRegisterLink || purchaseRegisterLink || customerGrowthLink ||
+                salesReturnLink || entityLevelLink || purchaseCustomerGrowthLink ||
+                purchaseEntityLevelLink || PurchaseCustomerLevelLink;
 
             return `
 

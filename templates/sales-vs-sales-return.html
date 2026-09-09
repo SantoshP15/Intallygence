@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales v/s Sales Return | InTallygence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-itemwise.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sales-return-report {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            min-height: 0;
+        }
+
+        .sales-return-report .report-table-card {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .sales-return-report .table-wrap {
+            flex: 1 1 auto;
+            max-height: none;
+        }
+
+        .sales-return-table {
+            min-width: max-content;
+        }
+
+        .sales-return-table th {
+            background: #c4c4c4;
+            border-color: #b0b0b0;
+        }
+
+        .sales-return-table th,
+        .sales-return-table td {
+            text-align: right;
+        }
+
+        .sales-return-table th:first-child,
+        .sales-return-table td:first-child {
+            text-align: left;
+        }
+
+        .sales-return-filter {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+        }
+
+        .sales-return-filter label {
+            color: #58708f;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .sales-return-filter select {
+            background: #ffffff;
+            border: 1px solid #b8cadb;
+            border-radius: 6px;
+            color: #17223b;
+            font: inherit;
+            padding: 9px 12px;
+        }
+
+        .sales-return-export {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <main class="customer-itemwise-report sales-return-report">
+        {% include 'header.html' %}
+
+        <section class="report-top">
+            <div class="report-title">
+                <a class="back-link" href="{{ url_for('report_dashboard') }}" aria-label="Back to Reports">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+                <div class="header-content">
+                    <p class="eyebrow">Sales Reports</p>
+                    <h1>Sales v/s Sales Return</h1>
+                    <p class="subtitle">Customer-wise sales and sales returns by financial year.</p>
+                </div>
+            </div>
+
+            <form class="sales-return-filter" method="get">
+                <label for="yearFilter">Year</label>
+                <select id="yearFilter" name="year" onchange="this.form.submit()">
+                    <option value="">All Years</option>
+                    {% for year in available_years %}
+                        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </section>
+
+        <div class="sales-return-export">
+            <button type="button" class="export-excel-btn" data-export-excel data-sheet="Sales vs Sales Return" data-filename="sales-vs-sales-return">
+                <i class="fa-solid fa-file-excel"></i>
+                Export Excel
+            </button>
+        </div>
+
+        <section class="report-table-card" aria-live="polite">
+            <div class="table-wrap">
+                <table class="customer-itemwise-table sales-return-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Row Labels</th>
+                            {% for year in years %}
+                                <th colspan="3">{{ year }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for year in years %}
+                                <th>Sales</th>
+                                <th>Sales Return</th>
+                                <th>Sales Return %</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                            <tr>
+                                <td>{{ row.customer }}</td>
+                                {% for value in row.years %}
+                                    <td>{{ '%.2f'|format(value.sales) }}</td>
+                                    <td>{{ '%.2f'|format(value.returns) }}</td>
+                                    <td>{{ '%.2f'|format(value.return_percent) }}%</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Grand Total</th>
+                            {% for value in totals %}
+                                <th>{{ '%.2f'|format(value.sales) }}</th>
+                                <th>{{ '%.2f'|format(value.returns) }}</th>
+                                <th>{{ '%.2f'|format(value.return_percent) }}%</th>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
+</body>
+</html>
