@@ -27,11 +27,70 @@ const selectAllCompanies =
 const activeCompanyName =
     document.getElementById("activeCompanyName");
 
+const companyNameDisplays = [
+    ...document.querySelectorAll(".company-name-display")
+];
+
 const companyInputs = [
     ...document.querySelectorAll(
         'input[name="active-company"]'
     )
 ];
+
+
+async function saveCompanySelection() {
+
+    const companies = companyInputs
+        .filter(input => input.checked)
+        .map(input => input.value);
+
+    const response = await fetch(
+        "/api/company-selection",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ companies })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Unable to save company selection.");
+    }
+
+    window.location.reload();
+}
+
+
+function updateCompanyNameDisplays(company) {
+    companyNameDisplays.forEach(display => {
+        display.textContent = company;
+    });
+}
+
+
+function updateCompanyOptionStates() {
+    companyInputs.forEach(input => {
+        input.closest(".company-option")?.classList.toggle(
+            "is-selected",
+            input.checked
+        );
+    });
+
+    selectAllCompanies?.closest(".company-option")?.classList.toggle(
+        "is-selected",
+        selectAllCompanies.checked
+    );
+    selectAllCompanies?.closest(".company-option")?.classList.toggle(
+        "is-indeterminate",
+        selectAllCompanies.indeterminate
+    );
+}
+
+
+updateCompanyOptionStates();
 
 
 /* =========================================================
@@ -300,24 +359,14 @@ if (companySelector) {
 companyInputs.forEach(function (input) {
 
     input.addEventListener(
-        "change",
-        function () {
+        "click",
+        function (event) {
 
-            /*
-             * Do not allow all companies
-             * to be unchecked.
-             */
-            if (
-                !this.checked &&
-                !companyInputs.some(
-                    item => item.checked
-                )
-            ) {
+            event.preventDefault();
 
-                this.checked = true;
-
-                return;
-            }
+            companyInputs.forEach(input => {
+                input.checked = input === this;
+            });
 
 
             /*
@@ -326,14 +375,14 @@ companyInputs.forEach(function (input) {
              * The first checked company is used
              * as the displayed active company.
              */
-            if (
-                this.checked &&
-                activeCompanyName
-            ) {
+            if (activeCompanyName) {
 
                 activeCompanyName.textContent =
                     this.value;
 
+
+            updateCompanyNameDisplays(this.value);
+            updateCompanyOptionStates();
             }
 
 
@@ -343,10 +392,7 @@ companyInputs.forEach(function (input) {
             if (selectAllCompanies) {
 
                 selectAllCompanies.checked =
-                    companyInputs.length > 0 &&
-                    companyInputs.every(
-                        item => item.checked
-                    );
+                    false;
 
             }
 
@@ -367,6 +413,8 @@ companyInputs.forEach(function (input) {
                     }
                 )
             );
+
+            saveCompanySelection().catch(console.error);
 
         }
     );
@@ -435,6 +483,8 @@ if (selectAllCompanies) {
                     activeCompanyName.textContent =
                         firstChecked.value;
 
+                    updateCompanyNameDisplays(firstChecked.value);
+
                 }
 
             }
@@ -448,6 +498,8 @@ if (selectAllCompanies) {
                 companyInputs.every(
                     input => input.checked
                 );
+
+            updateCompanyOptionStates();
 
 
             /*
@@ -472,6 +524,8 @@ if (selectAllCompanies) {
                     }
                 )
             );
+
+            saveCompanySelection().catch(console.error);
 
         }
     );

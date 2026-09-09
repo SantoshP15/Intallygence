@@ -349,6 +349,14 @@ function renderReport(report) {
                             ${escapeHtml(row.item)}
                         </td>
 
+                        <td class="total">
+                            ${amount(row.total)}
+                        </td>
+
+                        <td class="total">
+                            ${percent(row.total_percent)}
+                        </td>
+
                         ${
                             row.months
                                 .map(month => `
@@ -368,14 +376,6 @@ function renderReport(report) {
                                 `)
                                 .join("")
                         }
-
-                        <td class="total">
-                            ${amount(row.total)}
-                        </td>
-
-                        <td class="total">
-                            ${percent(row.total_percent)}
-                        </td>
 
                     </tr>
                 `;
@@ -439,17 +439,15 @@ function renderReport(report) {
                     
                     </th>
 
-                    ${monthHeaders}
-
                     <th colspan="2">
                         Total Sales
                     </th>
 
+                    ${monthHeaders}
+
                 </tr>
 
                 <tr>
-
-                    ${subHeaders}
 
                     <th
                         class="sortable-header"
@@ -466,6 +464,8 @@ function renderReport(report) {
                         Sales %
                        
                     </th>
+
+                    ${subHeaders}
 
                 </tr>
 
@@ -485,8 +485,6 @@ function renderReport(report) {
                         Grand Total
                     </td>
 
-                    ${totals}
-
                     <td>
                         ${amount(report.grand_total)}
                     </td>
@@ -494,6 +492,8 @@ function renderReport(report) {
                     <td>
                         100.00%
                     </td>
+
+                    ${totals}
 
                 </tr>
 

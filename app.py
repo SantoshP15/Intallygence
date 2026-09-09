@@ -39,6 +39,20 @@ def validate_data_source(data_source):
     return data_source
 
 
+def company_filter_sql(data_source):
+    """Return a validated CompanyName predicate for the active selection."""
+    selected = session.get("selected_companies", [])
+    if not selected:
+        return ""
+
+    quoted_column = quote_identifier("CompanyName")
+    values = [
+        "'" + str(company).replace("'", "''") + "'"
+        for company in selected
+    ]
+    return f" AND {quoted_column} IN ({', '.join(values)})"
+
+
 CUSTOMER_LEVEL_COLUMNS = {
     "date": "VoucherDate",
     "customer": "PartyLedgerName",
@@ -145,6 +159,8 @@ def report_dashboard():
 def inject_company_name():
 
     company_name = "Company"
+    company_names = []
+    selected_companies = []
 
     db = None
     cursor = None
@@ -154,17 +170,33 @@ def inject_company_name():
         cursor = db.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT CompanyName
+            SELECT DISTINCT CompanyName
             FROM view_SalesInventory
             WHERE CompanyName IS NOT NULL
               AND TRIM(CompanyName) <> ''
-            LIMIT 1
+            ORDER BY CompanyName
         """)
 
-        row = cursor.fetchone()
+        rows = cursor.fetchall()
 
-        if row and row.get("CompanyName"):
-            company_name = str(row["CompanyName"]).strip()
+        company_names = list(dict.fromkeys(
+            str(row["CompanyName"]).strip()
+            for row in rows
+            if row.get("CompanyName")
+        ))
+
+        selected_companies = [
+            company
+            for company in session.get("selected_companies", [])
+            if company in company_names
+        ]
+
+        if not selected_companies and company_names:
+            selected_companies = [company_names[0]]
+            session["selected_companies"] = selected_companies
+
+        if selected_companies:
+            company_name = selected_companies[0]
 
     except Exception as e:
         print("Company name error:", e)
@@ -176,7 +208,9 @@ def inject_company_name():
             db.close()
 
     return {
-        "company_name": company_name
+        "company_name": company_name,
+        "company_names": company_names or [company_name],
+        "selected_companies": selected_companies or [company_name]
     }
 @app.route("/")
 def splash():
@@ -230,6 +264,50 @@ def logout():
     session.clear()
     return redirect(url_for("splash"))
 
+
+@app.route("/api/company-selection", methods=["POST"])
+def company_selection():
+    if "user" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    payload = request.get_json() or {}
+    selected = payload.get("companies", [])
+    if not isinstance(selected, list):
+        return jsonify({"error": "Companies must be a list."}), 400
+
+    selected = list(dict.fromkeys(
+        str(company).strip()
+        for company in selected
+        if str(company).strip()
+    ))
+
+    if not selected:
+        return jsonify({"error": "Select at least one company."}), 400
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT DISTINCT CompanyName
+            FROM view_SalesInventory
+            WHERE CompanyName IS NOT NULL
+              AND TRIM(CompanyName) <> ''
+        """)
+        available = {
+            str(row["CompanyName"]).strip()
+            for row in cursor.fetchall()
+            if row.get("CompanyName")
+        }
+    finally:
+        cursor.close()
+        db.close()
+
+    if not set(selected).issubset(available):
+        return jsonify({"error": "Invalid company selection."}), 400
+
+    session["selected_companies"] = selected
+    return jsonify({"success": True, "companies": selected})
+
 @app.route("/dashboard")
 def home():
 
@@ -241,15 +319,20 @@ def home():
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT COUNT(*) AS total FROM view_SalesInventory")
+    cursor.execute(
+        "SELECT COUNT(*) AS total FROM view_SalesInventory WHERE 1=1"
+        + company_filter_sql("view_SalesInventory")
+    )
     total = cursor.fetchone()["total"]
 
     if get_dbms() == "sqlserver":
 
         cursor.execute(
-            """
+            f"""
             SELECT *
             FROM view_SalesInventory
+            WHERE 1=1
+            {company_filter_sql("view_SalesInventory")}
             ORDER BY (SELECT NULL)
             OFFSET ? ROWS
             FETCH NEXT ? ROWS ONLY
@@ -263,9 +346,11 @@ def home():
     else:
 
         cursor.execute(
-            """
+            f"""
             SELECT *
             FROM view_SalesInventory
+            WHERE 1=1
+            {company_filter_sql("view_SalesInventory")}
             LIMIT %s OFFSET %s
             """,
             (
@@ -295,7 +380,10 @@ def render_register_report(data_source, title, route_name):
     cursor = db.cursor(dictionary=True)
 
     try:
-        cursor.execute(f"SELECT COUNT(*) AS total FROM {data_source}")
+        cursor.execute(
+            f"SELECT COUNT(*) AS total FROM {data_source} WHERE 1=1"
+            + company_filter_sql(data_source)
+        )
         total = cursor.fetchone()["total"]
 
         page = request.args.get("page", 1, type=int)
@@ -308,6 +396,8 @@ def render_register_report(data_source, title, route_name):
                 f"""
                 SELECT *
                 FROM {data_source}
+                WHERE 1=1
+                {company_filter_sql(data_source)}
                 ORDER BY (SELECT NULL)
                 OFFSET ? ROWS
                 FETCH NEXT ? ROWS ONLY
@@ -319,6 +409,8 @@ def render_register_report(data_source, title, route_name):
                 f"""
                 SELECT *
                 FROM {data_source}
+                WHERE 1=1
+                {company_filter_sql(data_source)}
                 LIMIT %s OFFSET %s
                 """,
                 (per_page, offset)
@@ -384,6 +476,7 @@ def sales_vs_sales_return():
             FROM view_SalesInventory
             WHERE VoucherDate IS NOT NULL
               AND PartyLedgerName IS NOT NULL
+                            {company_filter_sql("view_SalesInventory")}
             ORDER BY VoucherDate, PartyLedgerName
             """
         )
@@ -501,7 +594,8 @@ def customer_level_data():
                 SELECT {customer_column} AS customer, {date_column} AS transaction_date,
                        SUM({amount_column}) AS sales
                 FROM view_SalesInventory
-                WHERE {date_column} >= %s AND {date_column} <= %s
+                                WHERE {date_column} >= %s AND {date_column} <= %s
+                                    {company_filter_sql("view_SalesInventory")}
                 GROUP BY {customer_column}, {date_column}
                 """,
                 (from_date, to_date),
@@ -630,6 +724,7 @@ def item_level_data():
                 FROM {source_table}
                 WHERE {date_column} >= %s
                   AND {date_column} <= %s
+                                    {company_filter_sql(source_table)}
                 GROUP BY {item_column}, {date_column}
                 """,
                 (from_date, to_date),
@@ -936,6 +1031,7 @@ def customer_itemwise_data():
                 WHERE
                     {date_column} >= %s
                     AND {date_column} <= %s
+                    {company_filter_sql(source_table)}
 
                 ORDER BY
                     {customer_column}
@@ -978,6 +1074,7 @@ def customer_itemwise_data():
                 WHERE
                     {date_column} >= %s
                     AND {date_column} <= %s
+                    {company_filter_sql(source_table)}
             """
 
             query_params = [
@@ -1470,6 +1567,7 @@ def itemwise_customer_data():
                 WHERE
                     {date_column} >= %s
                     AND {date_column} <= %s
+                    {company_filter_sql(source_table)}
 
                 ORDER BY
                     {item_column}
@@ -1512,6 +1610,7 @@ def itemwise_customer_data():
                 WHERE
                     {date_column} >= %s
                     AND {date_column} <= %s
+                    {company_filter_sql(source_table)}
             """
 
             query_params = [
@@ -2061,6 +2160,7 @@ def customer_growth_data():
                 WHERE
                     {date_column} >= %s
                     AND {date_column} <= %s
+                    {company_filter_sql(source_table)}
 
                 GROUP BY
                     {customer_column},
@@ -2380,7 +2480,8 @@ def purchase_customer_level_data():
                 SELECT {customer_column} AS customer, {date_column} AS transaction_date,
                        SUM({amount_column}) AS purchase
                 FROM view_Purchase 
-                WHERE {date_column} >= %s AND {date_column} <= %s
+                                WHERE {date_column} >= %s AND {date_column} <= %s
+                                    {company_filter_sql("view_Purchase")}
                 GROUP BY {customer_column}, {date_column}
                 """,
                 (from_date, to_date),
@@ -2972,6 +3073,7 @@ def filter_values(column):
             {quoted}
         FROM {data_source}
         WHERE {quoted} IS NOT NULL
+        {company_filter_sql(data_source)}
         ORDER BY {quoted}
     """
 
@@ -3088,6 +3190,7 @@ def date_hierarchy(column):
                 {quoted_column}
             FROM {data_source}
             WHERE {quoted_column} IS NOT NULL
+            {company_filter_sql(data_source)}
             ORDER BY {quoted_column}
         """
 
@@ -3345,6 +3448,10 @@ END
 
     where_clause = []
 
+    company_clause = company_filter_sql(data_source)
+    if company_clause:
+        where_clause.append(company_clause[5:])
+
     for f in filters:
 
         field = f["field"]
@@ -3521,6 +3628,10 @@ def build_pivot_query(config, data_source):
     # =====================================================
 
     where_clause = []
+
+    company_clause = company_filter_sql(data_source)
+    if company_clause:
+        where_clause.append(company_clause[5:])
 
     from datetime import datetime
 

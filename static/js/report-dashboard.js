@@ -511,10 +511,43 @@ const settingsPopup = document.getElementById("settingsPopup");
 const switchCompanyBtn = document.getElementById("switchCompanyBtn");
 const companySelector = document.getElementById("companySelector");
 const activeCompanyName = document.getElementById("activeCompanyName");
+const companyNameDisplays = [
+    ...document.querySelectorAll(".company-name-display")
+];
 const selectAllCompanies = document.getElementById("selectAllCompanies");
 const companyInputs = [
     ...document.querySelectorAll('input[name="active-company"]')
 ];
+
+const selectedCompanyNames = JSON.parse(
+    companySelector?.dataset.selectedCompanies || "[]"
+);
+
+companyInputs.forEach(input => {
+    input.checked = selectedCompanyNames.includes(input.value);
+});
+
+async function saveCompanySelection() {
+    const companies = companyInputs
+        .filter(input => input.checked)
+        .map(input => input.value);
+
+    const response = await fetch(
+        "/api/company-selection",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ companies })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Unable to save company selection.");
+    }
+}
 
 function closeCompanySelector() {
     if (!switchCompanyBtn || !companySelector) return;
@@ -543,6 +576,22 @@ switchCompanyBtn.addEventListener("click", function () {
 function updateActiveCompanyName() {
     let selectedCompanies = companyInputs.filter(input => input.checked);
 
+    companyInputs.forEach(input => {
+        input.closest(".company-option")?.classList.toggle(
+            "is-selected",
+            input.checked
+        );
+    });
+
+    selectAllCompanies.closest(".company-option")?.classList.toggle(
+        "is-selected",
+        selectAllCompanies.checked
+    );
+    selectAllCompanies.closest(".company-option")?.classList.toggle(
+        "is-indeterminate",
+        selectAllCompanies.indeterminate
+    );
+
     // The dashboard must always have an active company.
     if (selectedCompanies.length === 0 && companyInputs.length > 0) {
         companyInputs[0].checked = true;
@@ -560,6 +609,12 @@ function updateActiveCompanyName() {
         }
     }
 
+    if (selectedCompanies.length > 0) {
+        companyNameDisplays.forEach(display => {
+            display.textContent = selectedCompanies[0].value;
+        });
+    }
+
     if (selectAllCompanies) {
         selectAllCompanies.checked = selectedCompanies.length === companyInputs.length;
         selectAllCompanies.indeterminate = selectedCompanies.length > 0 &&
@@ -569,16 +624,23 @@ function updateActiveCompanyName() {
 
 selectAllCompanies.addEventListener("change", function () {
     companyInputs.forEach((input, index) => {
-        // Clearing Select All retains the first company as the active one.
         input.checked = this.checked || index === 0;
     });
 
     updateActiveCompanyName();
+    saveCompanySelection().catch(console.error);
 });
 
 companyInputs.forEach(input => {
-    input.addEventListener("change", function () {
+    input.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        companyInputs.forEach(companyInput => {
+            companyInput.checked = companyInput === this;
+        });
+
         updateActiveCompanyName();
+        saveCompanySelection().catch(console.error);
     });
 });
 

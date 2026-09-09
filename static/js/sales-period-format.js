@@ -362,6 +362,11 @@ function initSalesPeriodFormat(onPeriodSelected) {
                             `.format-submenu[data-submenu="${button.dataset.parent}"]`
                         );
 
+                    if (button.dataset.parent === "CUSTOM") {
+                        selectedFormat = "CUSTOM";
+                        updateDisplay();
+                    }
+
                     formatMenu
                         .querySelectorAll(
                             ".format-submenu"

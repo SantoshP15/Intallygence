@@ -919,9 +919,6 @@ function renderReport(report) {
                 </th>
 
 
-                ${monthHeaders}
-
-
                 <th
                     rowspan="2"
                     class="sortable-header"
@@ -938,6 +935,8 @@ function renderReport(report) {
                 >
                     Total %
                 </th>
+
+                ${monthHeaders}
 
             </tr>
 
@@ -1052,9 +1051,6 @@ function renderReport(report) {
                         </td>
 
 
-                        ${monthCells}
-
-
                         <td class="total">
                             ${formatNumber(row.total)}
                         </td>
@@ -1065,6 +1061,8 @@ function renderReport(report) {
                                 row.total_percent
                             )}
                         </td>
+
+                        ${monthCells}
 
                     </tr>
 
@@ -1140,9 +1138,6 @@ function renderReport(report) {
                 </td>
 
 
-                ${monthTotals}
-
-
                 <td>
                     ${formatNumber(grandTotal)}
                 </td>
@@ -1151,6 +1146,8 @@ function renderReport(report) {
                 <td>
                     100.00%
                 </td>
+
+                ${monthTotals}
 
             </tr>
 

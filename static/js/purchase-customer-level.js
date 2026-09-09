@@ -3107,17 +3107,15 @@ function renderReport(report) {
                     Customer
                 </th>
 
-                ${monthHeaders}
-
                 <th colspan="2">
                     Total Sales
                 </th>
 
+                ${monthHeaders}
+
             </tr>
 
             <tr>
-
-                ${subHeaders}
 
                 <th
                     class="sortable-header"
@@ -3132,6 +3130,8 @@ function renderReport(report) {
                 >
                     Sales %
                 </th>
+
+                ${subHeaders}
 
             </tr>
 
@@ -3206,8 +3206,6 @@ function renderReport(report) {
                             ${escapeHtml(customer)}
                         </td>
 
-                        ${monthCells}
-
                         <td class="total">
                             ${amount(row.total)}
                         </td>
@@ -3217,6 +3215,8 @@ function renderReport(report) {
                                 row.total_percent
                             )}
                         </td>
+
+                        ${monthCells}
 
                     </tr>
 
@@ -3314,8 +3314,6 @@ function renderReport(report) {
                     Grand Total
                 </td>
 
-                ${totals}
-
                 <td>
                     ${amount(
                         grandTotal
@@ -3325,6 +3323,8 @@ function renderReport(report) {
                 <td>
                     100.00%
                 </td>
+
+                ${totals}
 
             </tr>
 
