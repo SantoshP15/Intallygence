@@ -29,7 +29,8 @@ def get_db_connection():
 
 ALLOWED_REPORT_SOURCES = {
     "view_SalesInventory",
-    "view_Purchase"
+    "view_Purchase",
+    "view_DayBook"
 }
 
 
@@ -80,6 +81,17 @@ def p_customer_level_columns():
         "customer": "PartyLedgerName",
         "amount": "Amount"
     }
+OUTSTANDING_DEBTORS_COLUMNS = {
+    "ledger": "LedgerName",
+    "bill_ref": "bill_ref_no",
+    "due_date": "bill_due_dt",
+    "amount": "Netmount",
+    "voucher_no": "vch_no",
+    "voucher_date": "date",
+    "party": "PartyLedgerName",
+    "company": "CompanyName",
+    "group":"`Group`"
+}
 
 def customer_itemwise_columns():
     return {
@@ -2443,6 +2455,459 @@ def purchase_customer_level_data():
         return jsonify({"error": str(error)}), 500
 
 
+@app.route("/outstanding-debtors")
+def outstanding_debtors():
+
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template(
+        "outstanding-debtors.html"
+    )
+@app.route("/api/outstanding-debtors")
+def outstanding_debtors_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Not logged in"
+        }), 401
+
+    try:
+
+        # =====================================================
+        # AS-ON DATE
+        # =====================================================
+
+        as_on = request.args.get("as_on")
+
+        if as_on:
+            try:
+                as_on_date = datetime.strptime(
+                    as_on,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid as_on date. Use YYYY-MM-DD."
+                }), 400
+        else:
+            as_on_date = date.today()
+
+
+        # =====================================================
+        # COLUMN MAPPING
+        # =====================================================
+
+        ledger_column = OUTSTANDING_DEBTORS_COLUMNS["ledger"]
+        bill_column = OUTSTANDING_DEBTORS_COLUMNS["bill_ref"]
+        due_date_column = OUTSTANDING_DEBTORS_COLUMNS["due_date"]
+        amount_column = OUTSTANDING_DEBTORS_COLUMNS["amount"]
+        voucher_column = OUTSTANDING_DEBTORS_COLUMNS["voucher_no"]
+        voucher_date_column = OUTSTANDING_DEBTORS_COLUMNS["voucher_date"]
+        party_column = OUTSTANDING_DEBTORS_COLUMNS["party"]
+        company_column = OUTSTANDING_DEBTORS_COLUMNS["company"]
+        group_column=OUTSTANDING_DEBTORS_COLUMNS["group"]
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+
+        cursor = db.cursor(dictionary=True)
+
+
+        try:
+
+            query = f"""
+                SELECT
+                    {ledger_column} AS ledger_name,
+                    {bill_column} AS bill_ref_no,
+                    {due_date_column} AS bill_due_dt,
+                    {amount_column} AS net_amount,
+                    {voucher_column} AS voucher_no,
+                    {voucher_date_column} AS voucher_date,
+                    {party_column} AS party_name,
+                    {company_column} AS company_name
+                FROM view_DayBook
+                where {group_column}='Sundry Debtors'
+                ORDER BY
+                    {ledger_column},
+                    {due_date_column},
+                    {bill_column}
+            """
+
+            cursor.execute(query)
+
+            source_rows = cursor.fetchall()
+        
+        finally:
+
+            cursor.close()
+            db.close()
+
+
+        # =====================================================
+        # BUILD REPORT
+        # =====================================================
+
+        rows = []
+
+        grand_total = 0
+
+        age_group_totals = {
+            "0-30": 0,
+            "31-60": 0,
+            "61-90": 0,
+            "91-120": 0,
+            "121+": 0
+        }
+
+
+        for row in source_rows:
+
+            ledger_name = str(
+                row.get("ledger_name") or ""
+            ).strip()
+
+            bill_ref_no = str(
+                row.get("bill_ref_no") or ""
+            ).strip()
+
+            due_date = parse_report_date(
+                row.get("bill_due_dt")
+            )
+
+            if not due_date:
+                continue
+
+
+            # =================================================
+            # AMOUNT
+            # =================================================
+
+            try:
+                net_amount = float(
+                    row.get("net_amount") or 0
+                )
+            except (TypeError, ValueError):
+                net_amount = 0
+
+
+            # =================================================
+            # AGE
+            # =================================================
+
+            age = (
+                as_on_date - due_date
+            ).days
+
+            if age < 0:
+                age = 0
+
+
+            # =================================================
+            # AGE GROUP
+            # =================================================
+
+            if age <= 30:
+
+                age_group = "0-30"
+
+            elif age <= 60:
+
+                age_group = "31-60"
+
+            elif age <= 90:
+
+                age_group = "61-90"
+
+            elif age <= 120:
+
+                age_group = "91-120"
+
+            else:
+
+                age_group = "121+"
+
+
+            # =================================================
+            # TOTALS
+            # =================================================
+
+            grand_total += net_amount
+
+            age_group_totals[age_group] += net_amount
+
+
+            # =================================================
+            # ROW
+            # =================================================
+
+            rows.append({
+
+                "ledger_name":
+                    ledger_name,
+
+                "bill_ref_no":
+                    bill_ref_no,
+
+                "due_date":
+                    due_date.isoformat(),
+
+                "new_due_date":
+                    due_date.isoformat(),
+
+                "net_amount":
+                    net_amount,
+
+                "age":
+                    age,
+
+                "age_group":
+                    age_group,
+
+                "voucher_no":
+                    row.get("voucher_no"),
+
+                "voucher_date":
+                    (
+                        parse_report_date(
+                            row.get("voucher_date")
+                        ).isoformat()
+                        if parse_report_date(
+                            row.get("voucher_date")
+                        )
+                        else None
+                    ),
+
+                "party_name":
+                    str(
+                        row.get("party_name") or ""
+                    ).strip(),
+
+                "company_name":
+                    str(
+                        row.get("company_name") or ""
+                    ).strip()
+            })
+
+
+        # =====================================================
+        # SORT
+        # =====================================================
+
+        rows.sort(
+            key=lambda row: (
+                str(
+                    row["ledger_name"]
+                ).lower(),
+
+                row["due_date"] or ""
+            )
+        )
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "as_on":
+                as_on_date.isoformat(),
+
+            "rows":
+                rows,
+
+            "grand_total":
+                grand_total,
+
+            "age_group_totals":
+                age_group_totals,
+
+            "total_records":
+                len(rows)
+        })
+
+
+    except Exception as error:
+
+        print(
+            "OUTSTANDING DEBTORS ERROR:",
+            error
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+        
+        
+@app.route("/ageing-level")
+def ageing_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("ageing-level.html")
+
+
+@app.route("/api/ageing-level")
+def ageing_level_data():
+
+    if "user" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+
+        as_on = request.args.get("as_on")
+
+        if as_on:
+            as_on_date = datetime.strptime(
+                as_on,
+                "%Y-%m-%d"
+            ).date()
+        else:
+            as_on_date = date.today()
+
+        db = connect()
+        cursor = db.cursor(dictionary=True)
+
+        ledger_column = quote_identifier("LedgerName")
+        due_date_column = quote_identifier("bill_due_dt")
+        amount_column = quote_identifier("Netmount")
+        group_column = quote_identifier("Group")
+
+        query = f"""
+            SELECT
+                {ledger_column} AS ledger_name,
+                {due_date_column} AS bill_due_dt,
+                {amount_column} AS net_amount
+            FROM view_DayBook
+            WHERE {group_column} = 'Sundry Debtors'
+        """
+
+        cursor.execute(query)
+
+        source_rows = cursor.fetchall()
+
+        cursor.close()
+        db.close()
+
+        ageing = {}
+
+        for row in source_rows:
+
+            ledger = row.get("ledger_name") or ""
+
+            amount = row.get("net_amount") or 0
+
+            try:
+                amount = float(amount)
+            except:
+                amount = 0
+
+            due_date = row.get("bill_due_dt")
+
+            # -----------------------------------------------
+            # On Account
+            # -----------------------------------------------
+
+            if not due_date:
+                if ledger not in ageing:
+                    ageing[ledger] = {
+                        "0-30": 0,
+                        "31-60": 0,
+                        "61-90": 0,
+                        "91-120": 0,
+                        "121+": 0,
+                        "on_account": 0
+                    }
+
+                ageing[ledger]["on_account"] += amount
+
+                continue
+
+            if isinstance(due_date, datetime):
+                due_date = due_date.date()
+
+            age = (
+                as_on_date - due_date
+            ).days
+
+            if age < 0:
+                age = 0
+
+            if ledger not in ageing:
+                ageing[ledger] = {
+                    "0-30": 0,
+                    "31-60": 0,
+                    "61-90": 0,
+                    "91-120": 0,
+                    "121+": 0,
+                    "on_account": 0
+                }
+
+            if age <= 30:
+                ageing[ledger]["0-30"] += amount
+
+            elif age <= 60:
+                ageing[ledger]["31-60"] += amount
+
+            elif age <= 90:
+                ageing[ledger]["61-90"] += amount
+
+            elif age <= 120:
+                ageing[ledger]["91-120"] += amount
+
+            else:
+                ageing[ledger]["121+"] += amount
+
+        rows = []
+
+        for ledger, values in ageing.items():
+
+            grand_total = (
+                values["0-30"] +
+                values["31-60"] +
+                values["61-90"] +
+                values["91-120"] +
+                values["121+"] +
+                values["on_account"]
+            )
+
+            rows.append({
+                "ledger_name": ledger,
+                "0_30": values["0-30"],
+                "31_60": values["31-60"],
+                "61_90": values["61-90"],
+                "91_120": values["91-120"],
+                "121_plus": values["121+"],
+                "on_account": values["on_account"],
+                "grand_total": grand_total
+            })
+
+        rows.sort(
+            key=lambda x: x["ledger_name"].lower()
+        )
+
+        return jsonify({
+            "as_on": as_on_date.isoformat(),
+            "rows": rows
+        })
+
+    except Exception as e:
+
+        print(
+            "Ageing Level Error:",
+            repr(e)
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+        
+                
 @app.route("/pivot")
 def pivot():
 

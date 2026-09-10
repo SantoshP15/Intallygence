@@ -88,8 +88,8 @@ const reportData = {
 
         items: [
             "Entity Level",
-            "Business Type",
-            "Customer Level",
+            "Outstanding Debtors",
+            "Ageing Level",
             "Adverse Debtor",
             "Overdue Debtor",
             "Unadjusted Debtors",
@@ -108,8 +108,8 @@ const reportData = {
         items: [
             "Entity Level",
             "Business Type",
-            "Customer Level",
-            "Creditor <10K",
+            "Outstanding Creditors",
+            "Ageing Level",
             "Adverse Creditors",
             "Overdue Creditors",
             "unadjusted creditors",
@@ -226,6 +226,11 @@ function openReportModal(categoryKey) {
                 categoryKey === "purchase" && item === "Entity";
             const PurchaseCustomerLevelLink =
                 categoryKey === "purchase" && item === "Customer Level";
+
+            const OutstandingDebtorsLink =
+                categoryKey === "debtors" && item === "Outstanding Debtors";
+            const AgeingLevelLink =
+                categoryKey === "debtors" && item === "Ageing Level";
             const reportLink = customerLevelLink
                 ? "/customer-level"
                 : inventoryLevelLink
@@ -256,6 +261,10 @@ function openReportModal(categoryKey) {
                 ? "/purchase-entity-level"
                 : PurchaseCustomerLevelLink
                 ? "/purchase-customer-level"
+                : OutstandingDebtorsLink
+                ? "/outstanding-debtors"
+                : AgeingLevelLink
+                ? "/ageing-level"
                 : "#";
 
             const isClickable =
@@ -264,7 +273,7 @@ function openReportModal(categoryKey) {
                 itemwiseCustomerLink || purchaseItemwiseCustomerLink ||
                 salesRegisterLink || purchaseRegisterLink || customerGrowthLink ||
                 salesReturnLink || entityLevelLink || purchaseCustomerGrowthLink ||
-                purchaseEntityLevelLink || PurchaseCustomerLevelLink;
+                purchaseEntityLevelLink || PurchaseCustomerLevelLink || OutstandingDebtorsLink || AgeingLevelLink;
 
             return `
 
