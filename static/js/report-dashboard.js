@@ -406,8 +406,7 @@ function formatDashboardAmount(amount, format, includeUnit = true) {
     };
     const value = amount / divisors[format];
     const formatted = new Intl.NumberFormat("en-IN", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 0
     }).format(value);
 
     return `₹${formatted}${includeUnit ? suffixes[format] : ""}`;
@@ -448,7 +447,7 @@ const ytdPnlRows = [
     ["Less: Cost of Goods Sold", "55.90 Cr", "59.80 Cr", "7.0%", ""],
     ["Gross Profit", "32.50 Cr", "36.40 Cr", "12.0%", "highlight"],
     ["Gross Profit %", "36.8%", "37.8%", "1.0%", "percent"],
-    ["Less: Operating Expenses", "23.30 Cr", "24.50 Cr", "5.2%", ""],
+    ["Less: Operating Expenses", "23 Cr", "25 Cr", "5%", ""],
     ["Operating Profit", "9.20 Cr", "11.90 Cr", "29.3%", "highlight"],
     ["Operating Profit %", "10.4%", "12.4%", "2.0%", "percent"],
     ["Other Income", "1.30 Cr", "1.60 Cr", "23.1%", ""],
@@ -520,10 +519,43 @@ const settingsPopup = document.getElementById("settingsPopup");
 const switchCompanyBtn = document.getElementById("switchCompanyBtn");
 const companySelector = document.getElementById("companySelector");
 const activeCompanyName = document.getElementById("activeCompanyName");
+const companyNameDisplays = [
+    ...document.querySelectorAll(".company-name-display")
+];
 const selectAllCompanies = document.getElementById("selectAllCompanies");
 const companyInputs = [
     ...document.querySelectorAll('input[name="active-company"]')
 ];
+
+const selectedCompanyNames = JSON.parse(
+    companySelector?.dataset.selectedCompanies || "[]"
+);
+
+companyInputs.forEach(input => {
+    input.checked = selectedCompanyNames.includes(input.value);
+});
+
+async function saveCompanySelection() {
+    const companies = companyInputs
+        .filter(input => input.checked)
+        .map(input => input.value);
+
+    const response = await fetch(
+        "/api/company-selection",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ companies })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Unable to save company selection.");
+    }
+}
 
 function closeCompanySelector() {
     if (!switchCompanyBtn || !companySelector) return;
@@ -552,6 +584,22 @@ switchCompanyBtn.addEventListener("click", function () {
 function updateActiveCompanyName() {
     let selectedCompanies = companyInputs.filter(input => input.checked);
 
+    companyInputs.forEach(input => {
+        input.closest(".company-option")?.classList.toggle(
+            "is-selected",
+            input.checked
+        );
+    });
+
+    selectAllCompanies.closest(".company-option")?.classList.toggle(
+        "is-selected",
+        selectAllCompanies.checked
+    );
+    selectAllCompanies.closest(".company-option")?.classList.toggle(
+        "is-indeterminate",
+        selectAllCompanies.indeterminate
+    );
+
     // The dashboard must always have an active company.
     if (selectedCompanies.length === 0 && companyInputs.length > 0) {
         companyInputs[0].checked = true;
@@ -569,6 +617,12 @@ function updateActiveCompanyName() {
         }
     }
 
+    if (selectedCompanies.length > 0) {
+        companyNameDisplays.forEach(display => {
+            display.textContent = selectedCompanies[0].value;
+        });
+    }
+
     if (selectAllCompanies) {
         selectAllCompanies.checked = selectedCompanies.length === companyInputs.length;
         selectAllCompanies.indeterminate = selectedCompanies.length > 0 &&
@@ -578,16 +632,23 @@ function updateActiveCompanyName() {
 
 selectAllCompanies.addEventListener("change", function () {
     companyInputs.forEach((input, index) => {
-        // Clearing Select All retains the first company as the active one.
         input.checked = this.checked || index === 0;
     });
 
     updateActiveCompanyName();
+    saveCompanySelection().catch(console.error);
 });
 
 companyInputs.forEach(input => {
-    input.addEventListener("change", function () {
+    input.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        companyInputs.forEach(companyInput => {
+            companyInput.checked = companyInput === this;
+        });
+
         updateActiveCompanyName();
+        saveCompanySelection().catch(console.error);
     });
 });
 

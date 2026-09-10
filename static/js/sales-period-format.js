@@ -362,6 +362,11 @@ function initSalesPeriodFormat(onPeriodSelected) {
                             `.format-submenu[data-submenu="${button.dataset.parent}"]`
                         );
 
+                    if (button.dataset.parent === "CUSTOM") {
+                        selectedFormat = "CUSTOM";
+                        updateDisplay();
+                    }
+
                     formatMenu
                         .querySelectorAll(
                             ".format-submenu"
@@ -654,8 +659,7 @@ function renderSalesComparison(
         (Number(value) || 0).toLocaleString(
             "en-IN",
             {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                maximumFractionDigits: 0
             }
         );
 

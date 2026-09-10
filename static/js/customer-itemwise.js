@@ -46,8 +46,7 @@ function formatNumber(value) {
     const number = Number(value) || 0;
 
     return number.toLocaleString("en-IN", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 0
     });
 }
 
@@ -1049,8 +1048,6 @@ function renderReport(report) {
                     Item
                 </th>
 
-                ${monthHeaders}
-
                 <th
                     rowspan="2"
                     class="sortable-header"
@@ -1066,6 +1063,8 @@ function renderReport(report) {
                 >
                     Total %
                 </th>
+
+                ${monthHeaders}
 
             </tr>
 
@@ -1176,8 +1175,6 @@ function renderReport(report) {
                                 ${escapeHtml(item)}
                             </td>
 
-                            ${monthCells}
-
                             <td class="total">
                                 ${formatNumber(row.total)}
                             </td>
@@ -1187,6 +1184,8 @@ function renderReport(report) {
                                     row.total_percent
                                 )}
                             </td>
+
+                            ${monthCells}
 
                         </tr>
                     `;
@@ -1266,8 +1265,6 @@ function renderReport(report) {
                     Grand Total
                 </td>
 
-                ${monthTotals}
-
                 <td>
                     ${formatNumber(
                         grandTotal
@@ -1277,6 +1274,8 @@ function renderReport(report) {
                 <td>
                     100.00%
                 </td>
+
+                ${monthTotals}
 
             </tr>
 

@@ -42,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const number = Number(value || 0);
 
         return number.toLocaleString("en-IN", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            maximumFractionDigits: 0
         });
     }
 

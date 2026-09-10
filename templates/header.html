@@ -16,7 +16,7 @@
 
     <!-- Active Company -->
         <div class="active-company">
-            <strong id="activeCompanyName">{{ company_name }}</strong>
+            <strong id="activeCompanyName" class="company-name-display">{{ company_name }}</strong>
         </div>
 
     <div class="dashboard-user">
@@ -84,7 +84,7 @@
 
                         <div class="profile-item">
                             <label>Organisation</label>
-                            <span>{{ company_name }}</span>
+                            <span class="company-name-display">{{ company_name }}</span>
                         </div>
 
                         <div class="profile-item">
@@ -186,6 +186,7 @@
                     class="company-selector"
                     id="companySelector"
                     aria-label="Choose company"
+                    data-selected-companies='{{ selected_companies|tojson }}'
                 >
 
                     <legend>Choose company</legend>
@@ -198,15 +199,17 @@
                         <span>Select All</span>
                     </label>
 
-                    <label class="company-option">
-                        <input
-                            type="checkbox"
-                            name="active-company"
-                            value="{{ company_name }}"
-                            checked
-                        >
-                        <span>{{ company_name }}</span>
-                    </label>
+                    {% for name in company_names %}
+                        <label class="company-option">
+                            <input
+                                type="checkbox"
+                                name="active-company"
+                                value="{{ name }}"
+                                {% if name in selected_companies %}checked{% endif %}
+                            >
+                            <span>{{ name }}</span>
+                        </label>
+                    {% endfor %}
 
 
                 </fieldset>
