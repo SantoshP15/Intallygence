@@ -1,0 +1,633 @@
+/* =========================================================
+   PAGE
+========================================================= */
+/* =========================================================
+   GLOBAL FONT
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Inter", sans-serif;
+    background: #f5f8fa;
+}
+
+body * {
+    font-family: "Inter", sans-serif;
+}
+
+.customer-report {
+    width: 100%;
+    height: 100vh;
+    padding: 12px 3.5%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #f5f8fa;
+}
+
+
+/* =========================================================
+   PAGE CONTENT
+========================================================= */
+
+.page {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+    padding: 4px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* =========================================================
+   REPORT BACK & BACK LINK
+========================================================= */
+
+.report-back {
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1e4f91;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+}
+
+.back-link:hover {
+    color: #15487f;
+}
+
+.back-link i {
+    font-size: 12px;
+    transition: transform 0.15s ease;
+}
+
+.back-link:hover i {
+    transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+}
+
+
+.crumb {
+
+    font-size: 12px;
+
+    color: #7b8794;
+
+    margin-bottom: 4px;
+
+}
+
+
+.report-header h1 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    color: #18212f;
+
+}
+
+
+.report-header p {
+
+    margin: 4px 0 0;
+
+    font-size: 13px;
+
+    color: #7b8794;
+
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.btn {
+
+    border: 0;
+
+    border-radius: 6px;
+
+    padding: 8px 14px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    font-weight: 100;
+    font-family: inherit;
+}
+
+
+.btn.primary {
+
+    background: #11a54f;
+
+    color: white;
+
+}
+
+
+.btn.secondary {
+
+    background: white;
+
+    border: 1px solid #d9e0e7;
+
+    color: #263445;
+
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 0 0 6px 0;
+    flex-shrink: 0;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.filter-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #697586;
+}
+
+.filter-group select,
+.filter-group input {
+    height: 31px;
+    min-width: 150px;
+    padding: 0 10px;
+    border: 1px solid #d7dee7;
+    border-radius: 5px;
+    background: white;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.search-group {
+    margin-left: auto;
+}
+
+.search-group input {
+    min-width: 230px;
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary {
+    display: flex;
+    gap: 10px;
+    margin-top: -40px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.summary-card {
+    background: white;
+    border: 1px solid #e1e7ed;
+    border-radius: 7px;
+    padding: 5px 14px;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.summary-card span {
+    font-size: 10px;
+    color: #7b8794;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+
+.summary-card strong {
+    font-size: 14px;
+    color: #1d2735;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.table-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border: 1px solid #dce3ea;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.table-wrap {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: auto;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+
+    font-size: 12px;
+
+}
+
+
+th,
+td {
+
+    border-bottom: 1px solid #e5e9ee;
+
+    border-right: 1px solid #edf0f3;
+
+    padding: 7px 9px;
+
+    height: 30px;
+
+    box-sizing: border-box;
+
+}
+
+
+th {
+    font-size: 12px;
+    font-weight: 700;
+    color: #17212f;
+    background: #f2f5f7;
+    text-align: right;
+}
+
+
+td {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: right;
+    color: #263445;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+========================================================= */
+
+th:nth-child(1),
+td:nth-child(1) {
+
+    width: 23%;
+
+}
+
+
+th:nth-child(2),
+td:nth-child(2) {
+
+    width: 18%;
+
+}
+
+
+th:nth-child(3),
+td:nth-child(3),
+th:nth-child(4),
+td:nth-child(4),
+th:nth-child(5),
+td:nth-child(5),
+th:nth-child(6),
+td:nth-child(6) {
+
+    width: 10%;
+
+}
+
+
+th:nth-child(7),
+td:nth-child(7) {
+
+    width: 9%;
+
+}
+
+
+/* =========================================================
+   GROUP HEADER
+========================================================= */
+
+.group-header th {
+    background: #eaf1f5;
+    text-align: center;
+    height: 28px;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.column-header th {
+    background: #f3f6f8;
+    text-align: right;
+    position: sticky;
+    top: 28px;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   LEDGER ROW
+========================================================= */
+
+.ledger-row td {
+    background: #f8fafb;
+    font-weight: 400;
+}
+
+
+.ledger-row .ledger-name {
+
+    text-align: left;
+
+}
+
+
+.ledger-total-label {
+
+    text-align: left;
+
+    color: #7a8794;
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   BILL ROW
+========================================================= */
+
+.bill-row td {
+
+    background: white;
+
+}
+
+
+.bill-row td:first-child {
+
+    border-right: 0;
+
+}
+
+
+.bill-ref {
+
+    text-align: left;
+
+    padding-left: 28px;
+
+    color: #4e5d6c;
+
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.expand-btn {
+
+    width: 19px;
+
+    height: 19px;
+
+    margin-right: 7px;
+
+    padding: 0;
+
+    border: 1px solid #cbd4dd;
+
+    background: white;
+
+    border-radius: 3px;
+
+    cursor: pointer;
+
+    line-height: 16px;
+
+    font-size: 13px;
+
+    color: #354454;
+
+    vertical-align: middle;
+
+}
+
+
+.expand-btn:hover {
+
+    background: #eef3f7;
+
+}
+
+
+/* =========================================================
+   GRAND TOTAL
+========================================================= */
+
+.grand-total {
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+tfoot th {
+
+    position: sticky;
+
+    bottom: 0;
+
+    background: #eaf1f5;
+
+    border-top: 1px solid #cfd8e0;
+
+    font-weight: 700;
+
+}
+
+
+tfoot th:first-child {
+
+    text-align: left;
+
+}
+
+
+/* =========================================================
+   STATES
+========================================================= */
+
+.loading,
+.empty,
+.error {
+
+    text-align: center !important;
+
+    padding: 30px !important;
+
+}
+
+
+.loading {
+
+    color: #718096;
+
+}
+
+
+.empty {
+
+    color: #8995a3;
+
+}
+
+
+.error {
+
+    color: #c53030;
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.table-wrap::-webkit-scrollbar {
+
+    width: 8px;
+
+    height: 8px;
+
+}
+
+
+.table-wrap::-webkit-scrollbar-thumb {
+
+    background: #cbd5df;
+
+    border-radius: 10px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .toolbar {
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .search-group {
+
+        margin-left: 0;
+
+    }
+
+
+    .table-wrap {
+
+        overflow-x: auto;
+
+    }
+
+
+    table {
+
+        min-width: 1050px;
+
+    }
+
+}

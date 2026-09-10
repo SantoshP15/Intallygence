@@ -12,6 +12,12 @@
 
     <title>Ageing Level</title>
 
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/header.css') }}"
@@ -31,6 +37,17 @@
         {% include 'header.html' %}
 
         <div class="page">
+
+            <div class="report-back">
+                <a
+                    class="back-link"
+                    href="{{ url_for('report_dashboard') }}"
+                    aria-label="Back to Reports"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+            </div>
 
             <header class="header">
 
@@ -150,39 +167,16 @@
                     <table>
 
                         <thead>
-
                             <tr>
-
-                                <th class="left">
-                                    Row Labels
-                                </th>
-
-                                <th>
-                                    0-30
-                                </th>
-
-                                <th>
-                                    31-60
-                                </th>
-
-                                <th>
-                                    61-90
-                                </th>
-
-                                <th>
-                                    91-120
-                                </th>
-
-                                <th>
-                                    121+
-                                </th>
-
-                                <th>
-                                    Grand Total
-                                </th>
-
+                                <th class="left">Row Labels</th>
+                                <th>On Account</th>
+                                <th>0-30</th>
+                                <th>31-60</th>
+                                <th>61-90</th>
+                                <th>91-120</th>
+                                <th>121+</th>
+                                <th>Grand Total</th>
                             </tr>
-
                         </thead>
 
 
@@ -196,7 +190,9 @@
                                 <td>
                                     Grand Total
                                 </td>
-
+                                <td id="total_on_account">
+                                    0.00
+                                </td>
                                 <td id="total_0_30">
                                     0.00
                                 </td>

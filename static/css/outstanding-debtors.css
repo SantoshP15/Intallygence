@@ -19,6 +19,34 @@ html,body{
     display: flex;
     flex-direction: column;
 }
+/* =========================================================
+   REPORT BACK & BACK LINK
+   ========================================================= */
+.report-back {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1e4f91;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+}
+.back-link:hover {
+    color: #15487f;
+}
+.back-link i {
+    font-size: 12px;
+    transition: transform 0.15s ease;
+}
+.back-link:hover i {
+    transform: translateX(-2px);
+}
 .header{
     display:flex;
     align-items:center;
@@ -189,7 +217,8 @@ th{
     color:#243e4c;
     text-align:right;
     white-space:nowrap;
-    font-size:10px
+    font-size:12px;
+    font-weight:700
 }
 th:first-child{
     width:31%
@@ -230,7 +259,8 @@ td{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    font-size:10.5px
+    font-size:12px;
+    font-weight:400
 }
 td:first-child{
     text-align:left;

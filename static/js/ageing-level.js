@@ -175,15 +175,13 @@ function render() {
 
 
             tr.innerHTML = `
-
                 <td class="left">
-
-                    <span class="expand">
-                        +
-                    </span>
-
+                    <span class="expand">+</span>
                     ${esc(row.ledger_name)}
+                </td>
 
+                <td>
+                     ${num(row.on_account)}
                 </td>
 
                 <td>
@@ -209,7 +207,6 @@ function render() {
                 <td>
                     ${num(row.grand_total)}
                 </td>
-
             `;
 
 
@@ -245,7 +242,7 @@ function summary() {
 
 
     const totals = {
-
+        "on_account": 0,
         "0_30": 0,
         "31_60": 0,
         "61_90": 0,
@@ -273,6 +270,8 @@ function summary() {
         }
     );
 
+    $("total_on_account").textContent =
+        num(totals["on_account"]);
 
     $("total_0_30").textContent =
         num(totals["0_30"]);
@@ -353,6 +352,7 @@ function exportCSV() {
 
     const headers = [
         "Ledger Name",
+        "On Account",
         "0-30",
         "31-60",
         "61-90",
@@ -369,6 +369,7 @@ function exportCSV() {
         ...shown.map(
             row => [
                 row.ledger_name,
+                row.on_account,
                 row["0_30"],
                 row["31_60"],
                 row["61_90"],
