@@ -110,7 +110,7 @@ const reportData = {
             "Business Type",
             "Outstanding Creditors",
             "Ageing Level",
-            "Adverse Creditors",
+            "Ledger Movement",
             "Overdue Creditors",
             "unadjusted creditors",
             "Unadjusted FX Creditors",
@@ -231,9 +231,11 @@ function openReportModal(categoryKey) {
                 categoryKey === "debtors" && item === "Outstanding Debtors";
             const AgeingLevelLink =
                 categoryKey === "debtors" && item === "Ageing Level";
-
             const ledgermovementLink =
                 categoryKey === "debtors" && item === "Ledger Movement";
+
+            const OutstandingCreditorsLink =
+                categoryKey === "creditors" && item === "Outstanding Creditors";    
             const reportLink = customerLevelLink
                 ? "/customer-level"
                 : inventoryLevelLink
@@ -270,6 +272,8 @@ function openReportModal(categoryKey) {
                 ? "/ageing-level"
                 : ledgermovementLink
                 ? "/ledger-movement"
+                : OutstandingCreditorsLink
+                ? "/outstanding-creditors"
                 : "#";
 
             const isClickable =
@@ -278,7 +282,7 @@ function openReportModal(categoryKey) {
                 itemwiseCustomerLink || purchaseItemwiseCustomerLink ||
                 salesRegisterLink || purchaseRegisterLink || customerGrowthLink ||
                 salesReturnLink || entityLevelLink || purchaseCustomerGrowthLink ||
-                ledgermovementLink || purchaseEntityLevelLink || PurchaseCustomerLevelLink || OutstandingDebtorsLink || AgeingLevelLink;
+                ledgermovementLink || purchaseEntityLevelLink || PurchaseCustomerLevelLink || OutstandingDebtorsLink || AgeingLevelLink || OutstandingCreditorsLink;
 
             return `
 

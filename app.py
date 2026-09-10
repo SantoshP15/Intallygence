@@ -2857,7 +2857,312 @@ def outstanding_debtors_data():
         return jsonify({
             "error": str(error)
         }), 500
+
+
+@app.route("/outstanding-creditors")
+def outstanding_creditors():
+
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template(
+        "outstanding-creditors.html"
+    )    
+
+
+@app.route("/api/outstanding-creditors")
+def outstanding_creditors_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Not logged in"
+        }), 401
+
+    try:
+
+        # =====================================================
+        # AS-ON DATE
+        # =====================================================
+
+        as_on = request.args.get("as_on")
+
+        if as_on:
+            try:
+                as_on_date = datetime.strptime(
+                    as_on,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid as_on date. Use YYYY-MM-DD."
+                }), 400
+        else:
+            as_on_date = date.today()
+
+
+        # =====================================================
+        # COLUMN MAPPING
+        # =====================================================
+
+        ledger_column = OUTSTANDING_DEBTORS_COLUMNS["ledger"]
+        bill_column = OUTSTANDING_DEBTORS_COLUMNS["bill_ref"]
+        due_date_column = OUTSTANDING_DEBTORS_COLUMNS["due_date"]
+        amount_column = OUTSTANDING_DEBTORS_COLUMNS["amount"]
+        voucher_column = OUTSTANDING_DEBTORS_COLUMNS["voucher_no"]
+        voucher_date_column = OUTSTANDING_DEBTORS_COLUMNS["voucher_date"]
+        party_column = OUTSTANDING_DEBTORS_COLUMNS["party"]
+        company_column = OUTSTANDING_DEBTORS_COLUMNS["company"]
+        group_column=OUTSTANDING_DEBTORS_COLUMNS["group"]
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+
+        cursor = db.cursor(dictionary=True)
+
+
+        try:
+
+            query = f"""
+                SELECT
+                    {ledger_column} AS ledger_name,
+                    {bill_column} AS bill_ref_no,
+                    {due_date_column} AS bill_due_dt,
+                    {amount_column} AS net_amount,
+                    {voucher_column} AS voucher_no,
+                    {voucher_date_column} AS voucher_date,
+                    {party_column} AS party_name,
+                    {company_column} AS company_name
+                FROM view_DayBook
+                where {group_column}='Sundry Creditors'
+                ORDER BY
+                    {ledger_column},
+                    {due_date_column},
+                    {bill_column}
+            """
+
+            cursor.execute(query)
+
+            source_rows = cursor.fetchall()
         
+        finally:
+
+            cursor.close()
+            db.close()
+
+
+        # =====================================================
+        # BUILD REPORT
+        # =====================================================
+
+        rows = []
+
+        grand_total = 0
+
+        age_group_totals = {
+            "0-30": 0,
+            "31-60": 0,
+            "61-90": 0,
+            "91-120": 0,
+            "121+": 0,
+            "On Account": 0
+        }
+
+        for row in source_rows:
+
+            ledger_name = str(
+                row.get("ledger_name") or ""
+            ).strip()
+
+            bill_ref_no = str(
+                row.get("bill_ref_no") or ""
+            ).strip()
+
+            # =================================================
+            # AMOUNT
+            # =================================================
+
+            try:
+                net_amount = float(
+                    row.get("net_amount") or 0
+            )
+            except (TypeError, ValueError):
+                net_amount = 0
+
+
+            # =================================================
+            # DUE DATE
+            # =================================================
+
+            due_date = parse_report_date(
+                row.get("bill_due_dt")
+            )
+
+
+            # =================================================
+            # ON ACCOUNT
+            # =================================================
+
+            if not due_date:
+
+                age = None
+                age_group = "On Account"
+
+            else:
+
+                # =================================================
+                # AGE
+                # =================================================
+
+                age = (
+                    as_on_date - due_date
+                ).days
+
+                if age < 0:
+                    age = 0
+
+
+                # =================================================
+                # AGE GROUP
+                # =================================================
+
+                if age <= 30:
+                    age_group = "0-30"
+
+                elif age <= 60:
+                    age_group = "31-60"
+
+                elif age <= 90:
+                    age_group = "61-90"
+
+                elif age <= 120:
+                    age_group = "91-120"
+
+                else:
+                    age_group = "121+"
+
+
+
+            # =================================================
+            # TOTALS
+            # =================================================
+
+            grand_total += net_amount
+
+            age_group_totals[age_group] += net_amount
+
+
+            # =================================================
+            # ROW
+            # =================================================
+
+            rows.append({
+
+                "ledger_name":
+                    ledger_name,
+
+                "bill_ref_no":
+                    bill_ref_no,
+
+                "due_date": (
+                    due_date.isoformat()
+                    if due_date
+                    else None
+                ),
+
+                "new_due_date": (
+                    due_date.isoformat()
+                    if due_date
+                    else None
+                ),
+
+                "net_amount":
+                    net_amount,
+
+                "age":
+                    age,
+
+                "age_group":
+                    age_group,
+
+                "voucher_no":
+                    row.get("voucher_no"),
+
+                "voucher_date":
+                    (
+                        parse_report_date(
+                            row.get("voucher_date")
+                        ).isoformat()
+                        if parse_report_date(
+                            row.get("voucher_date")
+                        )
+                        else None
+                    ),
+
+                "party_name":
+                    str(
+                        row.get("party_name") or ""
+                    ).strip(),
+
+                "company_name":
+                    str(
+                        row.get("company_name") or ""
+                    ).strip()
+            })
+
+
+        # =====================================================
+        # SORT
+        # =====================================================
+
+        rows.sort(
+            key=lambda row: (
+                str(
+                    row["ledger_name"]
+                ).lower(),
+
+                row["due_date"] or ""
+            )
+        )
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "as_on":
+                as_on_date.isoformat(),
+
+            "rows":
+                rows,
+
+            "grand_total":
+                grand_total,
+
+            "age_group_totals":
+                age_group_totals,
+
+            "total_records":
+                len(rows)
+        })
+
+
+    except Exception as error:
+
+        print(
+            "OUTSTANDING CREDITORS ERROR:",
+            error
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
 # =========================================================
 # LEDGER WISE BILL WISE REPORT
 # =========================================================

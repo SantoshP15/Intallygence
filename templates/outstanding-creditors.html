@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+    >
+
+    <title>Outstanding Creditors</title>
+
+
+    <!-- COMMON HEADER CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/header.css') }}"
+    >
+
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- OUTSTANDING CREDITORS CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/outstanding-creditors.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         COMMON APPLICATION HEADER
+         ===================================================== -->
+
+    <main class="customer-report">
+
+        {% include 'header.html' %}
+
+
+        <!-- =====================================================
+             OUTSTANDING CREDITORS CONTENT
+             ===================================================== -->
+
+        <div class="page">
+
+            <div class="report-back">
+                <a
+                    class="back-link"
+                    href="{{ url_for('report_dashboard') }}"
+                    aria-label="Back to Reports"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+            </div>
+
+            <header class="header">
+
+                <div>
+
+                    <div class="crumb">
+                        Creditors / Outstanding Creditors
+                    </div>
+
+                    <h1>
+                        Outstanding Creditors
+                    </h1>
+
+                    <p>
+                        Outstanding creditor bills from view_DayBook
+                    </p>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button
+                        id="refreshBtn"
+                        class="btn secondary"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                    <button
+                        id="exportBtn"
+                        class="btn primary"
+                    >
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================================
+                 FILTER TOOLBAR
+                 ===================================================== -->
+
+            <section class="toolbar">
+
+                <label>
+                    Group
+
+                    <select id="groupSelect">
+                        <option>Sundry Debtors</option>
+                        <option>All</option>
+                    </select>
+
+                </label>
+
+
+                <label>
+                    As On
+
+                    <input
+                        id="asOnDate"
+                        type="date"
+                    >
+
+                </label>
+
+
+                <label class="search">
+                    Search
+
+                    <input
+                        id="searchInput"
+                        type="search"
+                        placeholder="Ledger / bill no..."
+                    >
+
+                </label>
+
+
+                <label>
+                    Age Group
+
+                    <select id="ageGroupSelect">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option>
+                            0-30
+                        </option>
+
+                        <option>
+                            31-60
+                        </option>
+
+                        <option>
+                            61-90
+                        </option>
+
+                        <option>
+                            91-120
+                        </option>
+
+                        <option>
+                            121+
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <button
+                    id="clearBtn"
+                    class="clear"
+                >
+                    Clear
+                </button>
+
+            </section>
+
+
+            <!-- =====================================================
+                 SUMMARY
+                 ===================================================== -->
+
+            <section class="summary">
+
+                <div>
+
+                    <small>
+                        Ledger Count
+                    </small>
+
+                    <b id="ledgerCount">
+                        0
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        Bill Count
+                    </small>
+
+                    <b id="billCount">
+                        0
+                    </b>
+
+                </div>
+
+
+                <div class="total">
+
+                    <small>
+                        Net Outstanding
+                    </small>
+
+                    <b id="netOutstanding">
+                        0.00
+                    </b>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 TABLE
+                 ===================================================== -->
+
+            <main class="table-card">
+
+                <div class="status">
+
+                    <span id="status">
+                        Loading...
+                    </span>
+
+                    <span id="loading"></span>
+
+                </div>
+
+
+                <div class="scroll">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="left">
+
+                                    Ledger Name
+
+                                    <button
+                                        class="sort"
+                                        data-sort="ledger_name"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+
+                                <th>
+
+                                    Bill Ref No
+
+                                    <button
+                                        class="sort"
+                                        data-sort="bill_ref_no"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+
+                                <th>
+
+                                    New Due Date
+
+                                    <button
+                                        class="sort"
+                                        data-sort="new_due_date"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+
+                                <th>
+
+                                    Sum of Net Amount
+
+                                    <button
+                                        class="sort"
+                                        data-sort="net_amount"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+
+                                <th>
+
+                                    Age
+
+                                    <button
+                                        class="sort"
+                                        data-sort="age"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+
+                                <th>
+
+                                    Age Group
+
+                                    <button
+                                        class="sort"
+                                        data-sort="age_group"
+                                    >
+                                        ↕
+                                    </button>
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="tbody"></tbody>
+
+
+                        <tfoot>
+
+                            <tr>
+
+                                <td colspan="3">
+                                    Grand Total
+                                </td>
+
+                                <td id="grandTotal">
+                                    0.00
+                                </td>
+
+                                <td></td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="empty"
+                    class="empty"
+                    hidden
+                >
+                    No outstanding debtor records found.
+                </div>
+
+            </main>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         COMMON HEADER JS
+         ===================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='js/header.js') }}"
+    ></script>
+
+
+    <!-- =====================================================
+         OUTSTANDING DEBTORS JS
+         ===================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='js/outstanding-creditors.js') }}"
+    ></script>
+
+</body>
+
+</html>
