@@ -235,7 +235,12 @@ function openReportModal(categoryKey) {
                 categoryKey === "debtors" && item === "Ledger Movement";
 
             const OutstandingCreditorsLink =
-                categoryKey === "creditors" && item === "Outstanding Creditors";    
+                categoryKey === "creditors" && item === "Outstanding Creditors"; 
+            const CreditorsAgeingLevelLink =
+                categoryKey === "creditors" && item === "Ageing Level";
+            const CreditorsLedgerMovementLink =
+                categoryKey === "creditors" && item === "Ledger Movement";
+                
             const reportLink = customerLevelLink
                 ? "/customer-level"
                 : inventoryLevelLink
@@ -274,6 +279,10 @@ function openReportModal(categoryKey) {
                 ? "/ledger-movement"
                 : OutstandingCreditorsLink
                 ? "/outstanding-creditors"
+                : CreditorsAgeingLevelLink
+                ? "/creditors-ageing-level"
+                : CreditorsLedgerMovementLink
+                ? "/creditors-ledger-movement"
                 : "#";
 
             const isClickable =
@@ -282,7 +291,9 @@ function openReportModal(categoryKey) {
                 itemwiseCustomerLink || purchaseItemwiseCustomerLink ||
                 salesRegisterLink || purchaseRegisterLink || customerGrowthLink ||
                 salesReturnLink || entityLevelLink || purchaseCustomerGrowthLink ||
-                ledgermovementLink || purchaseEntityLevelLink || PurchaseCustomerLevelLink || OutstandingDebtorsLink || AgeingLevelLink || OutstandingCreditorsLink;
+                ledgermovementLink || purchaseEntityLevelLink || PurchaseCustomerLevelLink 
+                || OutstandingDebtorsLink || AgeingLevelLink || OutstandingCreditorsLink
+                || CreditorsAgeingLevelLink || CreditorsLedgerMovementLink;
 
             return `
 

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Ledger Movement</title>
+
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/creditors-ledger-movement.css') }}">
+
+</head>
+
+
+<body>
+
+    <main class="customer-report">
+
+        {% include 'header.html' %}
+
+
+        <div class="page">
+
+            <div class="report-back">
+                <a
+                    class="back-link"
+                    href="{{ url_for('report_dashboard') }}"
+                    aria-label="Back to Reports"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+            </div>
+
+            <!-- =========================================
+             HEADER
+        ========================================== -->
+
+            <header class="report-header">
+
+                <div>
+
+                    <div class="crumb">
+                        Debtors / Ledger Movement
+                    </div>
+
+                    <h1>
+                        Ledger Movement
+                    </h1>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button id="refreshBtn" class="btn secondary" type="button">
+                        ↻ Refresh
+                    </button>
+
+
+                    <button id="exportBtn" class="btn primary" type="button">
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =========================================
+             FILTERS
+        ========================================== -->
+
+            <section class="toolbar">
+
+                <!-- <div class="filter-group">
+
+                <label>
+                    Group
+                </label>
+
+                <select id="groupSelect">
+
+                    <option value="Sundry Debtors">
+                        Sundry Debtors
+                    </option>
+
+                </select>
+
+            </div>
+ -->
+
+                <!-- <div class="filter-group">
+
+                <label>
+                    From Date
+                </label>
+
+                <input
+                    type="date"
+                    id="fromDate"
+                >
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>
+                    To Date
+                </label>
+
+                <input
+                    type="date"
+                    id="toDate"
+                >
+
+            </div> -->
+
+
+                <div class="filter-group search-group">
+
+                    <label>
+                        Search Ledger
+                    </label>
+
+                    <input type="text" id="searchInput" placeholder="Search ledger..." autocomplete="off">
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================================
+             SUMMARY
+        ========================================== -->
+
+            <section class="summary">
+
+                <div class="summary-card">
+
+                    <span>
+                        Group
+                    </span>
+
+                    <strong id="summaryGroup">
+                        Sundry Debtors
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        Ledgers
+                    </span>
+
+                    <strong id="ledgerCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <span>
+                        Grand Total
+                    </span>
+
+                    <strong id="summaryTotal">
+                        0.00
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================================
+             TABLE
+        ========================================== -->
+
+            <section class="table-card">
+
+                <div class="table-wrap" id="tableWrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr class="group-header">
+
+                                <th rowspan="2">
+                                    Ledger Name
+                                </th>
+
+                                <th rowspan="2">
+                                    Voucher / Bill Ref No
+                                </th>
+
+                                <th colspan="2">
+                                    Voucher
+                                </th>
+
+                                <th rowspan="2">
+                                    Opening
+                                </th>
+
+                                <th rowspan="2">
+                                    Sales
+                                </th>
+
+                                <th rowspan="2">
+                                    Grand Total
+                                </th>
+
+                            </tr>
+
+
+                            <tr class="column-header">
+
+                                <th>
+                                    Credit Note
+                                </th>
+
+                                <th>
+                                    Journal
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="reportBody">
+
+                            <tr>
+
+                                <td colspan="7" class="loading">
+                                    Loading...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+
+                        <tfoot>
+
+                            <tr>
+
+                                <th colspan="2">
+                                    Grand Total
+                                </th>
+
+                                <th id="totalCreditNote">
+                                    0.00
+                                </th>
+
+                                <th id="totalJournal">
+                                    0.00
+                                </th>
+
+                                <th id="totalOpening">
+                                    0.00
+                                </th>
+
+                                <th id="totalSales">
+                                    0.00
+                                </th>
+
+                                <th id="totalGrand">
+                                    0.00
+                                </th>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='js/header.js') }}"></script>
+
+
+    <script src="{{ url_for('static', filename='js/creditors-ledger-movement.js') }}"></script>
+
+</body>
+
+</html>

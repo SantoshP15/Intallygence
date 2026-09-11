@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+    >
+
+    <title>Ageing Level</title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/header.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/creditors-ageing-level.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <main class="customer-report">
+
+        {% include 'header.html' %}
+
+        <div class="page">
+
+            <div class="report-back">
+                <a
+                    class="back-link"
+                    href="{{ url_for('report_dashboard') }}"
+                    aria-label="Back to Reports"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Reports
+                </a>
+            </div>
+
+            <header class="header">
+
+                <div>
+
+                    <div class="crumb">
+                        Debtors / Ageing Level
+                    </div>
+
+                    <h1>
+                        Ageing Level
+                    </h1>
+
+                    <p>
+                        Debtor ageing analysis from view_DayBook
+                    </p>
+
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        id="refreshBtn"
+                        class="btn secondary"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                    <button
+                        id="exportBtn"
+                        class="btn primary"
+                    >
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <section class="toolbar">
+
+                <label>
+
+                    As On
+
+                    <input
+                        id="asOnDate"
+                        type="date"
+                    >
+
+                </label>
+
+                <label class="search">
+
+                    Search
+
+                    <input
+                        id="searchInput"
+                        type="search"
+                        placeholder="Ledger..."
+                    >
+
+                </label>
+
+                <button
+                    id="clearBtn"
+                    class="clear"
+                >
+                    Clear
+                </button>
+
+            </section>
+
+
+            <section class="summary">
+
+                <div>
+
+                    <small>
+                        Ledger Count
+                    </small>
+
+                    <b id="ledgerCount">
+                        0
+                    </b>
+
+                </div>
+                <div>
+
+                    <small>
+                        Net Outstanding
+                    </small>
+
+                    <b id="netOutstanding">
+                        0.00
+                    </b>
+
+                </div>
+
+            </section>
+
+
+            <main class="table-card">
+
+                <div class="status">
+
+                    <span id="status">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="scroll">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th class="left">Row Labels</th>
+                                <th>On Account</th>
+                                <th>0-30</th>
+                                <th>31-60</th>
+                                <th>61-90</th>
+                                <th>91-120</th>
+                                <th>121+</th>
+                                <th>Grand Total</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="tbody"></tbody>
+
+
+                        <tfoot>
+
+                            <tr>
+
+                                <td>
+                                    Grand Total
+                                </td>
+                                <td id="total_on_account">
+                                    0.00
+                                </td>
+                                <td id="total_0_30">
+                                    0.00
+                                </td>
+
+                                <td id="total_31_60">
+                                    0.00
+                                </td>
+
+                                <td id="total_61_90">
+                                    0.00
+                                </td>
+
+                                <td id="total_91_120">
+                                    0.00
+                                </td>
+
+                                <td id="total_121_plus">
+                                    0.00
+                                </td>
+
+                                <td id="grandTotal">
+                                    0.00
+                                </td>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </main>
+
+
+    <script
+        src="{{ url_for('static', filename='js/header.js') }}"
+    ></script>
+
+    <script
+        src="{{ url_for('static', filename='js/creditors-ageing-level.js') }}"
+    ></script>
+
+</body>
+
+</html>

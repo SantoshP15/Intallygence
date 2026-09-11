@@ -3667,7 +3667,507 @@ def ledger_movement_data():
         if db:
             db.close()
 
-                   
+@app.route("/creditors-ledger-movement")
+def creditors_ledger_movement():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("creditors-ledger-movement.html")
+
+@app.route("/api/creditors-ledger-movement")
+def creditors_ledger_movement_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    db = None
+    cursor = None
+
+    try:
+
+        # =====================================================
+        # PARAMETERS
+        # =====================================================
+
+        selected_group = (
+            request.args.get("group")
+            or "Sundry Creditors"
+        ).strip()
+
+        allowed_groups = {
+            # "Sundry Debtors",
+            "Sundry Creditors"
+        }
+
+        if selected_group not in allowed_groups:
+            return jsonify({
+                "error": "Invalid group."
+            }), 400
+
+
+        from_date = request.args.get("from_date")
+        to_date = request.args.get("to_date")
+
+
+        if from_date:
+            try:
+                from_date_obj = datetime.strptime(
+                    from_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid From Date."
+                }), 400
+        else:
+            from_date_obj = None
+
+
+        if to_date:
+            try:
+                to_date_obj = datetime.strptime(
+                    to_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid To Date."
+                }), 400
+        else:
+            to_date_obj = None
+
+
+        if (
+            from_date_obj
+            and to_date_obj
+            and from_date_obj > to_date_obj
+        ):
+            return jsonify({
+                "error": "From Date cannot be greater than To Date."
+            }), 400
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+
+        cursor = db.cursor(dictionary=True)
+
+
+        ledger_column = quote_identifier(
+            "LedgerName"
+        )
+
+        bill_column = quote_identifier(
+            "bill_ref_no"
+        )
+
+        voucher_column = quote_identifier(
+            "voucher"
+        )
+
+        amount_column = quote_identifier(
+            "Netmount"
+        )
+
+        date_column = quote_identifier(
+            "date"
+        )
+
+        group_column = quote_identifier(
+            "Group"
+        )
+
+
+        # =====================================================
+        # QUERY
+        # =====================================================
+
+        query = f"""
+            SELECT
+
+                {ledger_column} AS ledger_name,
+
+                {bill_column} AS bill_ref_no,
+
+                {voucher_column} AS voucher_type,
+
+                SUM({amount_column}) AS amount
+
+            FROM view_DayBook
+
+            WHERE
+                TRIM({group_column}) = %s
+        """
+
+        query_params = [
+            selected_group
+        ]
+
+
+        # =====================================================
+        # DATE FILTER
+        # =====================================================
+
+        if from_date_obj:
+
+            query += f"""
+                AND {date_column} >= %s
+            """
+
+            query_params.append(
+                from_date_obj
+            )
+
+
+        if to_date_obj:
+
+            query += f"""
+                AND {date_column} <= %s
+            """
+
+            query_params.append(
+                to_date_obj
+            )
+
+
+
+        # =====================================================
+        # GROUP
+        # =====================================================
+
+        query += f"""
+            GROUP BY
+
+                {ledger_column},
+
+                {bill_column},
+
+                {voucher_column}
+
+            ORDER BY
+
+                {ledger_column},
+
+                {bill_column},
+
+                {voucher_column}
+        """
+
+
+        cursor.execute(
+            query,
+            tuple(query_params)
+        )
+
+
+        source_rows = cursor.fetchall()
+
+
+        # =====================================================
+        # BUILD LEDGER STRUCTURE
+        # =====================================================
+
+        ledger_map = {}
+
+
+        voucher_columns = [
+            "Credit Note",
+            "Journal",
+            "Opening",
+            "Sales"
+        ]
+
+
+        for row in source_rows:
+
+            ledger_name = str(
+                row.get("ledger_name") or
+                "Unspecified Ledger"
+            ).strip()
+
+
+            bill_ref_no = str(
+                row.get("bill_ref_no") or
+                "OnAccount"
+            ).strip()
+
+            if not bill_ref_no:
+                bill_ref_no = "OnAccount"
+
+
+            voucher_type = str(
+                row.get("voucher_type") or
+                ""
+            ).strip()
+
+
+            try:
+                amount = float(
+                    row.get("amount") or 0
+                )
+            except (TypeError, ValueError):
+                amount = 0
+
+
+            # -------------------------------------------------
+            # LEDGER
+            # -------------------------------------------------
+
+            if ledger_name not in ledger_map:
+
+                ledger_map[ledger_name] = {
+                    "ledger_name": ledger_name,
+                    "rows": []
+                }
+
+
+            ledger_rows = ledger_map[
+                ledger_name
+            ]["rows"]
+
+
+            # -------------------------------------------------
+            # FIND EXISTING BILL ROW
+            # -------------------------------------------------
+
+            bill_row = None
+
+            for existing in ledger_rows:
+
+                if (
+                    existing["bill_ref_no"]
+                    == bill_ref_no
+                ):
+                    bill_row = existing
+                    break
+
+
+            # -------------------------------------------------
+            # CREATE BILL ROW
+            # -------------------------------------------------
+
+            if bill_row is None:
+
+                bill_row = {
+                    "bill_ref_no": bill_ref_no,
+                    "credit_note": 0,
+                    "journal": 0,
+                    "opening": 0,
+                    "sales": 0,
+                    "grand_total": 0
+                }
+
+                ledger_rows.append(
+                    bill_row
+                )
+
+
+            # -------------------------------------------------
+            # VOUCHER TYPE
+            # -------------------------------------------------
+
+            if voucher_type == "Credit Note":
+
+                bill_row["credit_note"] += amount
+
+            elif voucher_type == "Journal":
+
+                bill_row["journal"] += amount
+
+            elif voucher_type == "Opening":
+
+                bill_row["opening"] += amount
+
+            elif voucher_type == "Sales":
+
+                bill_row["sales"] += amount
+
+            else:
+
+                # Unknown voucher types are not discarded.
+                # Put them into Journal so the transaction
+                # remains visible in the report.
+
+                bill_row["journal"] += amount
+
+
+            # -------------------------------------------------
+            # GRAND TOTAL
+            # -------------------------------------------------
+
+            bill_row["grand_total"] = (
+                bill_row["credit_note"]
+                + bill_row["journal"]
+                + bill_row["opening"]
+                + bill_row["sales"]
+            )
+
+
+        # =====================================================
+        # CONVERT TO LIST
+        # =====================================================
+
+        rows = []
+
+
+        for ledger_name in sorted(
+            ledger_map.keys(),
+            key=lambda x: x.lower()
+        ):
+
+            ledger = ledger_map[
+                ledger_name
+            ]
+
+
+            # -------------------------------------------------
+            # SORT BILL ROWS
+            # -------------------------------------------------
+
+            ledger["rows"].sort(
+                key=lambda x: (
+                    str(
+                        x["bill_ref_no"]
+                    ).lower()
+                    == "onaccount",
+                    str(
+                        x["bill_ref_no"]
+                    ).lower()
+                )
+            )
+
+
+            # -------------------------------------------------
+            # LEDGER TOTAL
+            # -------------------------------------------------
+
+            ledger_total = {
+                "credit_note": 0,
+                "journal": 0,
+                "opening": 0,
+                "sales": 0,
+                "grand_total": 0
+            }
+
+
+            for bill in ledger["rows"]:
+
+                ledger_total[
+                    "credit_note"
+                ] += bill["credit_note"]
+
+                ledger_total[
+                    "journal"
+                ] += bill["journal"]
+
+                ledger_total[
+                    "opening"
+                ] += bill["opening"]
+
+                ledger_total[
+                    "sales"
+                ] += bill["sales"]
+
+                ledger_total[
+                    "grand_total"
+                ] += bill["grand_total"]
+
+
+            rows.append({
+
+                "ledger_name":
+                    ledger_name,
+
+                "rows":
+                    ledger["rows"],
+
+                "total":
+                    ledger_total
+
+            })
+
+
+        # =====================================================
+        # GRAND TOTAL
+        # =====================================================
+
+        grand_total = {
+            "credit_note": 0,
+            "journal": 0,
+            "opening": 0,
+            "sales": 0,
+            "grand_total": 0
+        }
+
+
+        for ledger in rows:
+
+            grand_total[
+                "credit_note"
+            ] += ledger["total"]["credit_note"]
+
+            grand_total[
+                "journal"
+            ] += ledger["total"]["journal"]
+
+            grand_total[
+                "opening"
+            ] += ledger["total"]["opening"]
+
+            grand_total[
+                "sales"
+            ] += ledger["total"]["sales"]
+
+            grand_total[
+                "grand_total"
+            ] += ledger["total"]["grand_total"]
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "group":
+                selected_group,
+
+            "rows":
+                rows,
+
+            "grand_total":
+                grand_total
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            "LEDGER MOVEMENT ERROR:",
+            error
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
+
+
+                  
 @app.route("/ageing-level")
 def ageing_level():
     if "user" not in session:
@@ -4010,6 +4510,350 @@ def ageing_level_data():
         return jsonify({
             "error": str(e)
         }), 500              
+
+@app.route("/creditors-ageing-level")
+def creditors_ageing_level():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("creditors-ageing-level.html")
+
+@app.route("/api/creditors-ageing-level")
+def creditors_ageing_level_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    try:
+
+        # =====================================================
+        # AS ON DATE
+        # =====================================================
+
+        as_on = request.args.get("as_on")
+
+        if as_on:
+            try:
+                as_on_date = datetime.strptime(
+                    as_on,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid as_on date. Use YYYY-MM-DD."
+                }), 400
+        else:
+            as_on_date = date.today()
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = connect()
+        cursor = db.cursor(dictionary=True)
+
+        ledger_column = quote_identifier("LedgerName")
+        due_date_column = quote_identifier("bill_due_dt")
+        amount_column = quote_identifier("Netmount")
+        group_column = quote_identifier("Group")
+
+
+        # =====================================================
+        # GET ALL CREDITORS ENTRIES
+        # =====================================================
+
+        query = f"""
+            SELECT
+                {ledger_column} AS ledger_name,
+                {due_date_column} AS bill_due_dt,
+                {amount_column} AS net_amount
+            FROM view_DayBook
+            WHERE {group_column} = 'Sundry Creditors'
+        """
+
+        cursor.execute(query)
+
+        source_rows = cursor.fetchall()
+
+        cursor.close()
+        db.close()
+
+
+        # =====================================================
+        # AGEING STORAGE
+        # =====================================================
+
+        ageing = {}
+
+
+        # =====================================================
+        # PROCESS DATA
+        # =====================================================
+
+        for row in source_rows:
+
+            ledger = str(
+                row.get("ledger_name") or ""
+            ).strip()
+
+            if not ledger:
+                ledger = "Unknown Ledger"
+
+
+            # -------------------------------------------------
+            # AMOUNT
+            # -------------------------------------------------
+
+            amount = row.get("net_amount")
+
+            try:
+                amount = float(amount or 0)
+            except (TypeError, ValueError):
+                amount = 0.0
+
+
+            # -------------------------------------------------
+            # CREATE LEDGER BUCKET
+            # -------------------------------------------------
+
+            if ledger not in ageing:
+
+                ageing[ledger] = {
+                    "0-30": 0.0,
+                    "31-60": 0.0,
+                    "61-90": 0.0,
+                    "91-120": 0.0,
+                    "121+": 0.0,
+                    "on_account": 0.0
+                }
+
+
+            # -------------------------------------------------
+            # DUE DATE
+            # -------------------------------------------------
+
+            due_date = parse_report_date(
+                row.get("bill_due_dt")
+            )
+
+
+            # =================================================
+            # ON ACCOUNT
+            # =================================================
+
+            if due_date is None:
+
+                ageing[ledger]["on_account"] += amount
+
+                continue
+
+
+            # =================================================
+            # AGE
+            # =================================================
+
+            age = (
+                as_on_date - due_date
+            ).days
+
+
+            # Future due dates → 0-30
+            if age < 0:
+                age = 0
+
+
+            # =================================================
+            # AGEING GROUP
+            # =================================================
+
+            if age <= 30:
+
+                ageing[ledger]["0-30"] += amount
+
+            elif age <= 60:
+
+                ageing[ledger]["31-60"] += amount
+
+            elif age <= 90:
+
+                ageing[ledger]["61-90"] += amount
+
+            elif age <= 120:
+
+                ageing[ledger]["91-120"] += amount
+
+            else:
+
+                ageing[ledger]["121+"] += amount
+
+
+        # =====================================================
+        # BUILD ROWS
+        # =====================================================
+
+        rows = []
+
+
+        for ledger, values in ageing.items():
+
+            grand_total = (
+                values["on_account"]
+                + values["0-30"]
+                + values["31-60"]
+                + values["61-90"]
+                + values["91-120"]
+                + values["121+"]
+            )
+
+
+            rows.append({
+
+                "ledger_name":
+                    ledger,
+
+                "on_account":
+                    values["on_account"],
+
+                "0_30":
+                    values["0-30"],
+
+                "31_60":
+                    values["31-60"],
+
+                "61_90":
+                    values["61-90"],
+
+                "91_120":
+                    values["91-120"],
+
+                "121_plus":
+                    values["121+"],
+
+                "grand_total":
+                    grand_total
+
+            })
+
+
+        # =====================================================
+        # SORT
+        # =====================================================
+
+        rows.sort(
+            key=lambda row:
+                str(
+                    row["ledger_name"]
+                ).lower()
+        )
+
+
+        # =====================================================
+        # COLUMN TOTALS
+        # =====================================================
+
+        on_account_total = sum(
+            row["on_account"]
+            for row in rows
+        )
+
+        total_0_30 = sum(
+            row["0_30"]
+            for row in rows
+        )
+
+        total_31_60 = sum(
+            row["31_60"]
+            for row in rows
+        )
+
+        total_61_90 = sum(
+            row["61_90"]
+            for row in rows
+        )
+
+        total_91_120 = sum(
+            row["91_120"]
+            for row in rows
+        )
+
+        total_121_plus = sum(
+            row["121_plus"]
+            for row in rows
+        )
+
+
+        # =====================================================
+        # GRAND TOTAL
+        # =====================================================
+
+        grand_total = (
+            on_account_total
+            + total_0_30
+            + total_31_60
+            + total_61_90
+            + total_91_120
+            + total_121_plus
+        )
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "as_on":
+                as_on_date.isoformat(),
+
+            "rows":
+                rows,
+
+            "grand_total":
+                grand_total,
+
+            "age_group_totals": {
+
+                "On Account":
+                    on_account_total,
+
+                "0-30":
+                    total_0_30,
+
+                "31-60":
+                    total_31_60,
+
+                "61-90":
+                    total_61_90,
+
+                "91-120":
+                    total_91_120,
+
+                "121+":
+                    total_121_plus
+
+            },
+
+            "total_records":
+                len(rows)
+
+        })
+
+
+    except Exception as e:
+
+        print(
+            "AGEING LEVEL ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500              
+
+
 @app.route("/pivot")
 def pivot():
 
