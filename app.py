@@ -11,7 +11,7 @@ from flask import (
 import re
 import json
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime,timedelta
 
 from database import connect, get_dbms, quote_identifier
 
@@ -2566,6 +2566,7 @@ def outstanding_debtors():
         "outstanding-debtors.html"
     )
 @app.route("/api/outstanding-debtors")
+
 def outstanding_debtors_data():
 
     if "user" not in session:
@@ -3208,8 +3209,8 @@ def ledger_movement_data():
             }), 400
 
 
-        from_date = request.args.get("from_date")
-        to_date = request.args.get("to_date")
+        from_date = request.args.get("from")
+        to_date = request.args.get("to")
 
 
         if from_date:
@@ -4852,6 +4853,2221 @@ def creditors_ageing_level_data():
         return jsonify({
             "error": str(e)
         }), 500              
+
+# =========================================================
+# CASH & BANK — BANK SUMMARY
+# =========================================================
+
+@app.route("/bank-summary")
+def bank_summary():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("bank-summary.html")
+
+
+@app.route("/api/bank-summary")
+def bank_summary_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    db = None
+    cursor = None
+
+    try:
+
+        # =====================================================
+        # PARAMETERS
+        # =====================================================
+
+        from_date = request.args.get("from")
+        to_date = request.args.get("to")
+
+        selected_group = (
+            request.args.get("group") or ""
+        ).strip()
+
+        selected_party_group = (
+            request.args.get("party_group") or ""
+        ).strip()
+
+        # =====================================================
+        # DATE VALIDATION
+        # =====================================================
+
+        if from_date:
+            try:
+                from_date_obj = datetime.strptime(
+                    from_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid From Date."
+                }), 400
+        else:
+            from_date_obj = None
+
+        if to_date:
+            try:
+                to_date_obj = datetime.strptime(
+                    to_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid To Date."
+                }), 400
+        else:
+            to_date_obj = None
+
+        if (
+            from_date_obj
+            and to_date_obj
+            and from_date_obj > to_date_obj
+        ):
+            return jsonify({
+                "error": "From Date cannot be greater than To Date."
+            }), 400
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        ledger_column = quote_identifier("LedgerName")
+        party_column = quote_identifier("PartyLedgerName")
+        voucher_column = quote_identifier("voucher")
+        amount_column = quote_identifier("Netmount")
+        date_column = quote_identifier("date")
+        group_column = quote_identifier("Group")
+
+        # =====================================================
+        # BASE QUERY
+        # =====================================================
+
+        query = f"""
+            SELECT
+                {ledger_column} AS ledger_name,
+                {party_column} AS party_name,
+                {voucher_column} AS voucher_type,
+                {amount_column} AS amount,
+                {date_column} AS transaction_date,
+                {group_column} AS ledger_group
+            FROM view_CashBank
+            WHERE 1 = 1
+        """
+
+        query_params = []
+
+        # =====================================================
+        # COMPANY FILTER
+        # =====================================================
+
+        # # # query += company_filter_sql(
+        # #     "view_DayBook"
+        # # )
+
+        # =====================================================
+        # DATE FILTER
+        # =====================================================
+
+        if from_date_obj:
+            query += f"""
+                AND DATE({date_column}) >= %s
+            """
+            query_params.append(from_date_obj)
+
+        if to_date_obj:
+            query += f"""
+                AND DATE({date_column}) <= %s
+            """
+            query_params.append(to_date_obj)
+
+        # =====================================================
+        # GROUP FILTER
+        # =====================================================
+
+        if selected_group:
+
+            query += f"""
+                AND TRIM({group_column}) = %s
+            """
+
+            query_params.append(
+                selected_group
+            )
+
+        # =====================================================
+        # PARTY GROUP FILTER
+        #
+        # Party Group is optional because different
+        # DayBook views may expose different columns.
+        # =====================================================
+
+        query += f"""
+            ORDER BY
+                {ledger_column},
+                {party_column},
+                {date_column},
+                {voucher_column}
+        """
+
+        cursor.execute(
+            query,
+            tuple(query_params)
+        )
+
+        source_rows = cursor.fetchall()
+
+        # =====================================================
+        # BUILD MONTH LIST
+        # =====================================================
+
+        months = []
+
+        if from_date_obj and to_date_obj:
+
+            current_month = date(
+                from_date_obj.year,
+                from_date_obj.month,
+                1
+            )
+
+            while current_month <= to_date_obj:
+
+                months.append(
+                    current_month.strftime("%b-%y")
+                )
+
+                if current_month.month == 12:
+
+                    current_month = date(
+                        current_month.year + 1,
+                        1,
+                        1
+                    )
+
+                else:
+
+                    current_month = date(
+                        current_month.year,
+                        current_month.month + 1,
+                        1
+                    )
+
+        else:
+
+            # Build months automatically from returned data
+            parsed_dates = []
+
+            for row in source_rows:
+
+                transaction_date = parse_report_date(
+                    row.get("transaction_date")
+                )
+
+                if transaction_date:
+                    parsed_dates.append(
+                        transaction_date
+                    )
+
+            if parsed_dates:
+
+                first_date = min(parsed_dates)
+                last_date = max(parsed_dates)
+
+                current_month = date(
+                    first_date.year,
+                    first_date.month,
+                    1
+                )
+
+                while current_month <= last_date:
+
+                    months.append(
+                        current_month.strftime("%b-%y")
+                    )
+
+                    if current_month.month == 12:
+
+                        current_month = date(
+                            current_month.year + 1,
+                            1,
+                            1
+                        )
+
+                    else:
+
+                        current_month = date(
+                            current_month.year,
+                            current_month.month + 1,
+                            1
+                        )
+
+        # =====================================================
+        # VOUCHER TYPES
+        # =====================================================
+
+        voucher_types = []
+
+        voucher_set = set()
+
+        for row in source_rows:
+
+            voucher_type = str(
+                row.get("voucher_type") or ""
+            ).strip()
+
+            if voucher_type:
+                voucher_set.add(
+                    voucher_type
+                )
+
+        voucher_types = sorted(
+            voucher_set,
+            key=str.casefold
+        )
+
+        # =====================================================
+        # DATA STRUCTURE
+        #
+        # ledger
+        #    party
+        #       month
+        #          voucher
+        # =====================================================
+
+        values = defaultdict(
+            lambda: defaultdict(
+                lambda: defaultdict(
+                    lambda: defaultdict(float)
+                )
+            )
+        )
+
+        # =====================================================
+        # PROCESS ROWS
+        # =====================================================
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row.get("transaction_date")
+            )
+
+            if not transaction_date:
+                continue
+
+            ledger_name = str(
+                row.get("ledger_name")
+                or "Unspecified Ledger"
+            ).strip()
+
+            party_name = str(
+                row.get("party_name")
+                or ""
+            ).strip()
+
+            if not party_name:
+                party_name = ledger_name
+
+            voucher_type = str(
+                row.get("voucher_type")
+                or "Journal"
+            ).strip()
+
+            if not voucher_type:
+                voucher_type = "Journal"
+
+            month_key = transaction_date.strftime(
+                "%b-%y"
+            )
+
+            if month_key not in months:
+                continue
+
+            try:
+                amount = float(
+                    row.get("amount") or 0
+                )
+            except (TypeError, ValueError):
+                amount = 0.0
+
+            values[
+                ledger_name
+            ][
+                party_name
+            ][
+                month_key
+            ][
+                voucher_type
+            ] += amount
+
+        # =====================================================
+        # BUILD RESPONSE
+        # =====================================================
+
+        rows = []
+
+        month_totals = defaultdict(float)
+        grand_total = 0.0
+
+        for ledger_name in sorted(
+            values.keys(),
+            key=str.casefold
+        ):
+
+            party_rows = []
+
+            ledger_totals = {
+                month: {
+                    voucher: 0.0
+                    for voucher in voucher_types
+                }
+                for month in months
+            }
+
+            ledger_grand_total = 0.0
+
+            for party_name in sorted(
+                values[ledger_name].keys(),
+                key=str.casefold
+            ):
+
+                party_months = {}
+
+                party_total = 0.0
+
+                for month in months:
+
+                    month_values = {}
+
+                    for voucher in voucher_types:
+
+                        amount = values[
+                            ledger_name
+                        ][
+                            party_name
+                        ][
+                            month
+                        ][
+                            voucher
+                        ]
+
+                        month_values[
+                            voucher
+                        ] = amount
+
+                        ledger_totals[
+                            month
+                        ][
+                            voucher
+                        ] += amount
+
+                        month_totals[
+                            month
+                        ] += amount
+
+                        party_total += amount
+
+                        grand_total += amount
+
+                    month_values["total"] = sum(
+                        month_values[voucher]
+                        for voucher in voucher_types
+                    )
+
+                    party_months[
+                        month
+                    ] = month_values
+
+                party_rows.append({
+                    "party_name": party_name,
+                    "months": party_months,
+                    "total": party_total
+                })
+
+                ledger_grand_total += party_total
+
+            # =================================================
+            # LEDGER TOTAL
+            # =================================================
+
+            ledger_months = {}
+
+            for month in months:
+
+                month_total = sum(
+                    ledger_totals[
+                        month
+                    ][voucher]
+                    for voucher in voucher_types
+                )
+
+                ledger_months[
+                    month
+                ] = {
+                    **ledger_totals[month],
+                    "total": month_total
+                }
+
+            rows.append({
+                "ledger_name": ledger_name,
+                "parties": party_rows,
+                "months": ledger_months,
+                "total": ledger_grand_total
+            })
+
+        # =====================================================
+        # MONTH TOTAL OBJECT
+        # =====================================================
+
+        formatted_month_totals = {}
+
+        for month in months:
+
+            formatted_month_totals[
+                month
+            ] = month_totals[month]
+
+        # =====================================================
+        # GRAND TOTAL
+        # =====================================================
+
+        return jsonify({
+
+            "months": months,
+
+            "voucher_types": voucher_types,
+
+            "rows": rows,
+
+            "month_totals":
+                formatted_month_totals,
+
+            "grand_total":
+                grand_total,
+
+            "selected_group":
+                selected_group,
+
+            "selected_party_group":
+                selected_party_group,
+
+            "period": {
+                "from":
+                    from_date_obj.isoformat()
+                    if from_date_obj
+                    else "",
+
+                "to":
+                    to_date_obj.isoformat()
+                    if to_date_obj
+                    else ""
+            }
+
+        })
+
+    except Exception as error:
+
+        print(
+            "BANK SUMMARY ERROR:",
+            error
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
+
+@app.route("/cash-summary")
+def cash_summary():
+    if "user" not in session:
+        return redirect(url_for("splash"))
+
+    return render_template("cash-summary.html")
+
+@app.route("/api/cash-summary")
+def cash_summary_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    db = None
+    cursor = None
+
+    try:
+
+        # =====================================================
+        # PARAMETERS
+        # =====================================================
+
+        from_date = request.args.get("from")
+        to_date = request.args.get("to")
+
+        selected_group = (
+            request.args.get("group") or ""
+        ).strip()
+
+        selected_party_group = (
+            request.args.get("party_group") or ""
+        ).strip()
+
+        # =====================================================
+        # DATE VALIDATION
+        # =====================================================
+
+        if from_date:
+            try:
+                from_date_obj = datetime.strptime(
+                    from_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid From Date."
+                }), 400
+        else:
+            from_date_obj = None
+
+        if to_date:
+            try:
+                to_date_obj = datetime.strptime(
+                    to_date,
+                    "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return jsonify({
+                    "error": "Invalid To Date."
+                }), 400
+        else:
+            to_date_obj = None
+
+        if (
+            from_date_obj
+            and to_date_obj
+            and from_date_obj > to_date_obj
+        ):
+            return jsonify({
+                "error": "From Date cannot be greater than To Date."
+            }), 400
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        ledger_column = quote_identifier("LedgerName")
+        party_column = quote_identifier("PartyLedgerName")
+        voucher_column = quote_identifier("voucher")
+        amount_column = quote_identifier("Netmount")
+        date_column = quote_identifier("date")
+        group_column = quote_identifier("Group")
+
+        # =====================================================
+        # BASE QUERY
+        # =====================================================
+
+        query = f"""
+            SELECT
+                {ledger_column} AS ledger_name,
+                {party_column} AS party_name,
+                {voucher_column} AS voucher_type,
+                {amount_column} AS amount,
+                {date_column} AS transaction_date,
+                {group_column} AS ledger_group
+            FROM view_CashBank
+            WHERE {group_column}='Cash-in-hand'
+        
+        """
+
+        query_params = []
+
+        # =====================================================
+        # COMPANY FILTER
+        # =====================================================
+
+        # # # query += company_filter_sql(
+        # #     "view_DayBook"
+        # # )
+
+        # =====================================================
+        # DATE FILTER
+        # =====================================================
+
+        if from_date_obj:
+            query += f"""
+                AND DATE({date_column}) >= %s
+            """
+            query_params.append(from_date_obj)
+
+        if to_date_obj:
+            query += f"""
+                AND DATE({date_column}) <= %s
+            """
+            query_params.append(to_date_obj)
+
+        # =====================================================
+        # GROUP FILTER
+        # =====================================================
+
+        if selected_group:
+
+            query += f"""
+                AND TRIM({group_column}) = %s
+            """
+
+            query_params.append(
+                selected_group
+            )
+
+        # =====================================================
+        # PARTY GROUP FILTER
+        #
+        # Party Group is optional because different
+        # DayBook views may expose different columns.
+        # =====================================================
+
+        query += f"""
+            ORDER BY
+                {ledger_column},
+                {party_column},
+                {date_column},
+                {voucher_column}
+        """
+
+        cursor.execute(
+            query,
+            tuple(query_params)
+        )
+
+        source_rows = cursor.fetchall()
+
+        # =====================================================
+        # BUILD MONTH LIST
+        # =====================================================
+
+        months = []
+
+        if from_date_obj and to_date_obj:
+
+            current_month = date(
+                from_date_obj.year,
+                from_date_obj.month,
+                1
+            )
+
+            while current_month <= to_date_obj:
+
+                months.append(
+                    current_month.strftime("%b-%y")
+                )
+
+                if current_month.month == 12:
+
+                    current_month = date(
+                        current_month.year + 1,
+                        1,
+                        1
+                    )
+
+                else:
+
+                    current_month = date(
+                        current_month.year,
+                        current_month.month + 1,
+                        1
+                    )
+
+        else:
+
+            # Build months automatically from returned data
+            parsed_dates = []
+
+            for row in source_rows:
+
+                transaction_date = parse_report_date(
+                    row.get("transaction_date")
+                )
+
+                if transaction_date:
+                    parsed_dates.append(
+                        transaction_date
+                    )
+
+            if parsed_dates:
+
+                first_date = min(parsed_dates)
+                last_date = max(parsed_dates)
+
+                current_month = date(
+                    first_date.year,
+                    first_date.month,
+                    1
+                )
+
+                while current_month <= last_date:
+
+                    months.append(
+                        current_month.strftime("%b-%y")
+                    )
+
+                    if current_month.month == 12:
+
+                        current_month = date(
+                            current_month.year + 1,
+                            1,
+                            1
+                        )
+
+                    else:
+
+                        current_month = date(
+                            current_month.year,
+                            current_month.month + 1,
+                            1
+                        )
+
+        # =====================================================
+        # VOUCHER TYPES
+        # =====================================================
+
+        voucher_types = []
+
+        voucher_set = set()
+
+        for row in source_rows:
+
+            voucher_type = str(
+                row.get("voucher_type") or ""
+            ).strip()
+
+            if voucher_type:
+                voucher_set.add(
+                    voucher_type
+                )
+
+        voucher_types = sorted(
+            voucher_set,
+            key=str.casefold
+        )
+
+        # =====================================================
+        # DATA STRUCTURE
+        #
+        # ledger
+        #    party
+        #       month
+        #          voucher
+        # =====================================================
+
+        values = defaultdict(
+            lambda: defaultdict(
+                lambda: defaultdict(
+                    lambda: defaultdict(float)
+                )
+            )
+        )
+
+        # =====================================================
+        # PROCESS ROWS
+        # =====================================================
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row.get("transaction_date")
+            )
+
+            if not transaction_date:
+                continue
+
+            ledger_name = str(
+                row.get("ledger_name")
+                or "Unspecified Ledger"
+            ).strip()
+
+            party_name = str(
+                row.get("party_name")
+                or ""
+            ).strip()
+
+            if not party_name:
+                party_name = ledger_name
+
+            voucher_type = str(
+                row.get("voucher_type")
+                or "Journal"
+            ).strip()
+
+            if not voucher_type:
+                voucher_type = "Journal"
+
+            month_key = transaction_date.strftime(
+                "%b-%y"
+            )
+
+            if month_key not in months:
+                continue
+
+            try:
+                amount = float(
+                    row.get("amount") or 0
+                )
+            except (TypeError, ValueError):
+                amount = 0.0
+
+            values[
+                ledger_name
+            ][
+                party_name
+            ][
+                month_key
+            ][
+                voucher_type
+            ] += amount
+
+        # =====================================================
+        # BUILD RESPONSE
+        # =====================================================
+
+        rows = []
+
+        month_totals = defaultdict(float)
+        grand_total = 0.0
+
+        for ledger_name in sorted(
+            values.keys(),
+            key=str.casefold
+        ):
+
+            party_rows = []
+
+            ledger_totals = {
+                month: {
+                    voucher: 0.0
+                    for voucher in voucher_types
+                }
+                for month in months
+            }
+
+            ledger_grand_total = 0.0
+
+            for party_name in sorted(
+                values[ledger_name].keys(),
+                key=str.casefold
+            ):
+
+                party_months = {}
+
+                party_total = 0.0
+
+                for month in months:
+
+                    month_values = {}
+
+                    for voucher in voucher_types:
+
+                        amount = values[
+                            ledger_name
+                        ][
+                            party_name
+                        ][
+                            month
+                        ][
+                            voucher
+                        ]
+
+                        month_values[
+                            voucher
+                        ] = amount
+
+                        ledger_totals[
+                            month
+                        ][
+                            voucher
+                        ] += amount
+
+                        month_totals[
+                            month
+                        ] += amount
+
+                        party_total += amount
+
+                        grand_total += amount
+
+                    month_values["total"] = sum(
+                        month_values[voucher]
+                        for voucher in voucher_types
+                    )
+
+                    party_months[
+                        month
+                    ] = month_values
+
+                party_rows.append({
+                    "party_name": party_name,
+                    "months": party_months,
+                    "total": party_total
+                })
+
+                ledger_grand_total += party_total
+
+            # =================================================
+            # LEDGER TOTAL
+            # =================================================
+
+            ledger_months = {}
+
+            for month in months:
+
+                month_total = sum(
+                    ledger_totals[
+                        month
+                    ][voucher]
+                    for voucher in voucher_types
+                )
+
+                ledger_months[
+                    month
+                ] = {
+                    **ledger_totals[month],
+                    "total": month_total
+                }
+
+            rows.append({
+                "ledger_name": ledger_name,
+                "parties": party_rows,
+                "months": ledger_months,
+                "total": ledger_grand_total
+            })
+
+        # =====================================================
+        # MONTH TOTAL OBJECT
+        # =====================================================
+
+        formatted_month_totals = {}
+
+        for month in months:
+
+            formatted_month_totals[
+                month
+            ] = month_totals[month]
+
+        # =====================================================
+        # GRAND TOTAL
+        # =====================================================
+
+        return jsonify({
+
+            "months": months,
+
+            "voucher_types": voucher_types,
+
+            "rows": rows,
+
+            "month_totals":
+                formatted_month_totals,
+
+            "grand_total":
+                grand_total,
+
+            "selected_group":
+                selected_group,
+
+            "selected_party_group":
+                selected_party_group,
+
+            "period": {
+                "from":
+                    from_date_obj.isoformat()
+                    if from_date_obj
+                    else "",
+
+                "to":
+                    to_date_obj.isoformat()
+                    if to_date_obj
+                    else ""
+            }
+
+        })
+
+    except Exception as error:
+
+        print(
+            "BANK SUMMARY ERROR:",
+            error
+        )
+
+        return jsonify({
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
+        
+# =========================================================
+# CASH & BANK — BANK DAILY TRANSACTION
+# =========================================================
+
+@app.route("/bank-daily-transaction")
+def bank_daily_transaction():
+
+    if "user" not in session:
+        return redirect(
+            url_for("splash")
+        )
+
+    return render_template(
+        "bank-daily-transaction.html"
+    )
+
+
+# =========================================================
+# API — BANK DAILY TRANSACTION
+# =========================================================
+
+@app.route("/api/bank-daily-transaction")
+def bank_daily_transaction_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    db = None
+    cursor = None
+
+    try:
+
+        # =====================================================
+        # PARAMETERS
+        # =====================================================
+
+        selected_month = (
+            request.args.get("month")
+            or ""
+        ).strip()
+
+        selected_party_group = (
+            request.args.get("party_group")
+            or ""
+        ).strip()
+
+        # Group / Bank Accounts filter is intentionally removed
+        selected_group = ""
+
+
+        # =====================================================
+        # MONTH VALIDATION
+        # Expected:
+        # 2026-04
+        # 2026-05
+        # =====================================================
+
+        if selected_month:
+
+            try:
+
+                month_parts = selected_month.split("-")
+
+                if len(month_parts) != 2:
+                    raise ValueError
+
+                selected_year = int(
+                    month_parts[0]
+                )
+
+                selected_month_number = int(
+                    month_parts[1]
+                )
+
+                if not (
+                    1 <= selected_month_number <= 12
+                ):
+                    raise ValueError
+
+            except (
+                ValueError,
+                TypeError
+            ):
+
+                return jsonify({
+                    "error":
+                        "Invalid month. Use YYYY-MM."
+                }), 400
+
+        else:
+
+            # Default to current month
+            today = date.today()
+
+            selected_year = today.year
+            selected_month_number = today.month
+
+            selected_month = (
+                f"{selected_year}-"
+                f"{selected_month_number:02d}"
+            )
+
+
+        # =====================================================
+        # MONTH DATE RANGE
+        # =====================================================
+
+        month_start = date(
+            selected_year,
+            selected_month_number,
+            1
+        )
+
+        if selected_month_number == 12:
+
+            next_month_start = date(
+                selected_year + 1,
+                1,
+                1
+            )
+
+        else:
+
+            next_month_start = date(
+                selected_year,
+                selected_month_number + 1,
+                1
+            )
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+
+        cursor = db.cursor(
+            dictionary=True
+        )
+
+
+        # =====================================================
+        # view_cashbank COLUMNS
+        #
+        # Actual columns from your view:
+        #
+        # date
+        # LedgerName
+        # PartyLedgerName
+        # VouchertypeName
+        # Netmount
+        # voucher
+        # Company
+        # =====================================================
+
+        ledger_column = quote_identifier(
+            "LedgerName"
+        )
+
+        party_column = quote_identifier(
+            "PartyLedgerName"
+        )
+
+        voucher_type_column = quote_identifier(
+            "VouchertypeName"
+        )
+
+        amount_column = quote_identifier(
+            "Netmount"
+        )
+
+        date_column = quote_identifier(
+            "date"
+        )
+
+        company_column = quote_identifier(
+            "CompanyName"
+        )
+        group_column = quote_identifier(
+                    "group"
+        )
+        
+
+
+        # =====================================================
+        # BASE QUERY
+        # =====================================================
+
+        query = f"""
+            SELECT
+
+                {ledger_column}
+                    AS ledger_name,
+
+                {party_column}
+                    AS party_name,
+
+                {voucher_type_column}
+                    AS voucher_type,
+
+                {amount_column}
+                    AS amount,
+
+                {date_column}
+                    AS transaction_date,
+
+                {company_column}
+                    AS company
+
+            FROM view_cashbank
+
+            WHERE {group_column}='Bank Accounts'
+        """
+
+
+        query_params = []
+
+
+        # =====================================================
+        # COMPANY FILTER
+        #
+        # IMPORTANT:
+        # view_cashbank uses "Company"
+        # =====================================================
+
+        active_company = (
+            session.get("active_company")
+            or session.get("company")
+            or ""
+        ).strip()
+
+        if active_company:
+
+            query += """
+                AND TRIM(`Company`) = %s
+            """
+
+            query_params.append(
+                active_company
+            )
+
+
+        # =====================================================
+        # MONTH FILTER
+        # =====================================================
+
+        query += f"""
+            AND {date_column} >= %s
+            AND {date_column} < %s
+        """
+
+        query_params.extend([
+            month_start,
+            next_month_start
+        ])
+
+
+        # =====================================================
+        # PARTY GROUP
+        #
+        # view_cashbank does not currently expose
+        # a Party Group column, so "(All)" means
+        # no additional filter.
+        # =====================================================
+
+
+        # =====================================================
+        # ORDER
+        # =====================================================
+
+        query += f"""
+            ORDER BY
+
+                {date_column},
+
+                {voucher_type_column},
+
+                {ledger_column},
+
+                {party_column}
+        """
+
+
+        # =====================================================
+        # EXECUTE
+        # =====================================================
+
+        print(
+            "BANK DAILY QUERY:",
+            query
+        )
+
+        print(
+            "BANK DAILY PARAMS:",
+            query_params
+        )
+
+        cursor.execute(
+            query,
+            tuple(query_params)
+        )
+
+        source_rows = cursor.fetchall()
+
+
+        print(
+            "BANK DAILY ROW COUNT:",
+            len(source_rows)
+        )
+
+
+        # =====================================================
+        # BUILD DAYS
+        # =====================================================
+
+        days = []
+
+        day_cursor = month_start
+
+        while day_cursor < next_month_start:
+
+            days.append(
+                day_cursor.isoformat()
+            )
+
+            day_cursor += timedelta(
+                days=1
+            )
+
+
+        # =====================================================
+        # VOUCHER TYPES
+        # =====================================================
+
+        voucher_types = set()
+
+        for row in source_rows:
+
+            voucher_type = str(
+                row.get("voucher_type")
+                or ""
+            ).strip()
+
+            if voucher_type:
+                voucher_types.add(
+                    voucher_type
+                )
+
+        voucher_types = sorted(
+            voucher_types,
+            key=str.casefold
+        )
+
+
+        # =====================================================
+        # DATA
+        #
+        # voucher_type
+        #       day
+        #           amount
+        # =====================================================
+
+        values = defaultdict(
+            lambda: defaultdict(float)
+        )
+
+
+        # =====================================================
+        # PROCESS DATABASE ROWS
+        # =====================================================
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row.get(
+                    "transaction_date"
+                )
+            )
+
+            if not transaction_date:
+                continue
+
+
+            voucher_type = str(
+                row.get(
+                    "voucher_type"
+                )
+                or "Journal"
+            ).strip()
+
+            if not voucher_type:
+                voucher_type = "Journal"
+
+
+            day_key = (
+                transaction_date.isoformat()
+            )
+
+
+            try:
+
+                amount = float(
+                    row.get(
+                        "amount"
+                    )
+                    or 0
+                )
+
+            except (
+                TypeError,
+                ValueError
+            ):
+
+                amount = 0.0
+
+
+            values[
+                voucher_type
+            ][
+                day_key
+            ] += amount
+
+
+        # =====================================================
+        # BUILD RESPONSE ROWS
+        # =====================================================
+
+        rows = []
+
+        grand_total = 0.0
+
+
+        for voucher_type in voucher_types:
+
+            daily_values = {}
+
+            row_total = 0.0
+
+
+            for day in days:
+
+                amount = float(
+                    values[
+                        voucher_type
+                    ][
+                        day
+                    ]
+                    or 0
+                )
+
+                daily_values[
+                    day
+                ] = amount
+
+                row_total += amount
+
+
+            grand_total += row_total
+
+
+            rows.append({
+                "voucher_type":
+                    voucher_type,
+
+                "values":
+                    daily_values,
+
+                "total":
+                    row_total
+            })
+
+
+        # =====================================================
+        # DAILY GRAND TOTALS
+        # =====================================================
+
+        daily_totals = {}
+
+
+        for day in days:
+
+            total = 0.0
+
+
+            for voucher_type in voucher_types:
+
+                total += float(
+                    values[
+                        voucher_type
+                    ][
+                        day
+                    ]
+                    or 0
+                )
+
+
+            daily_totals[
+                day
+            ] = total
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "month":
+                selected_month,
+
+            "days":
+                days,
+
+            "voucher_types":
+                voucher_types,
+
+            "rows":
+                rows,
+
+            "daily_totals":
+                daily_totals,
+
+            "grand_total":
+                grand_total,
+
+            "group":
+                "",
+
+            "party_group":
+                selected_party_group,
+
+            "transaction_count":
+                len(source_rows),
+
+            "period": {
+
+                "month":
+                    selected_month,
+
+                "from":
+                    month_start.isoformat(),
+
+                "to":
+                    (
+                        next_month_start
+                        - timedelta(days=1)
+                    ).isoformat()
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            "BANK DAILY TRANSACTION ERROR:",
+            repr(error)
+        )
+
+        return jsonify({
+            "error":
+                str(error)
+        }), 500
+
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
+
+@app.route("/cash-daily-transaction")
+def cash_daily_transaction():
+
+    if "user" not in session:
+        return redirect(
+            url_for("splash")
+        )
+
+    return render_template(
+        "cash-daily-transaction.html"
+    )
+
+@app.route("/api/cash-daily-transaction")
+def cash_daily_transaction_data():
+
+    if "user" not in session:
+        return jsonify({
+            "error": "Unauthorized"
+        }), 401
+
+    db = None
+    cursor = None
+
+    try:
+
+        # =====================================================
+        # PARAMETERS
+        # =====================================================
+
+        selected_month = (
+            request.args.get("month")
+            or ""
+        ).strip()
+
+        selected_party_group = (
+            request.args.get("party_group")
+            or ""
+        ).strip()
+
+        # Group / Bank Accounts filter is intentionally removed
+        selected_group = ""
+
+
+        # =====================================================
+        # MONTH VALIDATION
+        # Expected:
+        # 2026-04
+        # 2026-05
+        # =====================================================
+
+        if selected_month:
+
+            try:
+
+                month_parts = selected_month.split("-")
+
+                if len(month_parts) != 2:
+                    raise ValueError
+
+                selected_year = int(
+                    month_parts[0]
+                )
+
+                selected_month_number = int(
+                    month_parts[1]
+                )
+
+                if not (
+                    1 <= selected_month_number <= 12
+                ):
+                    raise ValueError
+
+            except (
+                ValueError,
+                TypeError
+            ):
+
+                return jsonify({
+                    "error":
+                        "Invalid month. Use YYYY-MM."
+                }), 400
+
+        else:
+
+            # Default to current month
+            today = date.today()
+
+            selected_year = today.year
+            selected_month_number = today.month
+
+            selected_month = (
+                f"{selected_year}-"
+                f"{selected_month_number:02d}"
+            )
+
+
+        # =====================================================
+        # MONTH DATE RANGE
+        # =====================================================
+
+        month_start = date(
+            selected_year,
+            selected_month_number,
+            1
+        )
+
+        if selected_month_number == 12:
+
+            next_month_start = date(
+                selected_year + 1,
+                1,
+                1
+            )
+
+        else:
+
+            next_month_start = date(
+                selected_year,
+                selected_month_number + 1,
+                1
+            )
+
+
+        # =====================================================
+        # DATABASE
+        # =====================================================
+
+        db = get_db_connection()
+
+        cursor = db.cursor(
+            dictionary=True
+        )
+
+
+        # =====================================================
+        # view_cashbank COLUMNS
+        #
+        # Actual columns from your view:
+        #
+        # date
+        # LedgerName
+        # PartyLedgerName
+        # VouchertypeName
+        # Netmount
+        # voucher
+        # Company
+        # =====================================================
+
+        ledger_column = quote_identifier(
+            "LedgerName"
+        )
+
+        party_column = quote_identifier(
+            "PartyLedgerName"
+        )
+
+        voucher_type_column = quote_identifier(
+            "VouchertypeName"
+        )
+
+        amount_column = quote_identifier(
+            "Netmount"
+        )
+
+        date_column = quote_identifier(
+            "date"
+        )
+
+        company_column = quote_identifier(
+            "CompanyName"
+        )
+        group_column = quote_identifier(
+                    "group"
+        )
+        
+
+
+        # =====================================================
+        # BASE QUERY
+        # =====================================================
+
+        query = f"""
+            SELECT
+
+                {ledger_column}
+                    AS ledger_name,
+
+                {party_column}
+                    AS party_name,
+
+                {voucher_type_column}
+                    AS voucher_type,
+
+                {amount_column}
+                    AS amount,
+
+                {date_column}
+                    AS transaction_date,
+
+                {company_column}
+                    AS company
+
+            FROM view_cashbank
+
+            WHERE {group_column}='Cash-in-hand'
+        """
+
+
+        query_params = []
+
+
+        # =====================================================
+        # COMPANY FILTER
+        #
+        # IMPORTANT:
+        # view_cashbank uses "Company"
+        # =====================================================
+
+        active_company = (
+            session.get("active_company")
+            or session.get("company")
+            or ""
+        ).strip()
+
+        if active_company:
+
+            query += """
+                AND TRIM(`Company`) = %s
+            """
+
+            query_params.append(
+                active_company
+            )
+
+
+        # =====================================================
+        # MONTH FILTER
+        # =====================================================
+
+        query += f"""
+            AND {date_column} >= %s
+            AND {date_column} < %s
+        """
+
+        query_params.extend([
+            month_start,
+            next_month_start
+        ])
+
+
+        # =====================================================
+        # PARTY GROUP
+        #
+        # view_cashbank does not currently expose
+        # a Party Group column, so "(All)" means
+        # no additional filter.
+        # =====================================================
+
+
+        # =====================================================
+        # ORDER
+        # =====================================================
+
+        query += f"""
+            ORDER BY
+
+                {date_column},
+
+                {voucher_type_column},
+
+                {ledger_column},
+
+                {party_column}
+        """
+
+
+        # =====================================================
+        # EXECUTE
+        # =====================================================
+
+        print(
+            "BANK DAILY QUERY:",
+            query
+        )
+
+        print(
+            "BANK DAILY PARAMS:",
+            query_params
+        )
+
+        cursor.execute(
+            query,
+            tuple(query_params)
+        )
+
+        source_rows = cursor.fetchall()
+
+
+        print(
+            "BANK DAILY ROW COUNT:",
+            len(source_rows)
+        )
+
+
+        # =====================================================
+        # BUILD DAYS
+        # =====================================================
+
+        days = []
+
+        day_cursor = month_start
+
+        while day_cursor < next_month_start:
+
+            days.append(
+                day_cursor.isoformat()
+            )
+
+            day_cursor += timedelta(
+                days=1
+            )
+
+
+        # =====================================================
+        # VOUCHER TYPES
+        # =====================================================
+
+        voucher_types = set()
+
+        for row in source_rows:
+
+            voucher_type = str(
+                row.get("voucher_type")
+                or ""
+            ).strip()
+
+            if voucher_type:
+                voucher_types.add(
+                    voucher_type
+                )
+
+        voucher_types = sorted(
+            voucher_types,
+            key=str.casefold
+        )
+
+
+        # =====================================================
+        # DATA
+        #
+        # voucher_type
+        #       day
+        #           amount
+        # =====================================================
+
+        values = defaultdict(
+            lambda: defaultdict(float)
+        )
+
+
+        # =====================================================
+        # PROCESS DATABASE ROWS
+        # =====================================================
+
+        for row in source_rows:
+
+            transaction_date = parse_report_date(
+                row.get(
+                    "transaction_date"
+                )
+            )
+
+            if not transaction_date:
+                continue
+
+
+            voucher_type = str(
+                row.get(
+                    "voucher_type"
+                )
+                or "Journal"
+            ).strip()
+
+            if not voucher_type:
+                voucher_type = "Journal"
+
+
+            day_key = (
+                transaction_date.isoformat()
+            )
+
+
+            try:
+
+                amount = float(
+                    row.get(
+                        "amount"
+                    )
+                    or 0
+                )
+
+            except (
+                TypeError,
+                ValueError
+            ):
+
+                amount = 0.0
+
+
+            values[
+                voucher_type
+            ][
+                day_key
+            ] += amount
+
+
+        # =====================================================
+        # BUILD RESPONSE ROWS
+        # =====================================================
+
+        rows = []
+
+        grand_total = 0.0
+
+
+        for voucher_type in voucher_types:
+
+            daily_values = {}
+
+            row_total = 0.0
+
+
+            for day in days:
+
+                amount = float(
+                    values[
+                        voucher_type
+                    ][
+                        day
+                    ]
+                    or 0
+                )
+
+                daily_values[
+                    day
+                ] = amount
+
+                row_total += amount
+
+
+            grand_total += row_total
+
+
+            rows.append({
+                "voucher_type":
+                    voucher_type,
+
+                "values":
+                    daily_values,
+
+                "total":
+                    row_total
+            })
+
+
+        # =====================================================
+        # DAILY GRAND TOTALS
+        # =====================================================
+
+        daily_totals = {}
+
+
+        for day in days:
+
+            total = 0.0
+
+
+            for voucher_type in voucher_types:
+
+                total += float(
+                    values[
+                        voucher_type
+                    ][
+                        day
+                    ]
+                    or 0
+                )
+
+
+            daily_totals[
+                day
+            ] = total
+
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return jsonify({
+
+            "month":
+                selected_month,
+
+            "days":
+                days,
+
+            "voucher_types":
+                voucher_types,
+
+            "rows":
+                rows,
+
+            "daily_totals":
+                daily_totals,
+
+            "grand_total":
+                grand_total,
+
+            "group":
+                "",
+
+            "party_group":
+                selected_party_group,
+
+            "transaction_count":
+                len(source_rows),
+
+            "period": {
+
+                "month":
+                    selected_month,
+
+                "from":
+                    month_start.isoformat(),
+
+                "to":
+                    (
+                        next_month_start
+                        - timedelta(days=1)
+                    ).isoformat()
+            }
+
+        })
+
+
+    except Exception as error:
+
+        print(
+            "BANK DAILY TRANSACTION ERROR:",
+            repr(error)
+        )
+
+        return jsonify({
+            "error":
+                str(error)
+        }), 500
+
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
 
 
 @app.route("/pivot")

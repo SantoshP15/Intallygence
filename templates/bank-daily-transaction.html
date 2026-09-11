@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Bank Daily Transaction | InTallygence</title>
+
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- COMMON HEADER CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/header.css') }}"
+    >
+
+
+    <!-- REPORT CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/bank-daily-transaction.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<main id="rahtut" class="bank-daily-report">
+
+
+    <!-- =================================================
+         COMMON HEADER
+    ================================================== -->
+
+    {% include 'header.html' %}
+
+
+    <!-- =================================================
+         REPORT TOP
+    ================================================== -->
+
+    <section class="report-top">
+
+
+        <!-- LEFT -->
+        <div class="report-title">
+
+            <a
+                class="back-link"
+                href="{{ url_for('report_dashboard') }}"
+                aria-label="Back to Reports"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Reports
+            </a>
+
+
+            <div class="header-content">
+
+                <p class="eyebrow">
+                    Cash &amp; Bank Reports
+                </p>
+
+
+                <h1>
+                    Bank Daily Transaction
+                </h1>
+
+
+                <p class="subtitle">
+                    Daily bank transactions grouped by voucher type.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FILTERS
+        ================================================== -->
+
+        <form
+            id="periodForm"
+            class="period-form"
+        >
+
+
+            <!-- GROUP -->
+
+            <label for="groupSelect">
+
+                Group
+
+                <select
+                    id="groupSelect"
+                    name="group"
+                >
+
+                    <option value="">
+                        All Groups
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <!-- MONTH -->
+
+            <label for="monthSelect">
+
+                Month
+
+                <select
+                    id="monthSelect"
+                    name="month"
+                >
+                </select>
+
+            </label>
+
+
+            <!-- PARTY GROUP -->
+
+            <label for="partyGroupSelect">
+
+                Party Group
+
+                <select
+                    id="partyGroupSelect"
+                    name="party_group"
+                >
+
+                    <option value="">
+                        (All)
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <!-- APPLY -->
+
+            <button
+                type="submit"
+                id="applyBtn"
+            >
+
+                <i class="fa-solid fa-rotate"></i>
+
+                Apply
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- =================================================
+         REPORT CARD
+    ================================================== -->
+
+    <section
+        class="report-table-card"
+        aria-live="polite"
+    >
+
+
+        <!-- STATUS -->
+
+        <div
+            id="reportStatus"
+            class="report-status"
+        >
+            Loading bank transactions…
+        </div>
+
+
+        <!-- TOOLBAR -->
+
+        <div
+            id="summaryToolbar"
+            class="summary-toolbar"
+            hidden
+        >
+
+            <div class="summary-toolbar-left">
+
+                <button
+                    type="button"
+                    id="expandAllBtn"
+                    class="summary-action"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Expand All
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="collapseAllBtn"
+                    class="summary-action"
+                >
+
+                    <i class="fa-solid fa-minus"></i>
+
+                    Collapse All
+
+                </button>
+
+            </div>
+
+
+            <div class="summary-toolbar-right">
+
+                <span
+                    id="periodLabel"
+                    class="period-label"
+                ></span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE AREA
+        ================================================== -->
+
+        <div
+            id="tableWrap"
+            class="table-wrap"
+            hidden
+        ></div>
+
+    </section>
+
+
+</main>
+
+
+<!-- =====================================================
+     REPORT JS
+====================================================== -->
+
+<script
+    src="{{ url_for('static', filename='js/bank-daily-transaction.js') }}"
+></script>
+
+
+</body>
+
+</html>

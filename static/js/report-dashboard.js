@@ -92,7 +92,6 @@ const reportData = {
             "Ageing Level",
             "Ledger Movement",
             "Overdue Debtor",
-            "Unadjusted Debtors",
             "Unadjusted fx Debtor",
             "Duplicate Pan",
             "Duplicate GSTIN",
@@ -142,9 +141,10 @@ const reportData = {
         icon: "fa-book",
 
         items: [
-            "Voucher >9999",
-            "Negative Cash",
-            "Cash Balance",
+            "Bank Summary",
+            "Bank Transaction",
+            "Cash Summary",
+            "Cash Transaction",
             "Cash in Decimals"
         ]
     }
@@ -240,7 +240,17 @@ function openReportModal(categoryKey) {
                 categoryKey === "creditors" && item === "Ageing Level";
             const CreditorsLedgerMovementLink =
                 categoryKey === "creditors" && item === "Ledger Movement";
-                
+
+            const BankSummaryLink =
+                categoryKey === "cash" && item === "Bank Summary";
+            const BankTransactionLink =
+                categoryKey === "cash" && item == "Bank Transaction";
+            const CashSummaryLink = 
+                categoryKey === "cash" && item == "Cash Summary";
+            const CashTransactionLink =
+                categoryKey === "cash" && item == "Cash Transaction";
+            
+
             const reportLink = customerLevelLink
                 ? "/customer-level"
                 : inventoryLevelLink
@@ -283,6 +293,14 @@ function openReportModal(categoryKey) {
                 ? "/creditors-ageing-level"
                 : CreditorsLedgerMovementLink
                 ? "/creditors-ledger-movement"
+                : BankSummaryLink
+                ? "/bank-summary"
+                : BankTransactionLink
+                ? "/bank-daily-transaction"
+                : CashSummaryLink
+                ? "/cash-summary"
+                : CashTransactionLink
+                ? "/cash-daily-transaction"
                 : "#";
 
             const isClickable =
@@ -293,7 +311,8 @@ function openReportModal(categoryKey) {
                 salesReturnLink || entityLevelLink || purchaseCustomerGrowthLink ||
                 ledgermovementLink || purchaseEntityLevelLink || PurchaseCustomerLevelLink 
                 || OutstandingDebtorsLink || AgeingLevelLink || OutstandingCreditorsLink
-                || CreditorsAgeingLevelLink || CreditorsLedgerMovementLink;
+                || CreditorsAgeingLevelLink || CreditorsLedgerMovementLink || BankSummaryLink 
+                || BankTransactionLink || CashSummaryLink || CashTransactionLink;
 
             return `
 
