@@ -4960,7 +4960,7 @@ def bank_summary_data():
                 {date_column} AS transaction_date,
                 {group_column} AS ledger_group
             FROM view_CashBank
-            WHERE 1 = 1
+            WHERE {group_column}='Bank Accounts'
         """
 
         query_params = []
