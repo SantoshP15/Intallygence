@@ -1,162 +1,568 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Entity Level | InTallygence</title>
 
-    <!-- Common Header CSS -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/header.css') }}">
-
-    <!-- Customer Growth CSS -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/entity-level.css') }}">
-
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/entity-level.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sales-period-format.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden !important;
+            background: #f4f7fb;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+        .customer-growth-report {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100vh !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            padding: 16px 3.5% !important;
+            box-sizing: border-box !important;
+        }
+
+        .customer-growth-report .report-top {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 30px !important;
+            width: 100% !important;
+            margin: 0 0 16px 0 !important;
+            flex: 0 0 auto !important;
+        }
+
+        .customer-growth-report .report-title {
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 18px !important;
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+        }
+
+        .customer-growth-report .back-link {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 7px !important;
+            margin-top: 3px !important;
+            color: #1558a6 !important;
+            text-decoration: none !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            white-space: nowrap !important;
+        }
+
+        .customer-growth-report .header-content h1 {
+            margin: 0 !important;
+            color: #102a4c !important;
+            font-size: 28px !important;
+            line-height: 1.2 !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+        }
+
+        .customer-growth-report .subtitle {
+            margin: 7px 0 0 !important;
+            color: #58708f !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            white-space: nowrap !important;
+        }
+
+        .customer-growth-report .period-form {
+            display: inline-flex !important;
+            align-items: flex-end !important;
+            gap: 12px !important;
+            width: auto !important;
+            max-width: fit-content !important;
+            flex-shrink: 0 !important;
+            margin: 0 !important;
+            padding: 14px 18px !important;
+            background: #ffffff !important;
+            border: 1px solid #dce5f0 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 6px 22px rgba(24, 48, 86, 0.08), 0 2px 6px rgba(24, 48, 86, 0.04) !important;
+        }
+
+        .format-control {
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 5px !important;
+            width: 105px !important;
+            min-width: 105px !important;
+        }
+
+        .filter-caption {
+            color: #475569 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+        }
+
+        .format-button {
+            width: 105px !important;
+            height: 38px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 10px !important;
+            color: #17223b !important;
+            background: #ffffff !important;
+            border: 1px solid #bccadd !important;
+            border-radius: 6px !important;
+            font: 500 12px Inter, Arial, sans-serif !important;
+            cursor: pointer !important;
+            outline: none !important;
+        }
+
+        /* FORCE SUBMENUS TO OPEN TOWARDS THE LEFT */
+        .format-submenu {
+            position: absolute !important;
+            top: 0 !important;
+            right: calc(100% + 8px) !important;
+            left: auto !important;
+            z-index: 2100 !important;
+            width: 170px !important;
+            max-height: 360px !important;
+            overflow-y: auto !important;
+            padding: 6px !important;
+            background: #ffffff !important;
+            border: 1px solid #d8e2ed !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 24px rgb(24 48 86 / 15%) !important;
+            display: none !important;
+        }
+
+        .format-submenu.submenu-open {
+            display: block !important;
+        }
+
+        .custom-submenu {
+            width: 230px !important;
+            min-width: 230px !important;
+            padding: 12px !important;
+            right: calc(100% + 8px) !important;
+            left: auto !important;
+        }
+
+        .custom-apply-button,
+        #applyPeriodBtn,
+        #applyCustomPeriodBtn {
+            width: 100% !important;
+            height: 36px !important;
+            margin-top: 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #1d5b9f !important;
+            border: 1px solid #1d5b9f !important;
+            color: #ffffff !important;
+            border-radius: 6px !important;
+            font: 600 12px Inter, Arial, sans-serif !important;
+            cursor: pointer !important;
+        }
+
+        .custom-apply-button:hover,
+        #applyPeriodBtn:hover,
+        #applyCustomPeriodBtn:hover {
+            background-color: #15487f !important;
+            border-color: #15487f !important;
+        }
+
+        .export-excel-row {
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-bottom: 8px !important;
+            position: relative !important;
+            z-index: 1000 !important;
+            flex: 0 0 auto !important;
+        }
+
+        .export-menu {
+            position: relative !important;
+            display: inline-block !important;
+        }
+
+        .export-menu-toggle {
+            background: #ffffff !important;
+            border: 1px solid #b8cadb !important;
+            border-radius: 6px !important;
+            padding: 8px 12px !important;
+            cursor: pointer !important;
+            color: #17223b !important;
+            font-size: 12px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .export-menu-panel {
+            position: absolute !important;
+            right: 0 !important;
+            top: calc(100% + 4px) !important;
+            background: #ffffff !important;
+            border: 1px solid #b8cadb !important;
+            border-radius: 6px !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+            min-width: 160px !important;
+            padding: 4px !important;
+            z-index: 1001 !important;
+        }
+
+        .export-menu-panel[hidden] {
+            display: none !important;
+        }
+
+        #exportExcelBtn {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            padding: 8px 12px !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 4px !important;
+            color: #217346 !important;
+            font-size: 12px !important;
+            cursor: pointer !important;
+            text-align: left !important;
+        }
+
+        #exportExcelBtn i {
+            color: #217346 !important;
+        }
+
+        #exportExcelBtn:hover {
+            background: #eef7f2 !important;
+        }
+
+        .customer-growth-report > .report-table-card {
+            flex: 1 1 0 !important;
+            min-height: 0 !important;
+            height: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            background: #ffffff !important;
+            border: 1px solid #dce5f0 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 5px 18px rgb(24 48 86 / 7%) !important;
+        }
+
+        .table-wrap {
+            flex: 1 1 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 0 !important;
+            overflow: auto !important;
+            position: relative !important;
+        }
+
+        .item-table,
+        .comparison-table {
+            width: 100% !important;
+            min-width: 1100px !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            font-size: 12px !important;
+        }
+
+        .item-table thead tr:first-child th,
+        .comparison-table thead tr:first-child th {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 20 !important;
+            height: 38px !important;
+            background: #c4c4c4 !important;
+            color: #132a46 !important;
+            border-right: 1px solid #b0b0b0 !important;
+            border-bottom: 1px solid #b0b0b0 !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            padding: 8px !important;
+        }
+
+        .item-table thead tr:nth-child(2) th,
+        .comparison-table thead tr:nth-child(2) th {
+            position: sticky !important;
+            top: 38px !important;
+            z-index: 20 !important;
+            height: 38px !important;
+            background: #c4c4c4 !important;
+            color: #132a46 !important;
+            border-right: 1px solid #b0b0b0 !important;
+            border-bottom: 1px solid #b0b0b0 !important;
+            font-weight: 700 !important;
+            text-align: right !important;
+            padding: 8px !important;
+        }
+
+        .item-table thead tr:first-child th:first-child,
+        .comparison-table thead tr:first-child th:first-child {
+            position: sticky !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 99 !important;
+            width: 260px !important;
+            min-width: 260px !important;
+            max-width: 260px !important;
+            height: 76px !important;
+            background: #c4c4c4 !important;
+            border-left: 1px solid #b0b0b0 !important;
+            border-right: 2px solid #94a3b8 !important;
+            border-bottom: 1px solid #b0b0b0 !important;
+            text-align: left !important;
+            vertical-align: middle !important;
+            padding: 0 12px !important;
+        }
+
+        .item-table tbody td:first-child,
+        .comparison-table tbody td:first-child {
+            position: sticky !important;
+            left: 0 !important;
+            z-index: 30 !important;
+            width: 260px !important;
+            min-width: 260px !important;
+            max-width: 260px !important;
+            background: #ffffff !important;
+            color: #17223b !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            border-left: 1px solid #e6edf4 !important;
+            border-right: 2px solid #b8c4d1 !important;
+            padding: 9px 12px !important;
+        }
+
+        .item-table td,
+        .comparison-table td {
+            border-right: 1px solid #e6edf4 !important;
+            border-bottom: 1px solid #e6edf4 !important;
+            padding: 9px 8px !important;
+            text-align: right !important;
+            white-space: nowrap !important;
+        }
+
+        .item-table tfoot td,
+        .comparison-table tfoot td {
+            position: sticky !important;
+            bottom: 0 !important;
+            z-index: 35 !important;
+            background: #ddecf4 !important;
+            color: #132a46 !important;
+            border-top: 2px solid #9ec5d8 !important;
+            border-right: 1px solid #9ec5d8 !important;
+            font-weight: 700 !important;
+            text-align: right !important;
+            padding: 10px 8px !important;
+        }
+
+        .item-table tfoot td:first-child,
+        .comparison-table tfoot td:first-child {
+            position: sticky !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            z-index: 85 !important;
+            width: 260px !important;
+            min-width: 260px !important;
+            max-width: 260px !important;
+            background: #ddecf4 !important;
+            color: #132a46 !important;
+            font-weight: 700 !important;
+            border-left: 1px solid #9ec5d8 !important;
+            border-right: 2px solid #9ec5d8 !important;
+            border-top: 2px solid #9ec5d8 !important;
+            text-align: left !important;
+            padding-left: 12px !important;
+        }
+    </style>
 </head>
 
 <body>
 
-<main class="customer-growth-report">
-
-    <!-- =========================================
-         COMMON HEADER
-    ========================================== -->
-
+<main class="customer-growth-report" data-report-source="{{ report_mode|default('sales') }}">
     {% include 'header.html' %}
 
-
-    <!-- =========================================
-         REPORT HEADER + FILTERS
-    ========================================== -->
-
     <section class="report-top">
-
         <div class="report-title">
-
-            <a href="{{ url_for('report_dashboard') }}"
-               class="back-link"
-               aria-label="Back to Reports">
-
+            <a href="{{ url_for('report_dashboard', modal=('purchase' if report_mode == 'purchase' else 'sales')) }}" class="back-link" aria-label="Back to Reports">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Reports</span>
-
             </a>
 
             <div class="header-content">
-
                 <p class="eyebrow">
-                    Sales Reports
+                    {{ 'Purchase Reports' if report_mode == 'purchase' else 'Sales Reports' }}
                 </p>
-
-                <h1>
-                    Entity Level
-                </h1>
-
+                <h1>Entity Level</h1>
                 <p class="subtitle">
-                    Company-wise sales growth compared with the previous financial year.
+                    {{ 'Company-wise purchase performance and contribution.' if report_mode == 'purchase' else 'Company-wise sales growth compared with the previous financial year.' }}
                 </p>
-
             </div>
-
         </div>
 
+        <form id="periodForm" class="period-form">
+            <div class="format-control">
+                <span class="filter-caption">Format</span>
+                <button type="button" id="formatValue" class="format-button" aria-expanded="false">
+                    YTD <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div id="formatMenu" class="format-menu" hidden>
+                    <!-- YTD -->
+                    <div class="format-menu-group">
+                        <button type="button" class="format-option format-parent" data-parent="YTD">
+                            YTD <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <div class="format-submenu" data-submenu="YTD">
+                            <label class="period-year-control">
+                                Year <select class="period-year-select ytd-year-select" aria-label="YTD fiscal year"></select>
+                            </label>
+                        </div>
+                    </div>
 
-        <!-- =========================================
-             PERIOD FILTER
-        ========================================== -->
+                    <!-- QTD -->
+                    <div class="format-menu-group">
+                        <button type="button" class="format-option format-parent" data-parent="QTD">
+                            QTD <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <div class="format-submenu" data-submenu="QTD">
+                            <label class="period-year-control">
+                                Year <select class="period-year-select qtd-year-select" aria-label="QTD fiscal year"></select>
+                            </label>
+                            <button type="button" data-quarter="Q1">Q1 <span>Apr - Jun</span></button>
+                            <button type="button" data-quarter="Q2">Q2 <span>Jul - Sep</span></button>
+                            <button type="button" data-quarter="Q3">Q3 <span>Oct - Dec</span></button>
+                            <button type="button" data-quarter="Q4">Q4 <span>Jan - Mar</span></button>
+                        </div>
+                    </div>
 
-        <form id="periodForm"
-              class="period-form">
+                    <!-- MTD -->
+                    <div class="format-menu-group">
+                        <button type="button" class="format-option format-parent" data-parent="MTD">
+                            MTD <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <div class="format-submenu" data-submenu="MTD">
+                            <label class="period-year-control">
+                                Year <select class="period-year-select mtd-year-select" aria-label="MTD fiscal year"></select>
+                            </label>
+                            <button type="button" data-month="April">April</button>
+                            <button type="button" data-month="May">May</button>
+                            <button type="button" data-month="June">June</button>
+                            <button type="button" data-month="July">July</button>
+                            <button type="button" data-month="August">August</button>
+                            <button type="button" data-month="September">September</button>
+                            <button type="button" data-month="October">October</button>
+                            <button type="button" data-month="November">November</button>
+                            <button type="button" data-month="December">December</button>
+                            <button type="button" data-month="January">January</button>
+                            <button type="button" data-month="February">February</button>
+                            <button type="button" data-month="March">March</button>
+                        </div>
+                    </div>
 
-            <label for="fromDate">
-                From
-
-                <input
-                    type="date"
-                    id="fromDate"
-                    name="from"
-                    required
-                >
-            </label>
-
-
-            <label for="toDate">
-                To
-
-                <input
-                    type="date"
-                    id="toDate"
-                    name="to"
-                    required
-                >
-            </label>
-
-
-            <button
-                type="submit"
-                id="applyPeriodBtn">
-
-                <i class="fa-solid fa-arrows-rotate"></i>
-                Apply period
-
-            </button>
-
+                    <!-- CUSTOM -->
+                    <div class="format-menu-group">
+                        <button type="button" class="format-option format-parent" data-parent="CUSTOM">
+                            Custom <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <div class="format-submenu custom-submenu" data-submenu="CUSTOM">
+                            <label class="custom-date-control" for="fromDate">
+                                From <input id="fromDate" name="from" type="date" required>
+                            </label>
+                            <label class="custom-date-control" for="toDate">
+                                To <input id="toDate" name="to" type="date" required>
+                            </label>
+                            <button type="button" id="applyPeriodBtn" class="custom-apply-button">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
-
     </section>
 
+    <!-- Export Menu -->
     <div class="export-excel-row">
         <div class="export-menu" data-export-menu>
-            <button type="button" class="export-menu-toggle" aria-label="More report actions" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
-            <div class="export-menu-panel" hidden><button type="button" class="export-excel-btn" data-export-excel data-sheet="Entity Level" data-filename="entity-level"><i class="fa-solid fa-file-excel"></i> Export Excel</button></div>
+            <button type="button" class="export-menu-toggle" aria-label="More report actions" aria-expanded="false">
+                <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <div class="export-menu-panel" hidden>
+                <button type="button" id="exportExcelBtn" class="export-excel-btn" title="Export report to Excel">
+                    <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
+            </div>
         </div>
     </div>
 
-
-    <!-- =========================================
-         REPORT TABLE
-    ========================================== -->
-
-    <section class="report-table-card"
-             aria-live="polite">
-
-        <div id="reportStatus"
-             class="report-status">
-
+    <section class="report-table-card" aria-live="polite">
+        <div id="reportStatus" class="report-status">
             Loading entity report…
-
         </div>
-
-
-        <div id="tableWrap"
-             class="table-wrap"
-             hidden>
-
-        </div>
-
+        <div id="tableWrap" class="table-wrap" hidden></div>
     </section>
-
 </main>
 
-<script
-    src="{{ url_for('static', filename='js/header.js') }}"
-    ></script>
+<!-- Scripts -->
+<script src="{{ url_for('static', filename='js/header.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sales-period-format.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
 <script src="{{ url_for('static', filename='js/entity-level.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const exportMenu = document.querySelector("[data-export-menu]");
+        if (!exportMenu) return;
+
+        const toggleBtn = exportMenu.querySelector(".export-menu-toggle");
+        const panel = exportMenu.querySelector(".export-menu-panel");
+
+        toggleBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const isHidden = panel.hasAttribute("hidden");
+            if (isHidden) {
+                panel.removeAttribute("hidden");
+                toggleBtn.setAttribute("aria-expanded", "true");
+            } else {
+                panel.setAttribute("hidden", "");
+                toggleBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!exportMenu.contains(e.target)) {
+                panel.setAttribute("hidden", "");
+                toggleBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+    });
+</script>
 </body>
 </html>

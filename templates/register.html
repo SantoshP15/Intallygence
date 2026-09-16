@@ -4,16 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} | InTallygence</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-itemwise.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/export-excel.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/report-viewport.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
     <style>
         html,
         body {
             height: 100%;
             overflow: hidden;
+            background: #f4f7fb;
+            font-family: "Inter", Arial, sans-serif !important;
         }
 
         .register-report {
@@ -21,10 +30,72 @@
             flex-direction: column;
             height: 100vh;
             min-height: 0;
+            padding: 16px 3.5%;
+            box-sizing: border-box;
+            font-family: "Inter", Arial, sans-serif !important;
         }
 
         .register-report .report-top {
-            flex: 0 0 auto;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 30px !important;
+            width: 100% !important;
+            margin: 0 0 16px 0 !important;
+            flex: 0 0 auto !important;
+        }
+
+        /* Ambient Glow Filter Card Container matching Sales vs Sales Return */
+        .register-filter-form {
+            display: inline-flex !important;
+            align-items: flex-end !important;
+            gap: 16px !important;
+            width: auto !important;
+            max-width: fit-content !important;
+            flex-shrink: 0 !important;
+            margin: 0 !important;
+            padding: 14px 18px !important;
+            background: #ffffff !important;
+            border: 1px solid #dce5f0 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 6px 22px rgba(24, 48, 86, 0.08), 
+                        0 2px 6px rgba(24, 48, 86, 0.04) !important;
+        }
+
+        .filter-control-group {
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 5px !important;
+        }
+
+        .filter-control-group label {
+            color: #475569 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            margin: 0 !important;
+        }
+
+        .register-filter-form select {
+            width: 170px !important;
+            height: 38px !important;
+            padding: 0 28px 0 12px !important;
+            background: #ffffff !important;
+            border: 1px solid #bccadd !important;
+            border-radius: 6px !important;
+            color: #17223b !important;
+            font: 500 12px "Inter", Arial, sans-serif !important;
+            cursor: pointer !important;
+            outline: none !important;
+            box-shadow: 0 2px 6px rgba(24, 48, 86, 0.04);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .register-filter-form select:hover,
+        .register-filter-form select:focus {
+            border-color: #7f9fbb !important;
+            box-shadow: 0 4px 12px rgba(24, 48, 86, 0.08) !important;
         }
 
         .register-report .report-table-card {
@@ -32,15 +103,52 @@
             flex: 1 1 auto;
             flex-direction: column;
             min-height: 0;
+            background: #ffffff;
+            border: 1px solid #dce5f0;
+            border-radius: 12px;
+            overflow: visible;
+            box-shadow: 0 5px 18px rgb(24 48 86 / 7%);
         }
 
         .register-report .table-wrap {
             flex: 1 1 auto;
             max-height: none;
+            overflow: auto;
+            position: relative;
+            border-radius: 12px;
         }
 
         .register-report .customer-itemwise-table {
+            width: 100%;
             min-width: max-content;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            font-family: "Inter", Arial, sans-serif !important;
+            font-size: 12px;
+        }
+
+        .register-report .customer-itemwise-table th {
+            background: #c4c4c4;
+            border-color: #b0b0b0;
+            color: #132a46;
+            font-weight: 700;
+            font-family: "Inter", Arial, sans-serif !important;
+            text-align: center !important;
+        }
+
+        .register-report .customer-itemwise-table th,
+        .register-report .customer-itemwise-table td {
+            padding: 9px 12px;
+            border-right: 1px solid #e6edf4;
+            border-bottom: 1px solid #e6edf4;
+            white-space: nowrap;
+            font-family: "Inter", Arial, sans-serif !important;
+            text-align: center !important;
+        }
+
+        .register-report .customer-itemwise-table th:first-child,
+        .register-report .customer-itemwise-table td:first-child {
+            text-align: left !important;
         }
 
         .register-report .register-pagination {
@@ -50,12 +158,91 @@
             justify-content: center;
             gap: 18px;
             padding: 12px 0 0;
+            font-family: "Inter", Arial, sans-serif !important;
         }
 
         .register-report .register-pagination a {
             color: #1558a6;
             font-weight: 600;
             text-decoration: none;
+            font-family: "Inter", Arial, sans-serif !important;
+        }
+
+        /* Export Menu & Button Styles matching target design */
+        .export-excel-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .export-menu {
+            position: relative;
+        }
+
+        .export-menu-toggle {
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #b8cadb;
+            border-radius: 6px;
+            color: #34516e;
+            cursor: pointer;
+            display: inline-flex;
+            font-family: "Inter", Arial, sans-serif !important;
+            height: 32px;
+            justify-content: center;
+            width: 36px;
+        }
+
+        .export-menu-toggle:hover,
+        .export-menu-toggle[aria-expanded="true"] {
+            background: #eef5fb;
+            border-color: #7f9fbb;
+        }
+
+        .export-menu-panel {
+            background: #ffffff;
+            border: 1px solid #d5e0eb;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgb(24 48 86 / 14%);
+            min-width: 155px;
+            padding: 6px;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 5px);
+            z-index: 1000;
+            font-family: "Inter", Arial, sans-serif !important;
+        }
+
+        .export-menu-panel[hidden] {
+            display: none;
+        }
+
+        .export-excel-btn {
+            align-items: center;
+            background: transparent;
+            border: 0;
+            border-radius: 6px;
+            color: #107c41; /* Clean Excel text green */
+            cursor: pointer;
+            display: flex;
+            font-family: "Inter", Arial, sans-serif !important;
+            font-size: 13px;
+            font-weight: 500;
+            gap: 10px;
+            padding: 8px 10px;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .export-excel-btn i {
+            font-size: 14px;
+            color: #107c41;
+        }
+
+        .export-excel-btn:hover {
+            background: #eef8ec;
         }
     </style>
 </head>
@@ -65,7 +252,7 @@
 
         <section class="report-top">
             <div class="report-title">
-                <a class="back-link" href="{{ url_for('report_dashboard') }}" aria-label="Back to Reports">
+                <a class="back-link" href="{{ url_for('report_dashboard', modal=('purchase' if report_mode == 'purchase' else 'sales')) }}" aria-label="Back to Reports">
                     <i class="fa-solid fa-arrow-left"></i>
                     Reports
                 </a>
@@ -75,12 +262,33 @@
                     <p class="subtitle">{{ total }} transactions</p>
                 </div>
             </div>
+
+            <!-- Unified Format / Year Filter Form -->
+            <form class="register-filter-form" method="get">
+                <div class="filter-control-group">
+                    <label for="yearFilter">Format</label>
+                    <select id="yearFilter" name="year" onchange="this.form.submit()">
+                        <option value="">All Years</option>
+                        {% for year in available_years %}
+                            <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                                {{ year }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
         </section>
 
         <div class="export-excel-row">
             <div class="export-menu" data-export-menu>
-                <button type="button" class="export-menu-toggle" aria-label="More report actions" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
-                <div class="export-menu-panel" hidden><button type="button" class="export-excel-btn" data-export-excel data-sheet="{{ title }}" data-filename="{{ title|lower|replace(' ', '-') }}"><i class="fa-solid fa-file-excel"></i> Export Excel</button></div>
+                <button type="button" class="export-menu-toggle" aria-label="More report actions" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <div class="export-menu-panel" hidden>
+                    <a href="{{ url_for(route_name, export='true') }}" class="export-excel-btn">
+                        <i class="fa-solid fa-file-excel"></i> Export Excel
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -90,16 +298,64 @@
                     <table class="customer-itemwise-table">
                         <thead>
                             <tr>
-                                {% for column in columns %}
-                                    <th>{{ column.replace('_', ' ') }}</th>
+                                {# Define desired column ordering sequence #}
+                                {% set desired_order = ['vouchernumber', 'voucherdate', 'partyledgername', 'itemname', 'quantity', 'rate', 'amount', 'amount_dr_cr', 'vouchertype', 'narration', 'state', 'country', 'companyname'] %}
+                                
+                                {# Build sorted/filtered list of columns matching desired sequence #}
+                                {% set ordered_columns = [] %}
+                                {% for col in desired_order %}
+                                    {% for c in columns %}
+                                        {% if c.lower() == col and c.lower() not in ['primary_key', 'id', 'voucher_id'] %}
+                                            {% if c.lower() not in ordered_columns %}
+                                                {% set _ = ordered_columns.append(c.lower()) %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                                {# Append any remaining columns not explicitly specified in desired_order #}
+                                {% for c in columns %}
+                                    {% if c.lower() not in ordered_columns and c.lower() not in ['primary_key', 'id', 'voucher_id'] %}
+                                        {% set _ = ordered_columns.append(c.lower()) %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {# Column renaming dictionary #}
+                                {% set column_aliases = {
+                                    'vouchernumber': 'Voucher Number',
+                                    'voucherdate': 'Voucher Date',
+                                    'partyledgername': 'Customer',
+                                    'itemname': 'Item Name',
+                                    'quantity': 'Quantity',
+                                    'rate': 'Rate',
+                                    'amount': 'Amount',
+                                    'amount_dr_cr': 'Dr / Cr',
+                                    'dr_cr': 'Dr / Cr',
+                                    'narration': 'Narration',
+                                    'voucher': 'Voucher',
+                                    'country': 'Country',
+                                    'state': 'State',
+                                    'companyname': 'Company Name',
+                                    'vouchertype': 'Voucher Type'
+                                } %}
+
+                                {% for col_lower in ordered_columns %}
+                                    <th>{{ column_aliases.get(col_lower, col_lower.replace('_', ' ').title()) }}</th>
                                 {% endfor %}
                             </tr>
                         </thead>
                         <tbody>
                             {% for row in data %}
                                 <tr>
-                                    {% for column in columns %}
-                                        <td>{{ row[column] }}</td>
+                                    {% for col_lower in ordered_columns %}
+                                        {# Find matching original key case from row dictionary #}
+                                        {% set matched_key = namespace(val='') %}
+                                        {% for k in row.keys() %}
+                                            {% if k.lower() == col_lower %}
+                                                {% set matched_key.val = k %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <td>{{ row[matched_key.val] if matched_key.val != '' else '' }}</td>
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
@@ -121,8 +377,35 @@
             {% endif %}
         </nav>
     </main>
+
     <script src="{{ url_for('static', filename='js/header.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="{{ url_for('static', filename='js/export-excel.js') }}"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const exportMenu = document.querySelector("[data-export-menu]");
+        if (!exportMenu) return;
+
+        const toggleBtn = exportMenu.querySelector(".export-menu-toggle");
+        const panel = exportMenu.querySelector(".export-menu-panel");
+
+        toggleBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const isHidden = panel.hasAttribute("hidden");
+            if (isHidden) {
+                panel.removeAttribute("hidden");
+                toggleBtn.setAttribute("aria-expanded", "true");
+            } else {
+                panel.setAttribute("hidden", "");
+                toggleBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!exportMenu.contains(e.target)) {
+                panel.setAttribute("hidden", "");
+                toggleBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+    });
+    </script>
 </body>
 </html>

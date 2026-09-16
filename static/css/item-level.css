@@ -1099,3 +1099,154 @@ body {
     background: #1d568f;
     border-color: #1d568f;
 }
+/* =========================================================
+   STICKY TOTAL COLUMNS (Item + Total Sales Frozen Left)
+   ========================================================= */
+
+/* 1. Header row 1: Total Sales group header */
+.item-table thead tr:first-child th:nth-child(2),
+.comparison-table thead tr:first-child th:nth-child(2) {
+    position: sticky !important;
+    top: 0 !important;
+    left: 260px !important;
+    z-index: 89 !important;
+    background: #c4c4c4 !important;
+    min-width: 210px !important;
+}
+
+/* 2. Header row 2: Total Sales -> Sales (1st col) & Sales % (2nd col) */
+.item-table thead tr:nth-child(2) th:nth-child(1),
+.comparison-table thead tr:nth-child(2) th:nth-child(1) {
+    position: sticky !important;
+    top: 38px !important;
+    left: 260px !important;
+    z-index: 89 !important;
+    background: #c4c4c4 !important;
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.item-table thead tr:nth-child(2) th:nth-child(2),
+.comparison-table thead tr:nth-child(2) th:nth-child(2) {
+    position: sticky !important;
+    top: 38px !important;
+    left: 380px !important; /* 260px (Item width) + 120px (Sales width) */
+    z-index: 89 !important;
+    background: #c4c4c4 !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    border-right: 2px solid #94a3b8 !important;
+}
+
+/* 3. Body cells for Total Sales */
+.item-table tbody td:nth-child(2),
+.comparison-table tbody td:nth-child(2) {
+    position: sticky !important;
+    left: 260px !important;
+    z-index: 28 !important;
+    background: #ffffff !important;
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.item-table tbody td:nth-child(3),
+.comparison-table tbody td:nth-child(3) {
+    position: sticky !important;
+    left: 380px !important;
+    z-index: 28 !important;
+    background: #ffffff !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    border-right: 2px solid #b8c4d1 !important;
+}
+
+.item-table tbody tr:hover td:nth-child(2),
+.item-table tbody tr:hover td:nth-child(3),
+.comparison-table tbody tr:hover td:nth-child(2),
+.comparison-table tbody tr:hover td:nth-child(3) {
+    background: #f0f8fc !important;
+}
+
+/* 4. Footer cells for Grand Total */
+.item-table tfoot td:nth-child(2),
+.comparison-table tfoot td:nth-child(2) {
+    position: sticky !important;
+    left: 260px !important;
+    bottom: 0 !important;
+    z-index: 84 !important;
+    background: #ddecf4 !important;
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.item-table tfoot td:nth-child(3),
+.comparison-table tfoot td:nth-child(3) {
+    position: sticky !important;
+    left: 380px !important;
+    bottom: 0 !important;
+    z-index: 84 !important;
+    background: #ddecf4 !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    border-right: 2px solid #9ec5d8 !important;
+}
+
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap !important;
+    padding: 8px 12px !important;
+}
+
+/* Flexbox layout to cleanly split header text and sorting arrows */
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header {
+    display: table-cell; /* fallback */
+}
+
+/* Convert header content alignment using flex inside the th */
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header {
+    position: relative;
+    padding-right: 32px !important;
+}
+
+/* Using a clean pseudo-element with absolute right spacing */
+.item-table th.sortable-header::after,
+.comparison-table th.sortable-header::after,
+.customer-table th.sortable-header::after {
+    content: "▲ ▼";
+    font-size: 7px;
+    color: #8899a6;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    letter-spacing: 2px;
+}
+
+/* Agar text right-aligned hai toh padding aur adjust kar lo */
+.item-table thead tr:nth-child(2) th.sortable-header,
+.comparison-table thead tr:nth-child(2) th.sortable-header {
+    padding-right: 36px !important;
+}
+
+.item-table th.sortable-header.asc::after,
+.comparison-table th.sortable-header.asc::after,
+.customer-table th.sortable-header.asc::after,
+.item-table th.sortable-header.desc::after,
+.comparison-table th.sortable-header.desc::after,
+.customer-table th.sortable-header.desc::after {
+    color: #17223b;
+    font-weight: bold;
+}
+
+.item-table th.sortable-header:hover,
+.comparison-table th.sortable-header:hover,
+.customer-table th.sortable-header:hover {
+    background: #b0b0b0 !important;
+}

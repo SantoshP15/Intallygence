@@ -22,7 +22,6 @@ body {
 
 /* =========================================================
    REPORT PAGE
-   Same outer spacing as Report Dashboard
 ========================================================= */
 
 .customer-growth-report {
@@ -35,7 +34,6 @@ body {
 
 /* =========================================================
    REPORT TOP
-   Title on left + filters on right
 ========================================================= */
 
 .report-top {
@@ -119,7 +117,7 @@ body {
 
 
 /* =========================================================
-   REPORT TITLE
+   REPORT TITLE H1
 ========================================================= */
 
 .header-content h1 {
@@ -284,19 +282,11 @@ body {
 
 
 /* =========================================================
-   STATUS
+   STATUS (HIDDEN TO REMOVE "X CUSTOMERS FOUND" TEXT)
 ========================================================= */
 
 .report-status {
-    width: 100%;
-
-    min-height: 20px;
-
-    margin: 0 0 9px;
-
-    color: #64748b;
-
-    font-size: 12px;
+    display: none !important;
 }
 
 
@@ -306,66 +296,87 @@ body {
 
 .table-wrap {
     width: 100%;
-
+    max-height: calc(100vh - 180px);
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: auto;
+    position: relative;
 
     background: #ffffff;
-
     border: 1px solid #d7e1ee;
     border-radius: 12px;
-
-    box-shadow:
-        0 2px 7px rgb(15 23 42 / 4%);
-
+    box-shadow: 0 2px 7px rgb(15 23 42 / 4%);
     scrollbar-width: thin;
 }
 
 
 /* =========================================================
-   CUSTOMER GROWTH TABLE
+   STICKY HEADERS & FIRST COLUMN
+========================================================= */
+
+.customer-growth-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #c4c4c4;
+}
+
+.customer-growth-table tbody td:first-child,
+.customer-growth-table tfoot td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 9;
+    background: #ffffff;
+}
+
+.customer-growth-table tbody tr:hover td:first-child {
+    background: #f7fafc;
+}
+
+.customer-growth-table tfoot td:first-child {
+    background: #eef3f8;
+}
+
+.customer-growth-table thead th:first-child {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    background: #c4c4c4;
+}
+
+
+/* =========================================================
+   CUSTOMER GROWTH TABLE & COLUMN WIDTHS
 ========================================================= */
 
 .customer-growth-table {
     width: 100%;
     min-width: 900px;
-
     border-collapse: separate;
     border-spacing: 0;
-
     table-layout: fixed;
-
     font-size: 12px;
 }
-
-
-/* =========================================================
-   COLUMN WIDTHS
-========================================================= */
 
 .customer-growth-table th:first-child,
 .customer-growth-table td:first-child {
     width: 34%;
 }
 
-
 .customer-growth-table th:nth-child(2),
 .customer-growth-table td:nth-child(2) {
     width: 16.5%;
 }
-
 
 .customer-growth-table th:nth-child(3),
 .customer-growth-table td:nth-child(3) {
     width: 16.5%;
 }
 
-
 .customer-growth-table th:nth-child(4),
 .customer-growth-table td:nth-child(4) {
     width: 16.5%;
 }
-
 
 .customer-growth-table th:nth-child(5),
 .customer-growth-table td:nth-child(5) {
@@ -374,13 +385,12 @@ body {
 
 
 /* =========================================================
-   TABLE HEADER
+   TABLE HEADER (COMPACT HEIGHT & PADDING)
 ========================================================= */
 
 .customer-growth-table thead th {
-    height: 44px;
-
-    padding: 10px 12px;
+    height: 32px !important;
+    padding: 4px 34px 4px 12px !important;
 
     background: #c4c4c4;
     color: #062e55;
@@ -392,15 +402,14 @@ body {
     font-weight: 700;
 
     text-align: right;
-
-    white-space: nowrap;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
 }
-
 
 .customer-growth-table thead th:first-child {
     text-align: left;
+    padding-left: 12px !important;
 }
-
 
 .customer-growth-table thead th:last-child {
     border-right: none;
@@ -408,17 +417,35 @@ body {
 
 
 /* =========================================================
-   SORTABLE HEADER
+   SORTABLE HEADER & DUAL TRIANGLES FIX (NAME FIRST, THEN TRIANGLES)
 ========================================================= */
 
 .customer-growth-table th.sortable-header {
     cursor: pointer;
     user-select: none;
+    position: relative !important;
 }
 
+.customer-growth-table th.sortable-header::after {
+    content: "▲ ▼";
+    font-size: 7px;
+    color: #8899a6;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    letter-spacing: 2px;
+    pointer-events: none;
+}
+
+.customer-growth-table th.sortable-header.asc::after,
+.customer-growth-table th.sortable-header.desc::after {
+    color: #17223b;
+    font-weight: bold;
+}
 
 .customer-growth-table th.sortable-header:hover {
-    background: #b0b0b0;
+    background: #b0b0b0 !important;
     color: #05294d;
 }
 
@@ -429,44 +456,26 @@ body {
 
 .customer-growth-table tbody td {
     height: 35px;
-
     padding: 8px 10px;
-
     background: #ffffff;
     color: #172b4d;
-
     border-right: 1px solid #e1e8f0;
     border-bottom: 1px solid #e1e8f0;
-
     text-align: right;
-
     white-space: nowrap;
 }
 
-
-/* =========================================================
-   CUSTOMER NAME
-========================================================= */
-
 .customer-growth-table tbody td:first-child {
     text-align: left;
-
     font-weight: 600;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-
 .customer-growth-table tbody td:last-child {
     border-right: none;
 }
-
-
-/* =========================================================
-   ROW HOVER
-========================================================= */
 
 .customer-growth-table tbody tr:hover td {
     background: #f7fafc;
@@ -474,61 +483,39 @@ body {
 
 
 /* =========================================================
-   GROWTH VALUES
+   STICKY FOOTER / GRAND TOTAL
 ========================================================= */
 
-.customer-growth-table .growth-positive {
-    font-weight: 600;
+.customer-growth-table tfoot {
+    position: sticky;
+    bottom: 0;
+    z-index: 12;
 }
-
-
-.customer-growth-table .growth-negative {
-    font-weight: 600;
-}
-
-
-.customer-growth-table .growth-neutral {
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   NEW CUSTOMER
-========================================================= */
-
-.customer-growth-table .new-customer {
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   TOTAL ROW
-========================================================= */
 
 .customer-growth-table tfoot td {
+    position: sticky;
+    bottom: 0;
+    z-index: 12;
     height: 42px;
-
     padding: 10px;
-
-    background: #eef3f8;
+    background: #eef3f8 !important;
     color: #102a4c;
-
     border-right: 1px solid #d2dce7;
     border-top: 2px solid #9aaabd;
-
     text-align: right;
-
     font-size: 12px;
     font-weight: 700;
-
     white-space: nowrap;
 }
 
-
 .customer-growth-table tfoot td:first-child {
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    z-index: 16;
+    background: #eef3f8 !important;
     text-align: left;
 }
-
 
 .customer-growth-table tfoot td:last-child {
     border-right: none;
@@ -539,66 +526,40 @@ body {
    NUMBER ALIGNMENT
 ========================================================= */
 
-.customer-growth-table .number-cell {
-    text-align: right;
-
-    font-variant-numeric: tabular-nums;
-}
-
-
+.customer-growth-table .number-cell,
 .customer-growth-table .percent-cell {
     text-align: right;
-
     font-variant-numeric: tabular-nums;
 }
 
 
 /* =========================================================
-   LOADING
+   LOADING, EMPTY & ERROR STATES
 ========================================================= */
 
 .report-loading {
     min-height: 100px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #64748b;
-
     font-size: 13px;
 }
-
-
-/* =========================================================
-   EMPTY REPORT
-========================================================= */
 
 .empty-report {
     padding: 45px 20px;
-
     color: #64748b;
-
     text-align: center;
-
     font-size: 13px;
 }
-
-
-/* =========================================================
-   ERROR
-========================================================= */
 
 .report-error {
     margin: 15px;
     padding: 13px 15px;
-
     border: 1px solid #fecaca;
     border-radius: 7px;
-
     background: #fef2f2;
     color: #b91c1c;
-
     font-size: 13px;
 }
 
@@ -611,17 +572,14 @@ body {
     height: 8px;
 }
 
-
 .table-wrap::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
-
 
 .table-wrap::-webkit-scrollbar-thumb {
     background: #a7b6c8;
     border-radius: 10px;
 }
-
 
 .table-wrap::-webkit-scrollbar-thumb:hover {
     background: #7d8fa5;
@@ -629,96 +587,86 @@ body {
 
 
 /* =========================================================
-   RESPONSIVE - TABLET
+   RESPONSIVE
 ========================================================= */
 
 @media (max-width: 900px) {
-
     .customer-growth-report {
         padding: 16px 12px 25px;
     }
-
-
     .report-top {
         align-items: flex-start;
         flex-direction: column;
     }
-
-
     .report-title {
         width: 100%;
     }
-
-
     .period-form {
         width: 100%;
         flex-wrap: wrap;
     }
-
-
     .customer-growth-table {
         min-width: 850px;
     }
 }
 
-
-/* =========================================================
-   RESPONSIVE - MOBILE
-========================================================= */
-
 @media (max-width: 600px) {
-
     .customer-growth-report {
         padding: 12px 8px 20px;
     }
-
-
-    .report-top {
-        gap: 15px;
-    }
-
-
-    .report-title {
-        gap: 12px;
-    }
-
-
     .header-content h1 {
         font-size: 23px;
     }
-
-
-    .subtitle {
-        font-size: 13px;
-    }
-
-
     .period-form {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
-
         padding: 12px;
     }
-
-
-    .period-form label {
-        min-width: 0;
-    }
-
-
     .period-form input {
         width: 100%;
     }
-
-
     .period-form button {
         width: 100%;
         grid-column: 1 / -1;
     }
+}/* =========================================================
+   FIX DROPDOWN OVERLAPPING 3-DOTS EXPORT MENU
+========================================================= */
 
+/* Format dropdown aur uske menus ko sabse upar layer (z-index) par laayein */
+#formatMenu,
+.format-submenu,
+.custom-submenu {
+    z-index: 99999 !important;
+}
 
-    .customer-growth-table {
-        min-width: 850px;
-    }
+/* Export menu button/panel ka z-index kam rakhein taaki dropdown uske upar aaye */
+.export-excel-row {
+    z-index: 100 !important;
+}
+
+.export-menu-panel {
+    z-index: 101 !important;
+}
+/* =========================================================
+   FIX CUSTOM APPLY BUTTON CLICK & POINTER EVENTS
+   ========================================================= */
+
+.format-submenu,
+.custom-submenu {
+    pointer-events: auto !important;
+}
+
+.custom-apply-button,
+#applyPeriodBtn,
+#applyCustomPeriodBtn {
+    position: relative !important;
+    z-index: 9999999 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+#formatMenu {
+    z-index: 999999 !important;
 }

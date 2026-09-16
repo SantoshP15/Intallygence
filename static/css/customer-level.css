@@ -46,7 +46,7 @@ body {
 
 .export-excel-btn {
     align-items: center;
-    background: #217346;
+    background: #1a7340;
     border: 0;
     border-radius: 6px;
     color: #ffffff;
@@ -54,13 +54,12 @@ body {
     display: inline-flex;
     font: inherit;
     font-size: 13px;
-    font-weight: 600;
     gap: 8px;
     padding: 10px 14px;
 }
 
 .export-excel-btn:hover {
-    background: #185c37;
+    background: #1a7340;
 }
 
 
@@ -2883,4 +2882,252 @@ body {
         grid-row: 3 !important;
         width: min(100%, 420px) !important;
     }
+}
+/* =========================================================
+   STICKY FOOTER / GRAND TOTAL (PINNED BOTTOM)
+   ========================================================= */
+
+    /* 1. Standard Customer Table (.customer-table) */
+    .customer-table tfoot {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+    }
+
+    .customer-table tfoot td {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+        padding: 10px 8px;
+        color: #132a46;
+        background: #ddecf4 !important; /* Required to prevent rows showing through */
+        border-top: 2px solid #9ec5d8;
+        font-weight: 700;
+    }
+
+    /* Intersection: Bottom-Left Customer Column */
+    .customer-table tfoot td:first-child {
+        position: sticky;
+        left: 0;
+        bottom: 0;
+        z-index: 16; /* Higher than regular footer cells and body sticky column */
+        background: #ddecf4 !important;
+    }
+
+
+    /* 2. Comparison Table (.comparison-table) */
+    .comparison-table tfoot {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+    }
+
+    .comparison-table tfoot td {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+        background: #ddecf4 !important;
+        border-top: 2px solid #9ec5d8;
+    }
+
+    /* Intersection: Bottom-Left Customer Column */
+    .comparison-table tfoot td:first-child {
+        position: sticky;
+        left: 0;
+        bottom: 0;
+        z-index: 16;
+        background: #ddecf4 !important;
+    }
+
+
+    /* 3. YTD Comparison Table (.ytd-table) */
+    .ytd-table tfoot {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+    }
+
+    .ytd-table tfoot td {
+        position: sticky;
+        bottom: 0;
+        z-index: 9;
+        background: #ddecf4 !important;
+        border-top: 2px solid #9ec5d8;
+    }
+
+    .ytd-table tfoot td:first-child {
+        position: sticky;
+        left: 0;
+        bottom: 0;
+        z-index: 16;
+        background: #ddecf4 !important;
+    }
+    /* =========================================================
+   STICKY TOTAL COLUMNS (Customer + Total Sales Frozen Left)
+   ========================================================= */
+
+    /* 1. Header row 1: Total Sales group header */
+    .customer-table thead tr:first-child th:nth-child(2),
+    .comparison-table thead tr:first-child th:nth-child(2) {
+        position: sticky !important;
+        top: 0 !important;
+        left: 260px !important;
+        z-index: 89 !important;
+        background: #c4c4c4 !important;
+        min-width: 210px !important;
+    }
+
+    /* 2. Header row 2: Total Sales -> Sales (1st col) & Sales % (2nd col) */
+    .customer-table thead tr:nth-child(2) th:nth-child(1),
+    .comparison-table thead tr:nth-child(2) th:nth-child(1) {
+        position: sticky !important;
+        top: 38px !important;
+        left: 260px !important;
+        z-index: 89 !important;
+        background: #c4c4c4 !important;
+        width: 120px !important;
+        min-width: 120px !important;
+    }
+
+    .customer-table thead tr:nth-child(2) th:nth-child(2),
+    .comparison-table thead tr:nth-child(2) th:nth-child(2) {
+        position: sticky !important;
+        top: 38px !important;
+        left: 380px !important; /* 260px (Customer width) + 120px (Sales width) */
+        z-index: 89 !important;
+        background: #c4c4c4 !important;
+        width: 90px !important;
+        min-width: 90px !important;
+        border-right: 2px solid #94a3b8 !important;
+    }
+
+    /* 3. Body cells for Total Sales */
+    .customer-table tbody td:nth-child(2),
+    .comparison-table tbody td:nth-child(2) {
+        position: sticky !important;
+        left: 260px !important;
+        z-index: 28 !important;
+        background: #ffffff !important;
+        width: 120px !important;
+        min-width: 120px !important;
+    }
+
+    .customer-table tbody td:nth-child(3),
+    .comparison-table tbody td:nth-child(3) {
+        position: sticky !important;
+        left: 380px !important;
+        z-index: 28 !important;
+        background: #ffffff !important;
+        width: 90px !important;
+        min-width: 90px !important;
+        border-right: 2px solid #b8c4d1 !important;
+    }
+
+    .customer-table tbody tr:hover td:nth-child(2),
+    .customer-table tbody tr:hover td:nth-child(3),
+    .comparison-table tbody tr:hover td:nth-child(2),
+    .comparison-table tbody tr:hover td:nth-child(3) {
+        background: #f0f8fc !important;
+    }
+
+    /* 4. Footer cells for Grand Total */
+    .customer-table tfoot td:nth-child(2),
+    .comparison-table tfoot td:nth-child(2) {
+        position: sticky !important;
+        left: 260px !important;
+        bottom: 0 !important;
+        z-index: 84 !important;
+        background: #ddecf4 !important;
+        width: 120px !important;
+        min-width: 120px !important;
+    }
+
+    .customer-table tfoot td:nth-child(3),
+    .comparison-table tfoot td:nth-child(3) {
+        position: sticky !important;
+        left: 380px !important;
+        bottom: 0 !important;
+        z-index: 84 !important;
+        background: #ddecf4 !important;
+        width: 90px !important;
+        min-width: 90px !important;
+        border-right: 2px solid #9ec5d8 !important;
+    }
+ /* =========================================================
+   COLUMN NAME FIRST, THEN TRIANGLES RIGHT BESIDE IT (FLEXBOX)
+   ========================================================= */
+/* =========================================================
+   SORTING HEADERS & DUAL TRIANGLES SPACING & HOVER FIX
+   ========================================================= */
+
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header,
+.itemwise-customer-table th.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap !important;
+    padding: 8px 12px !important;
+    position: relative !important;
+    padding-right: 32px !important;
+}
+
+/* Fallback display */
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header,
+.itemwise-customer-table th.sortable-header {
+    display: table-cell;
+}
+
+/* Right-aligned headers padding adjustment */
+.item-table thead tr:nth-child(2) th.sortable-header,
+.comparison-table thead tr:nth-child(2) th.sortable-header,
+.customer-table thead tr:nth-child(2) th.sortable-header,
+.itemwise-customer-table thead tr:nth-child(2) th.sortable-header {
+    padding-right: 36px !important;
+}
+
+/* Dual Triangles pseudo-element */
+.item-table th.sortable-header::after,
+.comparison-table th.sortable-header::after,
+.customer-table th.sortable-header::after,
+.itemwise-customer-table th.sortable-header::after {
+    content: "▲ ▼";
+    font-size: 7px;
+    color: #8899a6;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    letter-spacing: 2px;
+}
+
+/* Active Sorting Highlight Colors (Ascending / Descending) */
+.item-table th.sortable-header.asc::after,
+.comparison-table th.sortable-header.asc::after,
+.customer-table th.sortable-header.asc::after,
+.itemwise-customer-table th.sortable-header.asc::after,
+.item-table th.sortable-header.desc::after,
+.comparison-table th.sortable-header.desc::after,
+.customer-table th.sortable-header.desc::after,
+.itemwise-customer-table th.sortable-header.desc::after {
+    color: #17223b;
+    font-weight: bold;
+}
+
+/* Uniform Header Hover Effect */
+.item-table th.sortable-header:hover,
+.comparison-table th.sortable-header:hover,
+.customer-table th.sortable-header:hover,
+.itemwise-customer-table th.sortable-header:hover {
+    background: #b0b0b0 !important;
+}
+
+/* Uniform Running Cell Hover Effect */
+.item-table td.running:hover,
+.comparison-table td.running:hover,
+.customer-table td.running:hover,
+.itemwise-customer-table td.running:hover {
+    background: #e2edf5 !important;
 }

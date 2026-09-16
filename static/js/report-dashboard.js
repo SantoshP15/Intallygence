@@ -758,3 +758,15 @@ document.querySelectorAll("[data-amount]").forEach(button => {
 // The markup starts with Crore values, so retain that format until the user
 // chooses another amount unit.
 updateDashboardAmounts(selectedAmountFormat);
+// =========================================================
+// AUTO-OPEN MODAL ON BACK NAVIGATION
+// =========================================================
+document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modalToOpen = urlParams.get("modal");
+
+    // Keys matching reportData: 'sales', 'purchase', 'debtors', 'creditors', 'inventory', 'cash'
+    if (modalToOpen && reportData[modalToOpen]) {
+        openReportModal(modalToOpen);
+    }
+});

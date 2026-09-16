@@ -1025,3 +1025,74 @@ body {
     background: #1d568f;
     border-color: #1d568f;
 }
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header,
+.itemwise-customer-table th.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap !important;
+    padding: 8px 12px !important;
+    position: relative !important;
+    padding-right: 32px !important;
+}
+
+/* Fallback display */
+.item-table th.sortable-header,
+.comparison-table th.sortable-header,
+.customer-table th.sortable-header,
+.itemwise-customer-table th.sortable-header {
+    display: table-cell;
+}
+
+/* Right-aligned headers padding adjustment */
+.item-table thead tr:nth-child(2) th.sortable-header,
+.comparison-table thead tr:nth-child(2) th.sortable-header,
+.customer-table thead tr:nth-child(2) th.sortable-header,
+.itemwise-customer-table thead tr:nth-child(2) th.sortable-header {
+    padding-right: 36px !important;
+}
+
+/* Dual Triangles pseudo-element */
+.item-table th.sortable-header::after,
+.comparison-table th.sortable-header::after,
+.customer-table th.sortable-header::after,
+.itemwise-customer-table th.sortable-header::after {
+    content: "▲ ▼";
+    font-size: 7px;
+    color: #8899a6;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    letter-spacing: 2px;
+}
+
+/* Active Sorting Highlight Colors (Ascending / Descending) */
+.item-table th.sortable-header.asc::after,
+.comparison-table th.sortable-header.asc::after,
+.customer-table th.sortable-header.asc::after,
+.itemwise-customer-table th.sortable-header.asc::after,
+.item-table th.sortable-header.desc::after,
+.comparison-table th.sortable-header.desc::after,
+.customer-table th.sortable-header.desc::after,
+.itemwise-customer-table th.sortable-header.desc::after {
+    color: #17223b;
+    font-weight: bold;
+}
+
+/* Uniform Header Hover Effect */
+.item-table th.sortable-header:hover,
+.comparison-table th.sortable-header:hover,
+.customer-table th.sortable-header:hover,
+.itemwise-customer-table th.sortable-header:hover {
+    background: #b0b0b0 !important;
+}
+
+/* Uniform Running Cell Hover Effect */
+.item-table td.running:hover,
+.comparison-table td.running:hover,
+.customer-table td.running:hover,
+.itemwise-customer-table td.running:hover {
+    background: #e2edf5 !important;
+}
