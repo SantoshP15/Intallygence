@@ -978,16 +978,15 @@ body {
  */
 .format-menu .format-submenu {
     position: absolute !important;
-
     top: 0 !important;
-
     left: auto !important;
     right: calc(100% + 6px) !important;
 
-    z-index: 2000;
+    z-index: 20000 !important;
+
+    pointer-events: auto !important;
 
     background: #ffffff;
-
     border: 1px solid #dce5f0;
     border-radius: 8px;
 
@@ -1249,4 +1248,40 @@ body {
 .comparison-table th.sortable-header:hover,
 .customer-table th.sortable-header:hover {
     background: #b0b0b0 !important;
+}
+/* =========================================================
+   FORMAT MENU - YEAR DROPDOWN CLICK FIX
+   ========================================================= */
+
+/* Format menu container */
+.format-menu-group {
+    position: relative;
+    z-index: 10000;
+}
+
+/* Main format menu */
+#formatMenu {
+    position: absolute;
+    z-index: 10000 !important;
+}
+
+/* All submenus must sit ABOVE the main menu */
+#formatMenu .format-submenu {
+    position: absolute !important;
+    z-index: 20000 !important;
+    pointer-events: auto !important;
+}
+
+/* Year dropdown inside YTD / MTD / QTD */
+#formatMenu .period-year-select {
+    position: relative;
+    z-index: 30000 !important;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+/* Make the year select itself fully clickable */
+.period-year-select {
+    pointer-events: auto !important;
+    cursor: pointer;
 }

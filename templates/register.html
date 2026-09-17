@@ -252,7 +252,7 @@
 
         <section class="report-top">
             <div class="report-title">
-                <a class="back-link" href="{{ url_for('report_dashboard', modal=('purchase' if report_mode == 'purchase' else 'sales')) }}" aria-label="Back to Reports">
+                <a class="back-link" href="{{ url_for('report_dashboard', modal=('purchase' if data_source == 'view_Purchase' else 'sales')) }}" aria-label="Back to Reports">
                     <i class="fa-solid fa-arrow-left"></i>
                     Reports
                 </a>

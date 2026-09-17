@@ -35,10 +35,14 @@ const formatValue = document.getElementById("formatValue");
 const formatMenu = document.getElementById("formatMenu");
 const exportExcelBtn = document.getElementById("exportExcelBtn");
 
-const reportSource = document.querySelector("main")?.dataset.reportSource || "sales";
-const sourceView = reportSource === "purchase"
-    ? "view_Purchase"
-    : "view_SalesInventory";
+const reportSource =
+    document.querySelector("main")?.dataset.reportSource ||
+    (window.location.pathname.includes("purchase") ? "purchase" : "sales");
+
+const sourceView =
+    reportSource === "purchase"
+        ? "view_Purchase"
+        : "view_SalesInventory";
 
 function exportItemLevelExcel() {
     const table = tableWrap.querySelector("table");
@@ -353,16 +357,28 @@ function selectMTD(monthName) {
 
 function selectQTD(quarter) {
     if (!quarter) return;
-    const dates = getQuarterPeriod(quarter, selectedPeriodYear);
+
+    selectedFormat = "QTD";
+    selectedQuarter = quarter;
+    selectedMonth = null;
+
+    const dates = getQuarterPeriod(
+        selectedQuarter,
+        selectedPeriodYear
+    );
+
     if (!dates) {
         console.error("Invalid QTD quarter:", quarter);
         return;
     }
-    selectedFormat = "QTD";
-    selectedQuarter = quarter;
-    selectedMonth = null;
+
     fromDate.value = dates.from;
     toDate.value = dates.to;
+
+    // Keep every year dropdown synchronized
+    formatMenu?.querySelectorAll(".period-year-select").forEach(select => {
+        select.value = String(selectedPeriodYear);
+    });
 
     updateFormatDisplay();
     closeFormatMenu();
@@ -387,17 +403,113 @@ if (formatValue && formatMenu) {
             event.stopPropagation();
         });
 
-        select.addEventListener("change", () => {
-            selectedPeriodYear = Number(select.value);
+        select.addEventListener("change", event => {
+            event.stopPropagation();
+
+            const newYear = Number(event.target.value);
+
+            if (!Number.isInteger(newYear)) {
+                return;
+            }
+
+            // Update selected fiscal year
+            selectedPeriodYear = newYear;
+
+            // Keep all Year dropdowns synchronized
             formatMenu.querySelectorAll(".period-year-select").forEach(otherSelect => {
-                otherSelect.value = selectedPeriodYear;
+                otherSelect.value = String(newYear);
             });
+
+            /*
+            * The Year dropdown that was actually changed
+            * decides which Format is active.
+            *
+            * YTD → Year → 2025 = YTD 2025
+            * QTD → Q1 → Year → 2025 = Q1 2025
+            * MTD → April → Year → 2025 = April 2025
+            */
+
+            // =====================================================
+            // YTD YEAR
+            // =====================================================
             if (select.classList.contains("ytd-year-select")) {
-                selectYTD(selectedPeriodYear);
-            } else if (select.classList.contains("qtd-year-select") && selectedQuarter) {
-                selectQTD(selectedQuarter);
-            } else if (select.classList.contains("mtd-year-select") && selectedMonth) {
-                selectMTD(selectedMonth);
+
+                selectedFormat = "YTD";
+                selectedMonth = null;
+                selectedQuarter = null;
+
+                const dates = fiscalYearDates(selectedPeriodYear);
+
+                fromDate.value = dates.from;
+                toDate.value = dates.to;
+
+                updateFormatDisplay();
+                closeFormatMenu();
+                loadReport();
+
+                return;
+            }
+
+            // =====================================================
+            // QTD YEAR
+            // =====================================================
+            if (select.classList.contains("qtd-year-select")) {
+
+                if (!selectedQuarter) {
+                    return;
+                }
+
+                selectedFormat = "QTD";
+                selectedMonth = null;
+
+                const dates = getQuarterPeriod(
+                    selectedQuarter,
+                    selectedPeriodYear
+                );
+
+                if (!dates) {
+                    return;
+                }
+
+                fromDate.value = dates.from;
+                toDate.value = dates.to;
+
+                updateFormatDisplay();
+                closeFormatMenu();
+                loadReport();
+
+                return;
+            }
+
+            // =====================================================
+            // MTD YEAR
+            // =====================================================
+            if (select.classList.contains("mtd-year-select")) {
+
+                if (!selectedMonth) {
+                    return;
+                }
+
+                selectedFormat = "MTD";
+                selectedQuarter = null;
+
+                const dates = getMonthPeriod(
+                    selectedMonth,
+                    selectedPeriodYear
+                );
+
+                if (!dates) {
+                    return;
+                }
+
+                fromDate.value = dates.from;
+                toDate.value = dates.to;
+
+                updateFormatDisplay();
+                closeFormatMenu();
+                loadReport();
+
+                return;
             }
         });
     });
@@ -810,7 +922,7 @@ function renderComparisonReport(report) {
     }
 
     if (!report.rows.length) {
-        tableWrap.innerHTML = `<div class="empty-state">No sales were found for this period.</div>`;
+        tableWrap.innerHTML = `<div class="empty-state">No ${reportSource  === 'purchase' ? 'purchases' : 'sales'} were found for this period.</div>`;
         tableWrap.hidden = false;
         return;
     }
@@ -962,7 +1074,7 @@ function renderReport(report) {
     }
 
     if (!report.rows.length) {
-        tableWrap.innerHTML = `<div class="empty-state">No sales were found for this period.</div>`;
+        tableWrap.innerHTML = `<div class="empty-state">No ${reportSource  === 'purchase' ? 'purchases' : 'sales'} were found for this period.</div>`;
         tableWrap.hidden = false;
         return;
     }
