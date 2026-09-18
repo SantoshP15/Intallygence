@@ -678,18 +678,102 @@ async function fetchItemwiseCustomerReport(from, to, customer = "") {
    ========================================================= */
 
 async function loadComparisonReport() {
+
+    console.log(
+        "================================================"
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] COMPARISON START"
+    );
+
+    const totalStart = performance.now();
+
     const currentFrom = fromDate.value;
     const currentTo = toDate.value;
     const previousFrom = shiftDateOneYear(currentFrom);
     const previousTo = shiftDateOneYear(currentTo);
     const customerFilter = selectedCustomerFilter || "";
 
-    const [previousReport, currentReportData] = await Promise.all([
-        fetchItemwiseCustomerReport(previousFrom, previousTo, customerFilter),
-        fetchItemwiseCustomerReport(currentFrom, currentTo, customerFilter)
-    ]);
+    console.log(
+        "[CUSTOMER-ITEMWISE] Current period:",
+        currentFrom,
+        "→",
+        currentTo
+    );
 
-    const merged = mergeComparisonReports(previousReport, currentReportData);
+    console.log(
+        "[CUSTOMER-ITEMWISE] Previous period:",
+        previousFrom,
+        "→",
+        previousTo
+    );
+
+    // ========================================================
+    // 1. API REQUESTS
+    // ========================================================
+
+    const apiStart = performance.now();
+
+    const [previousReport, currentReportData] =
+        await Promise.all([
+
+            fetchItemwiseCustomerReport(
+                previousFrom,
+                previousTo,
+                customerFilter
+            ),
+
+            fetchItemwiseCustomerReport(
+                currentFrom,
+                currentTo,
+                customerFilter
+            )
+        ]);
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] BOTH API REQUESTS:",
+        ((performance.now() - apiStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] Previous rows:",
+        previousReport?.rows?.length || 0
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] Current rows:",
+        currentReportData?.rows?.length || 0
+    );
+
+    // ========================================================
+    // 2. MERGE
+    // ========================================================
+
+    const mergeStart = performance.now();
+
+    const merged = mergeComparisonReports(
+        previousReport,
+        currentReportData
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] MERGE:",
+        ((performance.now() - mergeStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] Merged rows:",
+        merged?.rows?.length || 0
+    );
+
+    // ========================================================
+    // 3. BUILD CURRENT REPORT OBJECT
+    // ========================================================
+
+    const objectStart = performance.now();
 
     currentReport = {
         type: "COMPARISON",
@@ -699,14 +783,79 @@ async function loadComparisonReport() {
         rows: merged.rows,
         grand_last_year: merged.grand_last_year,
         grand_current_year: merged.grand_current_year,
-        customers: currentReportData.customers || previousReport.customers || []
+        customers:
+            currentReportData.customers ||
+            previousReport.customers ||
+            []
     };
 
-    populateCustomerDropdown(currentReport.customers || currentReport.rows);
-    resetSort();
-    renderComparisonReport(currentReport);
-}
+    console.log(
+        "[CUSTOMER-ITEMWISE] REPORT OBJECT:",
+        ((performance.now() - objectStart) / 1000).toFixed(3),
+        "seconds"
+    );
 
+    // ========================================================
+    // 4. CUSTOMER DROPDOWN
+    // ========================================================
+
+    const dropdownStart = performance.now();
+
+    populateCustomerDropdown(
+        currentReport.customers ||
+        currentReport.rows
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] CUSTOMER DROPDOWN:",
+        ((performance.now() - dropdownStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 5. RESET SORT
+    // ========================================================
+
+    const sortResetStart = performance.now();
+
+    resetSort();
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] RESET SORT:",
+        ((performance.now() - sortResetStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 6. RENDER REPORT
+    // ========================================================
+
+    const renderStart = performance.now();
+
+    renderComparisonReport(
+        currentReport
+    );
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] RENDER REPORT:",
+        ((performance.now() - renderStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 7. TOTAL FRONTEND TIME
+    // ========================================================
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] TOTAL COMPARISON TIME:",
+        ((performance.now() - totalStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    console.log(
+        "================================================"
+    );
+}
 /* =========================================================
    MERGE TWO REPORTS
    ========================================================= */
@@ -806,6 +955,9 @@ async function loadReport() {
    ========================================================= */
 
 function renderComparisonReport(report) {
+
+    const renderStart = performance.now();
+
     if (!report || !Array.isArray(report.rows)) {
         reportStatus.hidden = false;
         reportStatus.className = "report-status error";
@@ -815,113 +967,472 @@ function renderComparisonReport(report) {
     }
 
     if (!report.rows.length) {
-        tableWrap.innerHTML = `<div class="empty-state">No sales were found for this period.</div>`;
+        tableWrap.innerHTML =
+            `<div class="empty-state">No sales were found for this period.</div>`;
+
         tableWrap.hidden = false;
         return;
     }
 
+    // ========================================================
+    // 1. CUSTOMER FILTER
+    // ========================================================
+
+    const filterStart = performance.now();
+
     let displayRows = report.rows;
+
     if (selectedCustomerFilter) {
-        displayRows = displayRows.filter(row => String(row.customer || "").trim() === selectedCustomerFilter);
+        displayRows = report.rows.filter(
+            row =>
+                String(row.customer || "").trim() ===
+                selectedCustomerFilter
+        );
     }
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] Render filter:",
+        ((performance.now() - filterStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 2. SORT
+    // ========================================================
+
+    const sortStart = performance.now();
 
     const rows = sortComparisonRows(displayRows);
 
-    const grandLastYear = Number(report.grand_last_year) || 0;
-    const grandCurrentYear = Number(report.grand_current_year) || 0;
+    console.log(
+        "[CUSTOMER-ITEMWISE] Render sort:",
+        ((performance.now() - sortStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 3. RUNNING PERCENTAGE
+    // ========================================================
+
+    const calculationStart = performance.now();
+
+    const grandLastYear =
+        Number(report.grand_last_year) || 0;
+
+    const grandCurrentYear =
+        Number(report.grand_current_year) || 0;
 
     let lastRunningSales = 0;
     let currentRunningSales = 0;
 
     rows.forEach(row => {
-        const lastYearSales = Number(row.last_year) || 0;
-        const currentYearSales = Number(row.current_year) || 0;
 
-        row.last_year_percent = grandLastYear ? (lastYearSales / grandLastYear) * 100 : 0;
-        row.current_year_percent = grandCurrentYear ? (currentYearSales / grandCurrentYear) * 100 : 0;
+        const lastYearSales =
+            Number(row.last_year) || 0;
+
+        const currentYearSales =
+            Number(row.current_year) || 0;
+
+        row.last_year_percent =
+            grandLastYear
+                ? (lastYearSales / grandLastYear) * 100
+                : 0;
+
+        row.current_year_percent =
+            grandCurrentYear
+                ? (currentYearSales / grandCurrentYear) * 100
+                : 0;
 
         lastRunningSales += lastYearSales;
         currentRunningSales += currentYearSales;
 
-        row.last_year_running_percent = grandLastYear ? (lastRunningSales / grandLastYear) * 100 : 0;
-        row.current_year_running_percent = grandCurrentYear ? (currentRunningSales / grandCurrentYear) * 100 : 0;
+        row.last_year_running_percent =
+            grandLastYear
+                ? (lastRunningSales / grandLastYear) * 100
+                : 0;
+
+        row.current_year_running_percent =
+            grandCurrentYear
+                ? (currentRunningSales / grandCurrentYear) * 100
+                : 0;
     });
+
+    console.log(
+        "[CUSTOMER-ITEMWISE] Render calculations:",
+        ((performance.now() - calculationStart) / 1000).toFixed(3),
+        "seconds"
+    );
+
+    // ========================================================
+    // 4. HEADERS
+    // ========================================================
 
     let lastYearHeader = "Last Year";
     let currentYearHeader = "Current Year";
 
-    if (report.format === "MTD" && report.month) {
-        lastYearHeader = `Last Year ${report.month}`;
-        currentYearHeader = `Current Year ${report.month}`;
-    } else if (report.format === "QTD" && report.quarter) {
-        lastYearHeader = `Last Year ${report.quarter}`;
-        currentYearHeader = `Current Year ${report.quarter}`;
+    if (
+        report.format === "MTD" &&
+        report.month
+    ) {
+
+        lastYearHeader =
+            `Last Year ${report.month}`;
+
+        currentYearHeader =
+            `Current Year ${report.month}`;
+
+    } else if (
+        report.format === "QTD" &&
+        report.quarter
+    ) {
+
+        lastYearHeader =
+            `Last Year ${report.quarter}`;
+
+        currentYearHeader =
+            `Current Year ${report.quarter}`;
     }
 
     const tableHeader = `
         <thead>
             <tr>
-                <th rowspan="2" class="customer-column ${getSortClass('customer')} frozen-customer-header" onclick="changeSort('customer')">Customer</th>
-                <th rowspan="2" class="item-column ${getSortClass('item')}" onclick="changeSort('item')">Item</th>
-                <th colspan="3" class="comparison-year-header">${escapeHtml(lastYearHeader)}</th>
-                <th colspan="3" class="comparison-year-header">${escapeHtml(currentYearHeader)}</th>
-                <th rowspan="2" class="${getSortClass('growth')} comparison-growth-header" onclick="changeSort('growth')">Growth %</th>
+                <th
+                    rowspan="2"
+                    class="customer-column ${getSortClass(
+                        'customer'
+                    )} frozen-customer-header"
+                    onclick="changeSort('customer')"
+                >
+                    Customer
+                </th>
+
+                <th
+                    rowspan="2"
+                    class="item-column ${getSortClass('item')}"
+                    onclick="changeSort('item')"
+                >
+                    Item
+                </th>
+
+                <th
+                    colspan="3"
+                    class="comparison-year-header"
+                >
+                    ${escapeHtml(lastYearHeader)}
+                </th>
+
+                <th
+                    colspan="3"
+                    class="comparison-year-header"
+                >
+                    ${escapeHtml(currentYearHeader)}
+                </th>
+
+                <th
+                    rowspan="2"
+                    class="${getSortClass(
+                        'growth'
+                    )} comparison-growth-header"
+                    onclick="changeSort('growth')"
+                >
+                    Growth %
+                </th>
             </tr>
+
             <tr>
-                <th class="${getSortClass('last_year')}" onclick="changeSort('last_year')">Sales</th>
-                <th class="${getSortClass('last_year_percent')}" onclick="changeSort('last_year_percent')">Sales %</th>
-                <th class="${getSortClass('last_year_running')}" onclick="changeSort('last_year_running')">Running %</th>
-                <th class="${getSortClass('current_year')}" onclick="changeSort('current_year')">Sales</th>
-                <th class="${getSortClass('current_year_percent')}" onclick="changeSort('current_year_percent')">Sales %</th>
-                <th class="${getSortClass('current_year_running')}" onclick="changeSort('current_year_running')">Running %</th>
+
+                <th
+                    class="${getSortClass('last_year')}"
+                    onclick="changeSort('last_year')"
+                >
+                    Sales
+                </th>
+
+                <th
+                    class="${getSortClass('last_year_percent')}"
+                    onclick="changeSort('last_year_percent')"
+                >
+                    Sales %
+                </th>
+
+                <th
+                    class="${getSortClass('last_year_running')}"
+                    onclick="changeSort('last_year_running')"
+                >
+                    Running %
+                </th>
+
+                <th
+                    class="${getSortClass('current_year')}"
+                    onclick="changeSort('current_year')"
+                >
+                    Sales
+                </th>
+
+                <th
+                    class="${getSortClass('current_year_percent')}"
+                    onclick="changeSort('current_year_percent')"
+                >
+                    Sales %
+                </th>
+
+                <th
+                    class="${getSortClass('current_year_running')}"
+                    onclick="changeSort('current_year_running')"
+                >
+                    Running %
+                </th>
+
             </tr>
         </thead>
     `;
 
-    const bodyRows = rows.map(row => {
-        const customer = String(row.customer || "Unspecified customer").trim();
-        const item = String(row.item || "Unspecified item").trim();
-        return `
-            <tr>
-                <td class="customer-column" title="${escapeHtml(customer)}">${escapeHtml(customer)}</td>
-                <td class="item-column" title="${escapeHtml(item)}">${escapeHtml(item)}</td>
-                <td>${amount(row.last_year)}</td>
-                <td>${percent(row.last_year_percent)}</td>
-                <td class="running">${percent(row.last_year_running_percent)}</td>
-                <td>${amount(row.current_year)}</td>
-                <td>${percent(row.current_year_percent)}</td>
-                <td class="running">${percent(row.current_year_running_percent)}</td>
-                <td>${formatGrowth(row.last_year, row.current_year)}</td>
-            </tr>
-        `;
-    }).join("");
+    // ========================================================
+    // 5. GRAND TOTAL
+    // ========================================================
 
-    const grandGrowth = formatGrowth(grandLastYear, grandCurrentYear);
+    const grandGrowth =
+        formatGrowth(
+            grandLastYear,
+            grandCurrentYear
+        );
 
     const grandTotalRow = `
         <tfoot>
             <tr>
-                <td class="customer-column" colspan="2">Grand Total</td>
-                <td>${amount(grandLastYear)}</td>
-                <td>${percent(grandLastYear ? 100 : 0)}</td>
-                <td class="running">${percent(grandLastYear ? 100 : 0)}</td>
-                <td>${amount(grandCurrentYear)}</td>
-                <td>${percent(grandCurrentYear ? 100 : 0)}</td>
-                <td class="running">${percent(grandCurrentYear ? 100 : 0)}</td>
-                <td>${grandGrowth}</td>
+
+                <td
+                    class="customer-column"
+                    colspan="2"
+                >
+                    Grand Total
+                </td>
+
+                <td>
+                    ${amount(grandLastYear)}
+                </td>
+
+                <td>
+                    ${percent(
+                        grandLastYear ? 100 : 0
+                    )}
+                </td>
+
+                <td class="running">
+                    ${percent(
+                        grandLastYear ? 100 : 0
+                    )}
+                </td>
+
+                <td>
+                    ${amount(grandCurrentYear)}
+                </td>
+
+                <td>
+                    ${percent(
+                        grandCurrentYear ? 100 : 0
+                    )}
+                </td>
+
+                <td class="running">
+                    ${percent(
+                        grandCurrentYear ? 100 : 0
+                    )}
+                </td>
+
+                <td>
+                    ${grandGrowth}
+                </td>
+
             </tr>
         </tfoot>
     `;
 
+    // ========================================================
+    // 6. CREATE TABLE SHELL ONLY
+    // ========================================================
+
     tableWrap.innerHTML = `
         <table class="customer-itemwise-table comparison-table">
+
             ${tableHeader}
-            <tbody>${bodyRows}</tbody>
+
+            <tbody id="customerItemwiseVirtualBody"></tbody>
+
             ${grandTotalRow}
+
         </table>
     `;
 
     tableWrap.hidden = false;
+
+    // ========================================================
+    // 7. VIRTUAL RENDERING
+    // ========================================================
+
+    const virtualStart = performance.now();
+
+    const tbody =
+        document.getElementById(
+            "customerItemwiseVirtualBody"
+        );
+
+    if (!tbody) {
+        console.error(
+            "[CUSTOMER-ITEMWISE] Virtual tbody not found."
+        );
+        return;
+    }
+
+    // Number of rows actually rendered in DOM
+    const ROWS_PER_BATCH = 1000;
+
+    let renderedCount = 0;
+
+    function renderNextBatch() {
+
+        const batchStart = performance.now();
+
+        const fragment =
+            document.createDocumentFragment();
+
+        const end =
+            Math.min(
+                renderedCount + ROWS_PER_BATCH,
+                rows.length
+            );
+
+        for (
+            let index = renderedCount;
+            index < end;
+            index++
+        ) {
+
+            const row = rows[index];
+
+            const customer =
+                String(
+                    row.customer ||
+                    "Unspecified customer"
+                ).trim();
+
+            const item =
+                String(
+                    row.item ||
+                    "Unspecified item"
+                ).trim();
+
+            const tr =
+                document.createElement("tr");
+
+            tr.innerHTML = `
+
+                <td
+                    class="customer-column"
+                    title="${escapeHtml(customer)}"
+                >
+                    ${escapeHtml(customer)}
+                </td>
+
+                <td
+                    class="item-column"
+                    title="${escapeHtml(item)}"
+                >
+                    ${escapeHtml(item)}
+                </td>
+
+                <td>
+                    ${amount(row.last_year)}
+                </td>
+
+                <td>
+                    ${percent(
+                        row.last_year_percent
+                    )}
+                </td>
+
+                <td class="running">
+                    ${percent(
+                        row.last_year_running_percent
+                    )}
+                </td>
+
+                <td>
+                    ${amount(row.current_year)}
+                </td>
+
+                <td>
+                    ${percent(
+                        row.current_year_percent
+                    )}
+                </td>
+
+                <td class="running">
+                    ${percent(
+                        row.current_year_running_percent
+                    )}
+                </td>
+
+                <td>
+                    ${formatGrowth(
+                        row.last_year,
+                        row.current_year
+                    )}
+                </td>
+            `;
+
+            fragment.appendChild(tr);
+        }
+
+        tbody.appendChild(fragment);
+
+        renderedCount = end;
+
+        console.log(
+            `[CUSTOMER-ITEMWISE] Rendered ${renderedCount.toLocaleString()} / ${rows.length.toLocaleString()} rows`,
+            `batch: ${(
+                (performance.now() - batchStart) /
+                1000
+            ).toFixed(3)}s`
+        );
+
+        if (renderedCount < rows.length) {
+
+            requestAnimationFrame(
+                renderNextBatch
+            );
+
+        } else {
+
+            console.log(
+                "[CUSTOMER-ITEMWISE] VIRTUAL RENDER COMPLETE:",
+                (
+                    (performance.now() -
+                        virtualStart) /
+                    1000
+                ).toFixed(3),
+                "seconds"
+            );
+
+            console.log(
+                "[CUSTOMER-ITEMWISE] TOTAL RENDER TIME:",
+                (
+                    (performance.now() -
+                        renderStart) /
+                    1000
+                ).toFixed(3),
+                "seconds"
+            );
+
+            console.log(
+                "[CUSTOMER-ITEMWISE] DOM rows:",
+                tbody.children.length.toLocaleString()
+            );
+        }
+    }
+
+    // Start rendering
+    renderNextBatch();
 }
 
 /* =========================================================

@@ -8,6 +8,8 @@ from flask import (
     session
 )
 import io
+import time
+report_start = time.perf_counter()
 import pandas as pd
 from flask import send_file, request
 
@@ -978,6 +980,11 @@ def purchase_customer_itemwise():
 @app.route("/api/customer-itemwise")
 def customer_itemwise_data():
 
+    # ============================================================
+    # TOTAL REQUEST TIMER
+    # ============================================================
+    report_start = time.perf_counter()
+
     if "user" not in session:
         return jsonify({"error": "Not logged in"}), 401
 
@@ -986,6 +993,8 @@ def customer_itemwise_data():
     # --------------------------------------------------
     # DEFAULT FINANCIAL YEAR
     # --------------------------------------------------
+
+    t = time.perf_counter()
 
     fiscal_start_year = (
         today.year
@@ -1005,9 +1014,16 @@ def customer_itemwise_data():
         31
     )
 
+    print(
+        f"[CUSTOMER-ITEMWISE] Date setup: "
+        f"{time.perf_counter() - t:.3f}s"
+    )
+
     # --------------------------------------------------
     # PERIOD
     # --------------------------------------------------
+
+    t = time.perf_counter()
 
     try:
 
@@ -1033,6 +1049,10 @@ def customer_itemwise_data():
             "error": "Use YYYY-MM-DD for the period."
         }), 400
 
+    print(
+        f"[CUSTOMER-ITEMWISE] Period parsing: "
+        f"{time.perf_counter() - t:.3f}s"
+    )
 
     if from_date > to_date:
 
@@ -1041,22 +1061,37 @@ def customer_itemwise_data():
                 "The start date must be before the end date."
         }), 400
 
-
     # --------------------------------------------------
     # CUSTOMER FILTER
     # --------------------------------------------------
+
+    t = time.perf_counter()
 
     selected_customer = (
         request.args.get("customer", "")
         .strip()
     )
 
+    print(
+        f"[CUSTOMER-ITEMWISE] Customer filter setup: "
+        f"{time.perf_counter() - t:.3f}s"
+    )
 
     try:
 
+        # ==================================================
+        # 1. VALIDATE SOURCE / BUILD COLUMN NAMES
+        # ==================================================
+
+        t = time.perf_counter()
+
         source_table = validate_data_source(
-            request.args.get("source", "view_SalesInventory")
+            request.args.get(
+                "source",
+                "view_SalesInventory"
+            )
         )
+
         columns = customer_itemwise_columns()
 
         date_column = quote_identifier(
@@ -1075,6 +1110,16 @@ def customer_itemwise_data():
             columns["amount"]
         )
 
+        print(
+            f"[CUSTOMER-ITEMWISE] Source/column setup: "
+            f"{time.perf_counter() - t:.3f}s"
+        )
+
+        # ==================================================
+        # 2. DATABASE CONNECTION
+        # ==================================================
+
+        t = time.perf_counter()
 
         db = get_db_connection()
 
@@ -1082,12 +1127,25 @@ def customer_itemwise_data():
             dictionary=True
         )
 
+        print(
+            f"[CUSTOMER-ITEMWISE] DB connection: "
+            f"{time.perf_counter() - t:.3f}s"
+        )
 
         try:
 
             # ==================================================
-            # 1. GET CUSTOMER LIST
+            # 3. GET CUSTOMER LIST
             # ==================================================
+
+            print(
+                "[CUSTOMER-ITEMWISE] -----------------------------"
+            )
+            print(
+                "[CUSTOMER-ITEMWISE] Starting customer query..."
+            )
+
+            t = time.perf_counter()
 
             cursor.execute(
                 f"""
@@ -1110,9 +1168,25 @@ def customer_itemwise_data():
                 )
             )
 
-
             customer_rows = cursor.fetchall()
 
+            customer_query_time = time.perf_counter() - t
+
+            print(
+                f"[CUSTOMER-ITEMWISE] Customer query: "
+                f"{customer_query_time:.3f}s"
+            )
+
+            print(
+                f"[CUSTOMER-ITEMWISE] Customer rows: "
+                f"{len(customer_rows):,}"
+            )
+
+            # ==================================================
+            # 4. BUILD CUSTOMER LIST
+            # ==================================================
+
+            t = time.perf_counter()
 
             customers = []
 
@@ -1125,10 +1199,21 @@ def customer_itemwise_data():
                 if customer:
                     customers.append(customer)
 
+            print(
+                f"[CUSTOMER-ITEMWISE] Build customer list: "
+                f"{time.perf_counter() - t:.3f}s"
+            )
+
+            print(
+                f"[CUSTOMER-ITEMWISE] Unique customers: "
+                f"{len(customers):,}"
+            )
 
             # ==================================================
-            # 2. BUILD SALES QUERY
+            # 5. BUILD SALES QUERY
             # ==================================================
+
+            t = time.perf_counter()
 
             query = f"""
                 SELECT
@@ -1150,10 +1235,16 @@ def customer_itemwise_data():
                 to_date
             ]
 
+            print(
+                f"[CUSTOMER-ITEMWISE] Base query build: "
+                f"{time.perf_counter() - t:.3f}s"
+            )
 
             # ==================================================
-            # 3. APPLY CUSTOMER FILTER
+            # 6. APPLY CUSTOMER FILTER
             # ==================================================
+
+            t = time.perf_counter()
 
             if selected_customer:
 
@@ -1165,6 +1256,16 @@ def customer_itemwise_data():
                     selected_customer
                 )
 
+            print(
+                f"[CUSTOMER-ITEMWISE] Customer filter query build: "
+                f"{time.perf_counter() - t:.3f}s"
+            )
+
+            # ==================================================
+            # 7. GROUP BY / ORDER BY
+            # ==================================================
+
+            t = time.perf_counter()
 
             query += f"""
                 GROUP BY
@@ -1178,25 +1279,61 @@ def customer_itemwise_data():
                     {date_column}
             """
 
+            print(
+                f"[CUSTOMER-ITEMWISE] GROUP BY/ORDER BY build: "
+                f"{time.perf_counter() - t:.3f}s"
+            )
+
+            # ==================================================
+            # 8. MAIN SQL QUERY
+            # ==================================================
+
+            print(
+                "[CUSTOMER-ITEMWISE] Starting main SQL query..."
+            )
+
+            t = time.perf_counter()
 
             cursor.execute(
                 query,
                 tuple(query_params)
             )
 
-
             source_rows = cursor.fetchall()
 
+            main_sql_time = time.perf_counter() - t
+
+            print(
+                f"[CUSTOMER-ITEMWISE] Main SQL query + fetch: "
+                f"{main_sql_time:.3f}s"
+            )
+
+            print(
+                f"[CUSTOMER-ITEMWISE] SQL rows returned: "
+                f"{len(source_rows):,}"
+            )
 
         finally:
+
+            # ==================================================
+            # 9. CLOSE DATABASE
+            # ==================================================
+
+            t = time.perf_counter()
 
             cursor.close()
             db.close()
 
+            print(
+                f"[CUSTOMER-ITEMWISE] DB close: "
+                f"{time.perf_counter() - t:.3f}s"
+            )
 
         # ==================================================
-        # MONTH LIST
+        # 10. CREATE MONTH LIST
         # ==================================================
+
+        t = time.perf_counter()
 
         months = []
 
@@ -1206,13 +1343,11 @@ def customer_itemwise_data():
             1
         )
 
-
         while current_month <= to_date:
 
             months.append(
                 current_month.strftime("%b-%y")
             )
-
 
             if current_month.month == 12:
 
@@ -1230,9 +1365,18 @@ def customer_itemwise_data():
                     1
                 )
 
+        print(
+            f"[CUSTOMER-ITEMWISE] Month list: "
+            f"{time.perf_counter() - t:.3f}s"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Months: "
+            f"{len(months)}"
+        )
 
         # ==================================================
-        # VALUES
+        # 11. BUILD VALUES
         # ==================================================
 
         values = defaultdict(
@@ -1241,6 +1385,7 @@ def customer_itemwise_data():
             )
         )
 
+        t = time.perf_counter()
 
         for row in source_rows:
 
@@ -1248,35 +1393,28 @@ def customer_itemwise_data():
                 row["transaction_date"]
             )
 
-
             if not transaction_date:
                 continue
-
 
             customer = str(
                 row["customer"] or
                 "Unspecified customer"
             ).strip()
 
-
             item = str(
                 row["item"] or
                 "Unspecified item"
             ).strip()
 
-
             if not customer:
                 customer = "Unspecified customer"
-
 
             if not item:
                 item = "Unspecified item"
 
-
             month_key = (
                 transaction_date.strftime("%b-%y")
             )
-
 
             if month_key in months:
 
@@ -1290,16 +1428,33 @@ def customer_itemwise_data():
                     row["sales"] or 0
                 )
 
+        build_values_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Build values: "
+            f"{build_values_time:.3f}s"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Customers in values: "
+            f"{len(values):,}"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Customer-item combinations: "
+            f"{sum(len(customer_data) for customer_data in values.values()):,}"
+        )
 
         # ==================================================
-        # MONTH TOTALS
+        # 12. MONTH TOTALS
         # ==================================================
+
+        t = time.perf_counter()
 
         month_totals = {
             month: 0
             for month in months
         }
-
 
         for customer_data in values.values():
 
@@ -1311,22 +1466,35 @@ def customer_itemwise_data():
                         item_data[month]
                     )
 
+        month_totals_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Month totals: "
+            f"{month_totals_time:.3f}s"
+        )
 
         # ==================================================
-        # GRAND TOTAL
+        # 13. GRAND TOTAL
         # ==================================================
+
+        t = time.perf_counter()
 
         grand_total = sum(
             month_totals.values()
         )
 
+        print(
+            f"[CUSTOMER-ITEMWISE] Grand total: "
+            f"{time.perf_counter() - t:.3f}s"
+        )
 
         # ==================================================
-        # BUILD ROWS
+        # 14. BUILD ROWS
         # ==================================================
+
+        t = time.perf_counter()
 
         rows = []
-
 
         for customer in values:
 
@@ -1335,7 +1503,6 @@ def customer_itemwise_data():
                 monthly = []
 
                 total = 0
-
 
                 for month in months:
 
@@ -1349,9 +1516,7 @@ def customer_itemwise_data():
                         ]
                     )
 
-
                     total += sales
-
 
                     monthly.append({
 
@@ -1368,7 +1533,6 @@ def customer_itemwise_data():
 
                         "running_percent": 0
                     })
-
 
                 rows.append({
 
@@ -1394,13 +1558,23 @@ def customer_itemwise_data():
                         else 0
                 })
 
+        build_rows_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Build rows: "
+            f"{build_rows_time:.3f}s"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Rows created: "
+            f"{len(rows):,}"
+        )
 
         # ==================================================
-        # ORIGINAL ORDER
-        #
-        # Customer A-Z
-        # Then Item A-Z
+        # 15. SORT ROWS
         # ==================================================
+
+        t = time.perf_counter()
 
         rows.sort(
             key=lambda row: (
@@ -1414,15 +1588,22 @@ def customer_itemwise_data():
             )
         )
 
+        sort_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Sort rows: "
+            f"{sort_time:.3f}s"
+        )
 
         # ==================================================
-        # RUNNING %
+        # 16. RUNNING PERCENTAGE
         # ==================================================
+
+        t = time.perf_counter()
 
         for month_index, month in enumerate(months):
 
             running_sales = 0
-
 
             for row in rows:
 
@@ -1432,9 +1613,7 @@ def customer_itemwise_data():
                     ]["sales"]
                 )
 
-
                 running_sales += sales
-
 
                 if month_totals[month]:
 
@@ -1451,12 +1630,20 @@ def customer_itemwise_data():
                         month_index
                     ]["running_percent"] = 0
 
+        running_percent_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Running percentages: "
+            f"{running_percent_time:.3f}s"
+        )
 
         # ==================================================
-        # RESPONSE
+        # 17. RESPONSE DATA PREPARATION
         # ==================================================
 
-        return jsonify({
+        t = time.perf_counter()
+
+        response_data = {
 
             "customers":
                 customers,
@@ -1484,9 +1671,75 @@ def customer_itemwise_data():
                 "to":
                     to_date.isoformat()
             }
+        }
 
-        })
+        response_prepare_time = time.perf_counter() - t
 
+        print(
+            f"[CUSTOMER-ITEMWISE] Response data preparation: "
+            f"{response_prepare_time:.3f}s"
+        )
+
+        # ==================================================
+        # 18. JSON SERIALIZATION
+        # ==================================================
+
+        t = time.perf_counter()
+
+        response = jsonify(response_data)
+
+        json_time = time.perf_counter() - t
+
+        print(
+            f"[CUSTOMER-ITEMWISE] JSONIFY / serialization: "
+            f"{json_time:.3f}s"
+        )
+
+        # ==================================================
+        # 19. FINAL TOTAL
+        # ==================================================
+
+        total_backend_time = (
+            time.perf_counter() -
+            report_start
+        )
+
+        print(
+            "[CUSTOMER-ITEMWISE] "
+            "=============================================="
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] TOTAL BACKEND TIME: "
+            f"{total_backend_time:.3f}s"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Final rows: "
+            f"{len(rows):,}"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] SQL rows: "
+            f"{len(source_rows):,}"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Customers: "
+            f"{len(customers):,}"
+        )
+
+        print(
+            f"[CUSTOMER-ITEMWISE] Months: "
+            f"{len(months)}"
+        )
+
+        print(
+            "[CUSTOMER-ITEMWISE] "
+            "=============================================="
+        )
+
+        return response
 
     except Exception as error:
 
@@ -1494,9 +1747,15 @@ def customer_itemwise_data():
             f"CUSTOMER ITEMWISE REPORT ERROR: {error}"
         )
 
+        print(
+            f"[CUSTOMER-ITEMWISE] ERROR AFTER: "
+            f"{time.perf_counter() - report_start:.3f}s"
+        )
+
         return jsonify({
             "error": str(error)
         }), 500
+
 
 @app.route("/itemwise-customer")
 def itemwise_customer():
